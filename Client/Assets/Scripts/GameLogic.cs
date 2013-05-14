@@ -16,6 +16,8 @@ public class GameLogic : MonoBehaviour {
 
     public UISprite MultipleBtnBack;
 
+    public UILabel RoundLabel;
+
     int mRound = -1;
     bool mCalculating = false;
 
@@ -36,7 +38,21 @@ public class GameLogic : MonoBehaviour {
 
     void BattleStart()
     {
-        mRound = 0;
+        Round = 1;
+        SelectAll();
+    }
+
+    int Round
+    {
+        get
+        {
+            return mRound;
+        }
+        set 
+        {
+            mRound = value;
+            RoundLabel.text = "Round:" + mRound.ToString();
+        }
     }
 
     void OnEnable()
@@ -54,7 +70,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickUp()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -69,7 +85,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickDown()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -84,7 +100,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickLeft()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -99,7 +115,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickRight()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -114,7 +130,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickUpLeft()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -129,7 +145,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickDownLeft()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -144,7 +160,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickUpRight()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -159,7 +175,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickDownRight()
     {
-        if (mCalculating)
+        if (mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -206,7 +222,7 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
-    bool IsAllSelect()
+    public bool IsAllSelect()
     {
         return !IsAnyUnselect();
     }
@@ -216,6 +232,19 @@ public class GameLogic : MonoBehaviour {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
         {
             if (!obj.GetComponent<CardLogic>().IsSelect)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool IsAnySelect()
+    {
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
+        {
+            if (obj.GetComponent<CardLogic>().IsSelect)
             {
                 return true;
             }
@@ -278,7 +307,7 @@ public class GameLogic : MonoBehaviour {
         {
             CardLogic data = mAIActionList[fastID];
             mAIActionList.RemoveAt(fastID);
-            
+                        
             data.ActionFinishEvent += AIActionFinishCallback;
             data.CalculateAI();
 
@@ -287,6 +316,7 @@ public class GameLogic : MonoBehaviour {
         else
         {
             mCalculating = false;
+            Round += 1;
         }
     }
 

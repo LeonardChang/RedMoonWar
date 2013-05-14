@@ -34,6 +34,8 @@ public class CardLogic : MonoBehaviour {
         mSelect = false;
         mNeedRefresh = true;
         PlayAnimation(CharAnimationState.Idle);
+
+        CardAnimation.gameObject.GetComponent<CardAnimation>().AnimationEvent += AnimationEventCall;
 	}
 	
 	// Update is called once per frame
@@ -54,12 +56,10 @@ public class CardLogic : MonoBehaviour {
 
     void OnEnable()
     {
-        CardAnimation.gameObject.GetComponent<CardAnimation>().AnimationEvent += AnimationEventCall;
     }
 
     void OnDisable()
     {
-        CardAnimation.gameObject.GetComponent<CardAnimation>().AnimationEvent -= AnimationEventCall;
     }
 
     bool mSelect = false;
@@ -75,12 +75,24 @@ public class CardLogic : MonoBehaviour {
 
     public void OnClick()
     {
-        if (!mSelect && !GameLogic.Instance.IsMultiple)
+        if (!GameLogic.Instance.IsMultiple)
         {
-            GameLogic.Instance.UnselectAll();
+            if (GameLogic.Instance.IsAllSelect())
+            {
+                GameLogic.Instance.UnselectAll();
+                Select(true);
+            }
+            else
+            {
+                bool sel = mSelect;
+                GameLogic.Instance.UnselectAll();
+                Select(!sel);
+            }
         }
-
-        Select(!mSelect);
+        else
+        {
+            Select(!mSelect);
+        }
     }
 
     public void Select(bool _select)
@@ -105,7 +117,11 @@ public class CardLogic : MonoBehaviour {
 
     void LateUpdate()
     {
-        Refresh();
+        if (mNeedRefresh)
+        {
+            mNeedRefresh = false;
+            Refresh();
+        }
 
         if (NeedEndCalculate && !mAnimationNotFinish && !mWaitingDamage)
         {
@@ -116,12 +132,6 @@ public class CardLogic : MonoBehaviour {
 
     void Refresh()
     {
-        if (!mNeedRefresh)
-        {
-            return;
-        }
-        mNeedRefresh = false;
-
         SelectSprite.active = mSelect;
     }
 
@@ -191,8 +201,8 @@ public class CardLogic : MonoBehaviour {
                     if (mTargetObj != null)
                     {
                         mWaitingDamage = true;
-                        CreateArrowEffect(mTargetObj.gameObject.transform.localPosition, 3.35f, mTargetObj.gameObject);
-                        Invoke("DoDamage", 3.35f);
+                        CreateArrowEffect(mTargetObj.gameObject.transform, 0.35f);
+                        Invoke("DoDamage", 0.35f);
                         NeedEndCalculate = true;
                     }
                     break;
@@ -256,6 +266,8 @@ public class CardLogic : MonoBehaviour {
             mTargetObj.Data.LastAttackerID = Data.ID;
         }
 
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
+
         mTargetObj.CreateHitEffect(damage);
         mWaitingDamage = false;
     }
@@ -280,6 +292,8 @@ public class CardLogic : MonoBehaviour {
         obj.transform.parent = gameObject.transform.parent;
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
         obj.transform.localScale = Vector3.one;
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Blow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
     public void CreateHitEffect(int _Damage)
@@ -318,9 +332,11 @@ public class CardLogic : MonoBehaviour {
         UILabel label = obj.GetComponent<UILabel>();
         label.text = "+" + _Health;
         label.color = new Color(0.2f, 1, 0.2f);
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Heal3", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
-    public void CreateArrowEffect(Vector3 _target, float _flyTime,GameObject _targetObj)
+    public void CreateArrowEffect(Transform _target, float _flyTime)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/Arrow", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -328,16 +344,16 @@ public class CardLogic : MonoBehaviour {
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
         obj.transform.localScale = new Vector3(9, 50, 1);
 
-        Vector3 position = transform.localPosition;
-        Vector3 tar = _targetObj.transform.localPosition;
-        Vector3 dir = tar - position;
+        Vector3 from = transform.localPosition + new Vector3(0, 50, 0);
+        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
+        Vector3 dir = to - from;
         dir.Normalize();
-
         obj.transform.up = dir;
 
-        obj.GetComponent<UISprite>().depth = 99;
-        TweenPosition.Begin(obj, _flyTime, _target + new Vector3(0, 0, -1));
+        TweenPosition.Begin(obj, _flyTime, to + new Vector3(0, 0, -1));
         Destroy(obj, _flyTime);
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Bow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
     public System.Action<CardLogic> ActionFinishEvent;
@@ -365,9 +381,11 @@ public class CardLogic : MonoBehaviour {
     {
         if (Data.Death)
         {
-            NeedEndCalculate = true;
+            EndCalculate();
             return;
         }
+
+        //print("Start calculatorAI: " + gameObject.GetInstanceID().ToString());
 
         mCalculatorAI = true;
         CardData data = Data;
@@ -464,7 +482,7 @@ public class CardLogic : MonoBehaviour {
 
     void EndCalculate()
     {
-        //print("End calculatorAI: " + gameObject.name);
+        //print("End calculatorAI: " + gameObject.GetInstanceID().ToString());
 
         mActionState = ActionState.None;
         mTargetObj = null;

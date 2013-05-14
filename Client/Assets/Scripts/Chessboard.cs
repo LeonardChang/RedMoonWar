@@ -40,6 +40,7 @@ public class Chessboard : MonoBehaviour {
         }
         {
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "char01";
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
@@ -51,6 +52,7 @@ public class Chessboard : MonoBehaviour {
         }
         {
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "char02";
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
@@ -62,6 +64,7 @@ public class Chessboard : MonoBehaviour {
         }
         {
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "char03";
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
@@ -72,9 +75,10 @@ public class Chessboard : MonoBehaviour {
             InitlizeChess(4, 0, id);
         }
 
-        for (int i = 0; i < 10; i++ )
+        for (int i = 0; i < 13; i++)
         {
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "char" + (i + 100).ToString("00");
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
@@ -296,13 +300,19 @@ public class Chessboard : MonoBehaviour {
             foreach (int id in mTempChessList.Keys)
             {
                 CardLogic obj = mChessList[id];
-                if (obj.Data.EnemyAI == AIType.Slime)
+                switch (obj.Data.EnemyAI)
                 {
-                    CardData target = GameLogic.Instance.GetActionTarget(obj.Data, PhaseType.Charactor);
-                    if (target == null && Random.Range(0, 100) < 33)
-                    {
-                        EnemyTryMove(obj, Random.Range(-1, 2), Random.Range(-1, 2));
-                    }
+                    case AIType.NPC:
+                    case AIType.Retarded:
+                    case AIType.Slime:
+                        {
+                            CardData target = GameLogic.Instance.GetActionTarget(obj.Data, PhaseType.Charactor);
+                            if (target == null && Random.Range(0, 100) < 33)
+                            {
+                                EnemyTryMove(obj, Random.Range(-1, 2), Random.Range(-1, 2));
+                            }
+                        }
+                        break;
                 }
 
                 needDeletes.Add(id);
