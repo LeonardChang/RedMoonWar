@@ -226,7 +226,7 @@ public class Chessboard : MonoBehaviour {
                 int x = data.X + _xOffset;
                 int y = data.Y + _yOffset;
 
-                if (x < 0 || x >= mWidth || y < 0 || y >= mHeight || y < mBottomLine || y > mBottomLine + 7)
+                if (x < 0 || x >= mWidth || y < 0 || y >= mHeight)
                 {
                     needDeletes.Add(id);
                 }

@@ -343,4 +343,26 @@ public class GameLogic : MonoBehaviour {
 
         return null;
     }
+
+    public IEnumerable<CardData> GetActionTargets(CardData _selfData, PhaseType _targetPhase, bool _containSelf)
+    {
+        for (int i = _selfData.X - _selfData.ActionRange; i <= _selfData.X + _selfData.ActionRange; i++)
+        {
+            for (int j = _selfData.Y - _selfData.ActionRange; j <= _selfData.Y + _selfData.ActionRange; j++)
+            {
+                if (!_containSelf && i == _selfData.X && j == _selfData.Y)
+                {
+                    continue;
+                }
+
+                CardLogic chess = GameChessboard.GetChess(i, j);
+                if (chess != null
+                    && chess.Data.Phase == _targetPhase
+                    && !chess.Data.Death)
+                {
+                    yield return chess.Data;
+                }
+            }
+        }
+    }
 }
