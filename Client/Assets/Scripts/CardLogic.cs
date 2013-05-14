@@ -191,7 +191,7 @@ public class CardLogic : MonoBehaviour {
                     if (mTargetObj != null)
                     {
                         mWaitingDamage = true;
-                        CreateArrowEffect(mTargetObj.gameObject.transform.localPosition, 3.35f);
+                        CreateArrowEffect(mTargetObj.gameObject.transform.localPosition, 3.35f, mTargetObj.gameObject);
                         Invoke("DoDamage", 3.35f);
                         NeedEndCalculate = true;
                     }
@@ -320,7 +320,7 @@ public class CardLogic : MonoBehaviour {
         label.color = new Color(0.2f, 1, 0.2f);
     }
 
-    public void CreateArrowEffect(Vector3 _target, float _flyTime)
+    public void CreateArrowEffect(Vector3 _target, float _flyTime,GameObject _targetObj)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/Arrow", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -328,10 +328,12 @@ public class CardLogic : MonoBehaviour {
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
         obj.transform.localScale = new Vector3(9, 50, 1);
 
-        //Vector3 from = gameObject.transform.localPosition;
-        //Vector3 to = _target;
-        //to.z = from.z;
-        //obj.transform.localEulerAngles = Quaternion.LookRotation(to - from).eulerAngles;
+        Vector3 position = transform.localPosition;
+        Vector3 tar = _targetObj.transform.localPosition;
+        Vector3 dir = tar - position;
+        dir.Normalize();
+
+        obj.transform.up = dir;
 
         obj.GetComponent<UISprite>().depth = 99;
         TweenPosition.Begin(obj, _flyTime, _target + new Vector3(0, 0, -1));
