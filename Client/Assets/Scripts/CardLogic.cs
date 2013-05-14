@@ -150,9 +150,42 @@ public class CardLogic : MonoBehaviour {
         {
             if (mTargetObj != null)
             {
-                int damage = CalculatorDamage(SelfData, mTargetObj.GetComponent<CardData>());
-                mTargetObj.GetComponent<CardData>().HP -= damage;
-                mTargetObj.GetComponent<CardLogic>().CreateHitEffect(damage);
+                // 计算伤害
+                int damage = CalculateDamage(Data, mTargetObj.GetComponent<CardData>());
+                mTargetObj.Data.HP -= damage;
+
+                // 记录仇恨
+                if (mTargetObj.Data.LastAttackerID == Data.ID)
+                {
+                    // 上次也是哥揍的
+                    if (mTargetObj.Data.AttackerHatred < Data.Hatred)
+                    {
+                        mTargetObj.Data.AttackerHatred = Data.Hatred;
+                    }
+                    else
+                    {
+                        mTargetObj.Data.AttackerHatred += (int)(Data.Hatred * 0.2f);
+                    }
+                    mTargetObj.Data.LastAttackerID = Data.ID;
+                }
+                else if (mTargetObj.Data.LastAttackerID != -1)
+                {
+                    // 上次是被其他人揍的
+                    mTargetObj.Data.AttackerHatred -= Data.Hatred;
+                    if (mTargetObj.Data.AttackerHatred <= 0)
+                    {
+                        mTargetObj.Data.AttackerHatred = Data.Hatred;
+                        mTargetObj.Data.LastAttackerID = Data.ID;
+                    }
+                }
+                else
+                {
+                    // 还没被人揍过
+                    mTargetObj.Data.AttackerHatred = Data.Hatred;
+                    mTargetObj.Data.LastAttackerID = Data.ID;
+                }
+                
+                mTargetObj.CreateHitEffect(damage);
             }
         }
         else if (_event == "StartSkill")
@@ -165,21 +198,26 @@ public class CardLogic : MonoBehaviour {
         {
             if (mCalculatorAI)
             {
-                EndCalculator();
+                EndCalculate();
             }
 
-            if (SelfData.Death)
+            if (Data.Death)
             {
                 gameObject.SetActiveRecursively(false);
             }
         }
     }
 
-    CardData SelfData
+    CardData mData = null;
+    public CardData Data
     {
         get
         {
-            return gameObject.GetComponent<CardData>();
+            if (mData == null)
+            {
+                mData = gameObject.GetComponent<CardData>();
+            }
+            return mData;
         }
     }
 
@@ -205,14 +243,20 @@ public class CardLogic : MonoBehaviour {
 
     public System.Action<CardLogic> ActionFinishEvent;
 
-    GameObject mTargetObj = null;
+    CardLogic mTargetObj = null;
     bool mCalculatorAI = false;
-    public void CalculatorAI()
+    public void CalculateAI()
     {
         //print("Start calculatorAI: " + gameObject.name);
 
+        if (Data.Death)
+        {
+            EndCalculate();
+            return;
+        }
+
         mCalculatorAI = true;
-        CardData data = SelfData;
+        CardData data = Data;
         if (data.Phase == PhaseType.Charactor)
         {
             switch (data.CardAction)
@@ -225,27 +269,43 @@ public class CardLogic : MonoBehaviour {
                         CardData enemy = GetActionTarget(PhaseType.Enemy);
                         if (enemy != null)
                         {
-                            mTargetObj = enemy.gameObject;
+                            mTargetObj = enemy.Logic;
                             PlayAnimation(CharAnimationState.Attack);
                         }
                         else
                         {
-                            EndCalculator();
+                            EndCalculate();
                         }
                     }
                     break;
                 default:
-                    EndCalculator();
+                    EndCalculate();
                     break;
             }
         }
         else
         {
-            EndCalculator();
+            if (Data.EnemyAI == AIType.Slime)
+            {
+                CardData enemy = GetActionTarget(PhaseType.Charactor);
+                if (enemy != null)
+                {
+                    mTargetObj = enemy.Logic;
+                    PlayAnimation(CharAnimationState.Attack);
+                }
+                else
+                {
+                    EndCalculate();
+                }
+            }
+            else
+            {
+                EndCalculate();
+            }
         }
     }
 
-    void EndCalculator()
+    void EndCalculate()
     {
         //print("End calculatorAI: " + gameObject.name);
 
@@ -257,12 +317,12 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
-    CardData GetActionTarget(PhaseType _targetPhase)
+    public CardData GetActionTarget(PhaseType _targetPhase)
     {
-        return GameLogic.Instance.GetActionTarget(SelfData, _targetPhase);
+        return GameLogic.Instance.GetActionTarget(Data, _targetPhase);
     }
 
-    int CalculatorDamage(CardData _from, CardData _target)
+    int CalculateDamage(CardData _from, CardData _target)
     {
         return (int)((_from.Atk - _target.Def * 0.5f) * 2);
     }

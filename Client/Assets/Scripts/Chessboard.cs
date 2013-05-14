@@ -14,7 +14,7 @@ public class Chessboard : MonoBehaviour {
     public Transform GameMap;
 
     [HideInInspector]
-    public Dictionary<int, GameObject> mChessList = new Dictionary<int, GameObject>();
+    public Dictionary<int, CardLogic> mChessList = new Dictionary<int, CardLogic>();
 
     private int mBottomLine = 0;
 
@@ -32,11 +32,10 @@ public class Chessboard : MonoBehaviour {
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(id, ClassType.WaterSaber, PhaseType.Charactor);
 
-            CardData data = card.GetComponent<CardData>();
-            data.ResetAllData(ClassType.WaterSaber, PhaseType.Charactor);
-
-            mChessList.Add(id, card);
+            mChessList.Add(id, logic);
             InitlizeChess(1, 0, id);
         }
         {
@@ -44,11 +43,10 @@ public class Chessboard : MonoBehaviour {
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(id, ClassType.SLMGirl, PhaseType.Charactor);
 
-            CardData data = card.GetComponent<CardData>();
-            data.ResetAllData(ClassType.SLMGirl, PhaseType.Charactor);
-
-            mChessList.Add(id, card);
+            mChessList.Add(id, logic);
             InitlizeChess(2, 0, id);
         }
         {
@@ -56,11 +54,10 @@ public class Chessboard : MonoBehaviour {
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(id, ClassType.LightPastor, PhaseType.Charactor);
 
-            CardData data = card.GetComponent<CardData>();
-            data.ResetAllData(ClassType.LightPastor, PhaseType.Charactor);
-
-            mChessList.Add(id, card);
+            mChessList.Add(id, logic);
             InitlizeChess(3, 0, id);
         }
         {
@@ -68,11 +65,10 @@ public class Chessboard : MonoBehaviour {
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(id, ClassType.GreenArrow, PhaseType.Charactor);
 
-            CardData data = card.GetComponent<CardData>();
-            data.ResetAllData(ClassType.GreenArrow, PhaseType.Charactor);
-
-            mChessList.Add(id, card);
+            mChessList.Add(id, logic);
             InitlizeChess(4, 0, id);
         }
 
@@ -82,11 +78,10 @@ public class Chessboard : MonoBehaviour {
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(id, (ClassType)Random.Range(0, (int)ClassType.Max), PhaseType.Enemy);
 
-            CardData data = card.GetComponent<CardData>();
-            data.ResetAllData((ClassType)Random.Range(0, (int)ClassType.Max), PhaseType.Enemy);
-
-            mChessList.Add(id, card);
+            mChessList.Add(id, logic);
             InitlizeChess(Random.Range(0, 6), 10 + i * 3, id);
         }
 
@@ -103,6 +98,16 @@ public class Chessboard : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    bool mNeedRefresh = false;
+    void LateUpdate()
+    {
+        if (mNeedRefresh)
+        {
+            mNeedRefresh = false;
+            Refresh(false);
+        }
+    }
 
     void Initlize(int _width, int _height)
     {
@@ -130,20 +135,34 @@ public class Chessboard : MonoBehaviour {
         }
 
         mChessboardData[_x, _y] = _id;
-        mChessList[_id].GetComponent<CardData>().SetPosition(_x, _y);
+        mChessList[_id].Data.SetPosition(_x, _y);
 
         return true;
     }
 
-    Dictionary<int, GameObject> mTempChessList = new Dictionary<int, GameObject>();
+    Dictionary<int, CardLogic> mTempChessList = new Dictionary<int, CardLogic>();
     void GetAllSelectCharactor()
     {
         mTempChessList.Clear();
         foreach (int id in mChessList.Keys)
         {
-            GameObject obj = mChessList[id];
-            CardData data = obj.GetComponent<CardData>();
-            if (data.Phase == PhaseType.Charactor && !data.Death && obj.GetComponent<CardLogic>().IsSelect)
+            CardLogic obj = mChessList[id];
+            CardData data = obj.Data;
+            if (data.Phase == PhaseType.Charactor && !data.Death && obj.IsSelect)
+            {
+                mTempChessList.Add(id, obj);
+            }
+        }
+    }
+
+    void GetAllEnemt()
+    {
+        mTempChessList.Clear();
+        foreach (int id in mChessList.Keys)
+        {
+            CardLogic obj = mChessList[id];
+            CardData data = obj.Data;
+            if (data.Phase == PhaseType.Enemy && !data.Death)
             {
                 mTempChessList.Add(id, obj);
             }
@@ -201,9 +220,9 @@ public class Chessboard : MonoBehaviour {
 
             foreach (int id in mTempChessList.Keys)
             {
-                GameObject obj = mChessList[id];
+                CardLogic obj = mChessList[id];
 
-                CardData data = obj.GetComponent<CardData>();
+                CardData data = obj.Data;
                 int x = data.X + _xOffset;
                 int y = data.Y + _yOffset;
 
@@ -211,7 +230,7 @@ public class Chessboard : MonoBehaviour {
                 {
                     needDeletes.Add(id);
                 }
-                else if (mChessboardData[x, y] == -1 || mChessList[mChessboardData[x, y]].GetComponent<CardData>().Death)
+                else if (mChessboardData[x, y] == -1 || mChessList[mChessboardData[x, y]].Data.Death)
                 {
                     mChessboardData[x, y] = mChessboardData[data.X, data.Y];
                     mChessboardData[data.X, data.Y] = -1;
@@ -240,7 +259,69 @@ public class Chessboard : MonoBehaviour {
         }
 
         mTempChessList.Clear();
-        Refresh(false);
+        mNeedRefresh = true;
+    }
+
+    void EnemyTryMove(CardLogic _logic, int _xOffset, int _yOffset)
+    {
+        if (_xOffset == 0 && _yOffset == 0)
+        {
+            return;
+        }
+
+        CardData data = _logic.Data;
+        int x = data.X + _xOffset;
+        int y = data.Y + _yOffset;
+
+        if (x < 0 || x >= mWidth || y < 0 || y >= mHeight)
+        {
+        }
+        else if (mChessboardData[x, y] == -1 || mChessList[mChessboardData[x, y]].Data.Death)
+        {
+            mChessboardData[x, y] = mChessboardData[data.X, data.Y];
+            mChessboardData[data.X, data.Y] = -1;
+            data.SetPosition(x, y);
+        }
+    }
+
+    public void AllEmemyMove()
+    {
+        GetAllEnemt();
+        while (mTempChessList.Keys.Count > 0)
+        {
+            int count = mTempChessList.Keys.Count;
+            int notDealNumber = 0;
+            List<int> needDeletes = new List<int>();
+
+            foreach (int id in mTempChessList.Keys)
+            {
+                CardLogic obj = mChessList[id];
+                if (obj.Data.EnemyAI == AIType.Slime)
+                {
+                    CardData target = GameLogic.Instance.GetActionTarget(obj.Data, PhaseType.Charactor);
+                    if (target == null && Random.Range(0, 100) < 33)
+                    {
+                        EnemyTryMove(obj, Random.Range(-1, 2), Random.Range(-1, 2));
+                    }
+                }
+
+                needDeletes.Add(id);
+            }
+
+            foreach (int id in needDeletes)
+            {
+                mTempChessList.Remove(id);
+            }
+            needDeletes.Clear();
+
+            if (count == notDealNumber)
+            {
+                break;
+            }
+        }
+
+        mTempChessList.Clear();
+        mNeedRefresh = true;
     }
 
     const float RectSize = 82.0f;
@@ -253,7 +334,7 @@ public class Chessboard : MonoBehaviour {
                 if (mChessboardData[i, j] != -1)
                 {
                     int id = mChessboardData[i, j];
-                    GameObject chess = mChessList[id];
+                    GameObject chess = mChessList[id].gameObject;
 
                     Vector3 target = new Vector3((float)(i - 2) * RectSize - RectSize * 0.5f + 3, (j + 3) * RectSize + 3, 0);
                     if (_init)
@@ -298,8 +379,8 @@ public class Chessboard : MonoBehaviour {
         int bottomline = 99999;
         foreach (int id in mChessList.Keys)
         {
-            GameObject obj = mChessList[id];
-            CardData data = obj.GetComponent<CardData>();
+            CardLogic obj = mChessList[id];
+            CardData data = obj.Data;
             if (data.Phase == PhaseType.Charactor && !data.Death)
             {
                 if (data.Y > topline)
@@ -325,7 +406,7 @@ public class Chessboard : MonoBehaviour {
         }
     }
 
-    public GameObject GetChess(int _x, int _y)
+    public CardLogic GetChess(int _x, int _y)
     {
         if (_x < 0 || _x >= mWidth || _y < 0 || _y >= mHeight)
         {

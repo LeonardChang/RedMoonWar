@@ -16,7 +16,8 @@ public class GameLogic : MonoBehaviour {
 
     public UISprite MultipleBtnBack;
 
-    bool mLockControl = false;
+    int mRound = -1;
+    bool mCalculating = false;
 
     void Awake()
     {
@@ -25,13 +26,18 @@ public class GameLogic : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        BattleStart();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+    void BattleStart()
+    {
+        mRound = 0;
+    }
 
     void OnEnable()
     {
@@ -43,95 +49,130 @@ public class GameLogic : MonoBehaviour {
         GameChessboard.RefreshFinishEvent -= GameChessboardRefreshFinish;
     }
 
-    void ClickUp()
+    /// <summary>
+    /// 向上
+    /// </summary>
+    public void ClickUp()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoUp();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickDown()
+    /// <summary>
+    /// 向下
+    /// </summary>
+    public void ClickDown()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoDown();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickLeft()
+    /// <summary>
+    /// 向左
+    /// </summary>
+    public void ClickLeft()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoLeft();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickRight()
+    /// <summary>
+    /// 向右
+    /// </summary>
+    public void ClickRight()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoRight();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickUpLeft()
+    /// <summary>
+    /// 向左上
+    /// </summary>
+    public void ClickUpLeft()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoUpLeft();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickDownLeft()
+    /// <summary>
+    /// 向左下
+    /// </summary>
+    public void ClickDownLeft()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoDownLeft();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickUpRight()
+    /// <summary>
+    /// 向右上
+    /// </summary>
+    public void ClickUpRight()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoUpRight();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickDownRight()
+    /// <summary>
+    /// 向右下
+    /// </summary>
+    public void ClickDownRight()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
+        mCalculating = true;
         GameChessboard.GoDownRight();
+        GameChessboard.AllEmemyMove();
     }
 
-    void ClickAll()
+    /// <summary>
+    /// 全选或全取消
+    /// </summary>
+    public void ClickAll()
     {
         if (IsAnyUnselect())
         {
@@ -143,7 +184,10 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
-    void SelectAll()
+    /// <summary>
+    /// 全选
+    /// </summary>
+    public void SelectAll()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
         {
@@ -151,6 +195,9 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 全取消
+    /// </summary>
     public void UnselectAll()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
@@ -177,15 +224,19 @@ public class GameLogic : MonoBehaviour {
         return false;
     }
 
-    void ClickStay()
+    /// <summary>
+    /// 待机一回合
+    /// </summary>
+    public void ClickStay()
     {
-        if (mLockControl)
+        if (mCalculating)
         {
             return;
         }
 
-        mLockControl = true;
-        CalculatorAI();
+        mCalculating = true;
+        GameChessboard.AllEmemyMove();
+        //CalculateAI();
     }
 
     private bool mIsMultiple = false;
@@ -202,18 +253,18 @@ public class GameLogic : MonoBehaviour {
 
     void GameChessboardRefreshFinish(int _bottomLine)
     {
-        CalculatorAI();
+        CalculateAI();
     }
 
-    List<GameObject> mAIActionList = new List<GameObject>();
-    void CalculatorAI()
+    List<CardLogic> mAIActionList = new List<CardLogic>();
+    void CalculateAI()
     {
         mAIActionList.Clear();
 
-        Dictionary<int, GameObject> list = GameChessboard.mChessList;
+        Dictionary<int, CardLogic> list = GameChessboard.mChessList;
         foreach (int id in list.Keys)
         {
-            GameObject obj = list[id];
+            CardLogic obj = list[id];
             mAIActionList.Add(obj);
         }
 
@@ -225,16 +276,17 @@ public class GameLogic : MonoBehaviour {
         int fastID = GetFastCharactor();
         if (fastID != -1)
         {
-            CardLogic data = mAIActionList[fastID].GetComponent<CardLogic>();
+            CardLogic data = mAIActionList[fastID];
             mAIActionList.RemoveAt(fastID);
+            
             data.ActionFinishEvent += AIActionFinishCallback;
-            data.CalculatorAI();
+            data.CalculateAI();
 
             fastID = GetFastCharactor();
         }
         else
         {
-            mLockControl = false;
+            mCalculating = false;
         }
     }
 
@@ -254,12 +306,12 @@ public class GameLogic : MonoBehaviour {
         int fastID = -1;
         for (int i = 0; i < mAIActionList.Count; i++ )
         {
-            CardData data = mAIActionList[i].GetComponent<CardData>();
+            CardData data = mAIActionList[i].Data;
             if (fastID == -1)
             {
                 fastID = i;
             }
-            else if (data.Spd > mAIActionList[fastID].GetComponent<CardData>().Spd)
+            else if (data.Spd > mAIActionList[fastID].Data.Spd)
             {
                 fastID = i;
             }
@@ -279,12 +331,12 @@ public class GameLogic : MonoBehaviour {
                     continue;
                 }
 
-                GameObject chess = GameChessboard.GetChess(i, j);
+                CardLogic chess = GameChessboard.GetChess(i, j);
                 if (chess != null
-                    && chess.GetComponent<CardData>().Phase == _targetPhase
-                    && !chess.GetComponent<CardData>().Death)
+                    && chess.Data.Phase == _targetPhase
+                    && !chess.Data.Death)
                 {
-                    return chess.GetComponent<CardData>();
+                    return chess.Data;
                 }
             }
         }
