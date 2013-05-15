@@ -56,6 +56,9 @@ public class CardData : MonoBehaviour {
     private int mHPMax = 100;
     private int mHP = 100;
 
+    private int mMPMax = 100;
+    private int mMP = 100;
+
     private ActionType mCardAction = ActionType.NormalAttack;
     private int mActionRange = 1;
     private PhaseType mPhase = PhaseType.Charactor;
@@ -124,13 +127,53 @@ public class CardData : MonoBehaviour {
                 mHP = HPMax;
             }
 
-            Logic.RefreshBloodBar((float)mHP / HPMax);
+            UI.Blood = (float)mHP / HPMax;
 
             if (mHP == 0)
             {
                 mDeath = true;
                 Logic.RefreshToDeath();
             }
+        }
+    }
+
+    /// <summary>
+    /// 最大MP
+    /// </summary>
+    public int MPMax
+    {
+        get
+        {
+            return mMPMax;
+        }
+        set
+        {
+            mMPMax = value;
+        }
+    }
+
+    /// <summary>
+    /// 当前MP
+    /// </summary>
+    public int MP
+    {
+        get
+        {
+            return mMP;
+        }
+        set
+        {
+            mMP = value;
+            if (mMP < 0)
+            {
+                mMP = 0;
+            }
+            if (mMP > MPMax)
+            {
+                mMP = MPMax;
+            }
+
+            UI.Mana = (float)mMP / MPMax;
         }
     }
 
@@ -176,7 +219,7 @@ public class CardData : MonoBehaviour {
         set
         {
             mPhase = value;
-            Logic.RefreshPhase(mPhase);
+            UI.Phase = mPhase;
         }
     }
 
@@ -361,6 +404,19 @@ public class CardData : MonoBehaviour {
         }
     }
 
+    CardUI mUI = null;
+    public CardUI UI
+    {
+        get
+        {
+            if (mUI == null)
+            {
+                mUI = gameObject.GetComponent<CardUI>();
+            }
+            return mUI;
+        }
+    }
+
     void Awake()
     {
 
@@ -395,7 +451,7 @@ public class CardData : MonoBehaviour {
                 Spd = 58;
                 mHatred = 50;
 
-                gameObject.transform.FindChild("Card").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card001";
+                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card001";
                 break;
             case ClassType.FireMagic:
                 CardAction = ActionType.MagicAttack;
@@ -407,7 +463,7 @@ public class CardData : MonoBehaviour {
                 Spd = 56;
                 mHatred = 50;
 
-                gameObject.transform.FindChild("Card").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card002";
+                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card002";
                 break;
             case ClassType.GreenArrow:
                 HPMax = 86;
@@ -419,7 +475,7 @@ public class CardData : MonoBehaviour {
                 Spd = 59;
                 mHatred = 50;
 
-                gameObject.transform.FindChild("Card").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card003";
+                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card003";
                 break;
             case ClassType.SLMGirl:
                 HPMax = 88;
@@ -431,7 +487,7 @@ public class CardData : MonoBehaviour {
                 Spd = 56;
                 mHatred = 100;
 
-                gameObject.transform.FindChild("Card").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card004";
+                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card004";
                 break;
             case ClassType.LightPastor:
                 HPMax = 84;
@@ -443,7 +499,7 @@ public class CardData : MonoBehaviour {
                 Spd = 58;
                 mHatred = 50;
 
-                gameObject.transform.FindChild("Card").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card005";
+                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card005";
                 break;
             case ClassType.DarkGhost:
                 HPMax = 83;
@@ -455,7 +511,7 @@ public class CardData : MonoBehaviour {
                 Spd = 60;
                 mHatred = 50;
 
-                gameObject.transform.FindChild("Card").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card006";
+                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card006";
                 break;
         }
 

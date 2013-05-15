@@ -21,10 +21,7 @@ public enum ActionState
 }
 
 public class CardLogic : MonoBehaviour {
-    public GameObject SelectSprite;
-    public UISlider BloodBar;
     public Animation CardAnimation;
-    public UISprite BloodBarBackground;
     
     CharAnimationState mAnimationState = CharAnimationState.NotInit;
     ActionState mActionState = ActionState.None;
@@ -132,7 +129,7 @@ public class CardLogic : MonoBehaviour {
 
     void Refresh()
     {
-        SelectSprite.active = mSelect;
+        UI.Select = mSelect;
     }
 
     public void PlayAnimation(CharAnimationState _state)
@@ -282,6 +279,19 @@ public class CardLogic : MonoBehaviour {
                 mData = gameObject.GetComponent<CardData>();
             }
             return mData;
+        }
+    }
+
+    CardUI mUI = null;
+    public CardUI UI
+    {
+        get
+        {
+            if (mUI == null)
+            {
+                mUI = gameObject.GetComponent<CardUI>();
+            }
+            return mUI;
         }
     }
 
@@ -493,28 +503,37 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
-    int CalculateDamage(CardData _from, CardData _target)
+    /// <summary>
+    /// ÉËº¦¼ÆËã¹«Ê½
+    /// </summary>
+    /// <param name="_from"></param>
+    /// <param name="_target"></param>
+    /// <returns></returns>
+    public static int CalculateDamage(CardData _from, CardData _target)
     {
+        
         int damage = (int)((_from.Atk - _target.Def * 0.5f) * 2);
+
         if (damage < 1)
         {
             damage = 1;
         }
-        return damage;
-    }
 
-    public void RefreshBloodBar(float _progress)
-    {
-        BloodBar.sliderValue = _progress;
+        if ((_from.Element == ElementType.Fire && _target.Element == ElementType.Wind)
+            || (_from.Element == ElementType.Wind && _target.Element == ElementType.Ground)
+            || (_from.Element == ElementType.Ground && _target.Element == ElementType.Water)
+            || (_from.Element == ElementType.Water && _target.Element == ElementType.Fire)
+            || (_from.Element == ElementType.Light && _target.Element == ElementType.Dark)
+            || (_from.Element == ElementType.Dark && _target.Element == ElementType.Light))
+        {
+            damage *= 2;
+        }
+
+        return damage;
     }
 
     public void RefreshToDeath()
     {
         PlayAnimation(CharAnimationState.Death);
-    }
-
-    public void RefreshPhase(PhaseType _phase)
-    {
-        BloodBarBackground.spriteName = _phase == PhaseType.Charactor ? "Bloodbar01" : "Bloodbar02";
     }
 }
