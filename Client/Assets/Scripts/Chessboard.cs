@@ -27,63 +27,51 @@ public class Chessboard : MonoBehaviour {
         mChessList.Clear();
         Object perfab = Resources.Load("Cards/Perfabs/Card");
 
+        for (int i = 0; i < 5; i++)
         {
+            CharacterData data = CharacterManager.Instance.GetCharacter(i);
+
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "Char" + data.ID.ToString();
+
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
             CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(id, ClassType.WaterSaber, PhaseType.Charactor);
+            logic.Data.ResetAllData(PhaseType.Charactor, data);
 
             mChessList.Add(id, logic);
-            InitlizeChess(1, 0, id);
+            InitlizeChess(0 + i, 1, id);
         }
+
         {
+            CharacterData data = CharacterManager.Instance.CreateRandomCharactor(10000);
+
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "char01";
+            card.name = "Char" + data.ID.ToString();
+
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
             CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(id, ClassType.SLMGirl, PhaseType.Charactor);
+            logic.Data.ResetAllData(PhaseType.Charactor, data);
 
             mChessList.Add(id, logic);
-            InitlizeChess(2, 0, id);
-        }
-        {
-            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "char02";
-            card.transform.parent = CardRoot;
-            card.transform.localScale = Vector3.one;
-            int id = mChessList.Keys.Count;
-            CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(id, ClassType.LightPastor, PhaseType.Charactor);
-
-            mChessList.Add(id, logic);
-            InitlizeChess(3, 0, id);
-        }
-        {
-            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "char03";
-            card.transform.parent = CardRoot;
-            card.transform.localScale = Vector3.one;
-            int id = mChessList.Keys.Count;
-            CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(id, ClassType.GreenArrow, PhaseType.Charactor);
-
-            mChessList.Add(id, logic);
-            InitlizeChess(4, 0, id);
+            InitlizeChess(5, 1, id);
         }
 
         for (int i = 0; i < 13; i++)
         {
+            CharacterData data = CharacterManager.Instance.CreateRandomCharactor(10001 + i);
+
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "char" + (i + 100).ToString("00");
+            card.name = "Char" + data.ID.ToString();
+
             card.transform.parent = CardRoot;
             card.transform.localScale = Vector3.one;
             int id = mChessList.Keys.Count;
             CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(id, (ClassType)Random.Range(0, (int)ClassType.Max), PhaseType.Enemy);
+            logic.Data.ResetAllData(PhaseType.Enemy, data);
 
             mChessList.Add(id, logic);
             InitlizeChess(Random.Range(0, 6), 10 + i * 3, id);
@@ -306,7 +294,7 @@ public class Chessboard : MonoBehaviour {
                     case AIType.Retarded:
                     case AIType.Slime:
                         {
-                            CardData target = GameLogic.Instance.GetActionTarget(obj.Data, PhaseType.Charactor);
+                            CardData target = GameLogic.Instance.GetActionTarget(obj.Data, obj.Data.NormalAttack);
                             if (target == null && Random.Range(0, 100) < 33)
                             {
                                 EnemyTryMove(obj, Random.Range(-1, 2), Random.Range(-1, 2));

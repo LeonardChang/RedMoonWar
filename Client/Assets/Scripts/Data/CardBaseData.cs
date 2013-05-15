@@ -18,6 +18,8 @@ public class CardBaseData
 {
     private int mID = 0;
 
+    private string mName = "";
+
     private float mBaseHP = 100;
     private float mBaseMP = 100;
     private float mBaseAtk = 100;
@@ -39,10 +41,14 @@ public class CardBaseData
     private int mLeaderSkillID = -1;
 
     private int mMaxLevel = 99;
-    private int mMaxSkillLevel = 6;
 
     private GrowType mGrowType = GrowType.TypeA;
     private ElementType mElementType = ElementType.Fire;
+
+    public CardBaseData(string _init)
+    {
+        Initialize(_init);
+    }
 
     /// <summary>
     /// 卡片ID
@@ -50,6 +56,14 @@ public class CardBaseData
     public int ID
     {
         get { return mID; }
+    }
+
+    /// <summary>
+    /// 名称
+    /// </summary>
+    public string Name
+    {
+        get { return mName; }
     }
 
     /// <summary>
@@ -189,14 +203,6 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// 最大技能等级
-    /// </summary>
-    public int MaxSkillLevel
-    {
-        get { return mMaxSkillLevel; }
-    }
-
-    /// <summary>
     /// 成长类型
     /// </summary>
     public GrowType Grow
@@ -210,6 +216,45 @@ public class CardBaseData
     public ElementType Element
     {
         get { return mElementType; }
+    }
+
+    void Initialize(string _str)
+    {       
+        string[] list = _str.Split(',');
+        if (list.Length != 21)
+        {
+            Debug.LogError("Error Card base data: " + _str);
+            return;
+        }
+
+        try
+        {
+            mID = int.Parse(list[0]);
+            mName = list[1];
+            mElementType = (ElementType)int.Parse(list[2]);
+            mBaseHP = int.Parse(list[3]);
+            mGrowHP = int.Parse(list[4]);
+            mBaseMP = int.Parse(list[5]);
+            mGrowMP = int.Parse(list[6]);
+            mBaseAtk = int.Parse(list[7]);
+            mGrowAtk = int.Parse(list[8]);
+            mBaseDef = int.Parse(list[9]);
+            mGrowDef = int.Parse(list[10]);
+            mBaseSpd = int.Parse(list[11]);
+            mGrowSpd = int.Parse(list[12]);
+            mCardSprite = list[13];
+            mStarCount = int.Parse(list[14]);
+            mEquipCost = int.Parse(list[15]);
+            mSkillID = int.Parse(list[16]);
+            mLeaderSkillID = int.Parse(list[17]);
+            mNormalAttackSkillID = int.Parse(list[18]);
+            mMaxLevel = int.Parse(list[19]);
+            mGrowType = (GrowType)int.Parse(list[20]);
+        }
+        catch (System.FormatException ex)
+        {
+            Debug.LogError("Error Card base data: " + ex.Message);
+        }
     }
 }
 
@@ -243,7 +288,20 @@ public class CardManager
 
     public CardManager()
     {
+        mCardDatas.Clear();
 
+        TextAsset text = Resources.Load("Datas/CardBaseData", typeof(TextAsset)) as TextAsset;
+        string[] line = text.text.Split('\n');
+        for (int i = 0; i < line.Length; i++ )
+        {
+            if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            {
+                continue;
+            }
+
+            CardBaseData data = new CardBaseData(line[i]);
+            mCardDatas[data.ID] = data;
+        }
     }
 
     /// <summary>

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public class CharacterData 
 {
-    private int mID = 0;
+    private System.Int64 mID = 0;
 
     private int mMaxHP = 100;
     private int mMaxMP = 100;
@@ -20,12 +20,15 @@ public class CharacterData
     private int mLevel = 1;
     private int mSkillLevel = 1;
 
+    private System.DateTime mGetDate = System.DateTime.Now;
+
     /// <summary>
     /// 卡片ID
     /// </summary>
-    public int ID
+    public System.Int64 ID
     {
         get { return mID; }
+        set { mID = value; }
     }
 
     /// <summary>
@@ -34,6 +37,7 @@ public class CharacterData
     public int MaxHP
     {
         get { return mMaxHP; }
+        set { mMaxHP = value; }
     }
 
     /// <summary>
@@ -42,6 +46,7 @@ public class CharacterData
     public int MaxMP
     {
         get { return mMaxMP; }
+        set { mMaxMP = value; }
     }
 
     /// <summary>
@@ -50,6 +55,7 @@ public class CharacterData
     public int Atk
     {
         get { return mAtk; }
+        set { mAtk = value; }
     }
 
     /// <summary>
@@ -58,6 +64,7 @@ public class CharacterData
     public int Def
     {
         get { return mDef; }
+        set { mDef = value; }
     }
 
     /// <summary>
@@ -66,6 +73,7 @@ public class CharacterData
     public int Spd
     {
         get { return mSpd; }
+        set { mSpd = value; }
     }
 
     /// <summary>
@@ -74,6 +82,7 @@ public class CharacterData
     public int CardID
     {
         get { return mCardID; }
+        set { mCardID = value; }
     }
 
     /// <summary>
@@ -82,6 +91,7 @@ public class CharacterData
     public int Level
     {
         get { return mLevel; }
+        set { mLevel = value; }
     }
     
     /// <summary>
@@ -90,6 +100,16 @@ public class CharacterData
     public int SkillLevel
     {
         get { return mSkillLevel; }
+        set { mSkillLevel = value; }
+    }
+
+    /// <summary>
+    /// 获得日期
+    /// </summary>
+    public System.DateTime GetDate
+    {
+        get { return mGetDate; }
+        set { mGetDate = value; }
     }
 }
 
@@ -119,11 +139,34 @@ public class CharacterManager
         }
     }
 
-    private Dictionary<int, CharacterData> mCharacterDatas = new Dictionary<int, CharacterData>();
+    private Dictionary<System.Int64, CharacterData> mCharacterDatas = new Dictionary<System.Int64, CharacterData>();
 
     public CharacterManager()
     {
+        for (int i = 0; i < 5; i++ )
+        {
+            CharacterData data = CreateRandomCharactor(i);
+            mCharacterDatas[data.ID] = data;
+        }
+    }
 
+    public CharacterData CreateRandomCharactor(System.Int64 _id)
+    {
+        CharacterData data = new CharacterData();
+        data.ID = _id;
+        data.CardID = Random.Range(1, 7);
+        data.Level = 1;
+        data.SkillLevel = 1;
+        data.GetDate = System.DateTime.Now;
+        
+        CardBaseData carddata = CardManager.Instance.GetCard(data.CardID);
+        data.MaxHP = (int)carddata.BaseHP;
+        data.MaxMP = (int)carddata.BaseMP;
+        data.Atk = (int)carddata.BaseAtk;
+        data.Def = (int)carddata.BaseDef;
+        data.Spd = (int)carddata.BaseSpd;
+        
+        return data;
     }
 
     /// <summary>
@@ -131,7 +174,7 @@ public class CharacterManager
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
-    public CharacterData GetCharacter(int _id)
+    public CharacterData GetCharacter(System.Int64 _id)
     {
         if (!mCharacterDatas.ContainsKey(_id))
         {

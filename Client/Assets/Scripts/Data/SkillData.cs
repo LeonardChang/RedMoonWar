@@ -5,26 +5,18 @@ using System.Collections.Generic;
 public enum AttackAnimType : int
 {
     Normal = 0,
-    Arrow,
-    FireBall,
-    IceBall,
-    WindBall,
-    StoneBall,
-    LightBall,
-    DarkBall,
-    CannonBall,
+    Arrow = 1,
+    FireBall = 2,
+    IceBall = 3,
+    WindBall = 4,
+    StoneBall = 5,
+    LightBall = 6,
+    DarkBall = 7,
+    CannonBall = 8,
 
-    HPHealth,
-    MPHealth,
+    HPHealth = 9,
+    MPHealth = 10,
 
-    Max,
-}
-
-public enum AttackActionType : int
-{
-    Attack = 0,
-    Skill,
-    
     Max,
 }
 
@@ -54,24 +46,14 @@ public class SkillData
     private int mManaCost = 10;
     private int mHatred = 100;
 
+    private int mMaxLevel = 6;
+
     private AttackTargetType mTargetPhase = AttackTargetType.Ememy;
     private AttackAnimType mAttackAnim = AttackAnimType.Normal;
-    private AttackActionType mAttackAction = AttackActionType.Attack;
 
-    public SkillData(int _ID, string _Name, float _MultiplyDamage, int _FixedDamage, int _Range, int _Count, int _AddBuff, int _ManaCost, AttackTargetType _TargetPhase, AttackAnimType _AttackAnim, AttackActionType _AttackAction, int _Hatred)
+    public SkillData(string _init)
     {
-        mID = _ID;
-        mName = _Name;
-        mMultiplyDamage = _MultiplyDamage;
-        mFixedDamage = _FixedDamage;
-        mRange = _Range;
-        mCount = _Count;
-        mAddBuff = _AddBuff;
-        mManaCost = _ManaCost;
-        mTargetPhase = _TargetPhase;
-        mAttackAnim = _AttackAnim;
-        mAttackAction = _AttackAction;
-        mHatred = _Hatred;
+        Initialize(_init);
     }
 
     /// <summary>
@@ -196,13 +178,43 @@ public class SkillData
     }
 
     /// <summary>
-    /// 是普通攻击还是技能
+    /// 最大等级
     /// </summary>
-    public AttackActionType AttackAction
+    public int MaxLevel
     {
         get
         {
-            return mAttackAction;
+            return mMaxLevel;
+        }
+    }
+
+    void Initialize(string _str)
+    {
+        string[] list = _str.Split(',');
+        if (list.Length != 12)
+        {
+            Debug.LogError("Error Skill data: " + _str);
+            return;
+        }
+
+        try
+        {
+            mID = int.Parse(list[0]);
+            mName = list[1];
+            mMultiplyDamage = float.Parse(list[2]);
+            mFixedDamage = int.Parse(list[3]);
+            mRange = int.Parse(list[4]);
+            mCount = int.Parse(list[5]);
+            mAddBuff = int.Parse(list[6]);
+            mManaCost = int.Parse(list[7]);
+            mHatred = int.Parse(list[8]);
+            mMaxLevel = int.Parse(list[9]);
+            mTargetPhase = (AttackTargetType)int.Parse(list[10]);
+            mAttackAnim = (AttackAnimType)int.Parse(list[11]);
+        }
+        catch (System.FormatException ex)
+        {
+            Debug.LogError("Error Skill data: " + ex.Message);
         }
     }
 }
@@ -239,56 +251,18 @@ public class SkillManager
     {
         mSkillDatas.Clear();
 
-        int id = 0;
+        TextAsset text = Resources.Load("Datas/SkillData", typeof(TextAsset)) as TextAsset;
+        string[] line = text.text.Split('\n');
+        for (int i = 0; i < line.Length; i++)
+        {
+            if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            {
+                continue;
+            }
 
-        // 0
-        SkillData skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.Normal, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 1
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.Arrow, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 2
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.FireBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 3
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.IceBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 4
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.WindBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 5
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.StoneBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 6 
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.LightBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 7
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.DarkBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 8
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 1, 0, 1, 1, -1, 0, AttackTargetType.Ememy, AttackAnimType.CannonBall, AttackActionType.Attack, 50);
-        mSkillDatas[skill.ID] = skill;
-
-        // 9
-        id += 1;
-        skill = new SkillData(id, "Skill" + id.ToString("000"), 0, 20, 1, 1, -1, 30, AttackTargetType.Team, AttackAnimType.HPHealth, AttackActionType.Skill, 50);
-        mSkillDatas[skill.ID] = skill;
+            SkillData data = new SkillData(line[i]);
+            mSkillDatas[data.ID] = data;
+        }
     }
 
     /// <summary>

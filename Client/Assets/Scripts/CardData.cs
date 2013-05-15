@@ -1,14 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-public enum ActionType : int
-{
-    NormalAttack = 0,
-    MagicAttack,
-    ArrowAttack,
-    Health,
-}
-
 public enum PhaseType : int
 {
     Charactor = 0,
@@ -25,18 +17,6 @@ public enum ElementType : int
     Dark,
 }
 
-public enum ClassType : int
-{
-    WaterSaber = 0,
-    FireMagic,
-    GreenArrow,
-    SLMGirl,
-    LightPastor,
-    DarkGhost,
-
-    Max,
-}
-
 public enum AIType : int 
 {
     NPC,        // 随机闲逛，不攻击范围内的敌人，不追击仇恨对象
@@ -51,24 +31,9 @@ public enum AIType : int
 }
 
 public class CardData : MonoBehaviour {
-    private int mID = -1;
-
-    private int mHPMax = 100;
     private int mHP = 100;
-
-    private int mMPMax = 100;
     private int mMP = 0;
-
-    private ActionType mCardAction = ActionType.NormalAttack;
-    private int mActionRange = 1;
     private PhaseType mPhase = PhaseType.Charactor;
-    private ElementType mElement = ElementType.Fire;
-    private ClassType mClass = ClassType.WaterSaber;
-
-    private int mAtk = 100;
-    private int mDef = 100;
-    private int mSpd = 100;
-    private int mHatred = 100;
 
     private int mX = 0;
     private int mY = 0;
@@ -77,17 +42,17 @@ public class CardData : MonoBehaviour {
 
     private AIType mEnemyAI = AIType.Slime;
 
-    private int mLastAttackerID = -1;
+    private System.Int64 mLastAttackerID = -1;
     private int mAttackerHatred = 0;
 
     /// <summary>
     /// 棋子在棋盘中的ID
     /// </summary>
-    public int ID
+    public System.Int64 ID
     {
         get
         {
-            return mID;
+            return mCharacterData.ID;
         }
     }
 
@@ -98,11 +63,7 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mHPMax;
-        }
-        set
-        {
-            mHPMax = value;
+            return mCharacterData.MaxHP;
         }
     }
 
@@ -144,11 +105,7 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mMPMax;
-        }
-        set
-        {
-            mMPMax = value;
+            return mCharacterData.MaxMP;
         }
     }
 
@@ -178,32 +135,38 @@ public class CardData : MonoBehaviour {
     }
 
     /// <summary>
-    /// 行动类型
+    /// 普通攻击
     /// </summary>
-    public ActionType CardAction
+    public SkillData NormalAttack
     {
         get
         {
-            return mCardAction;
-        }
-        set
-        {
-            mCardAction = value;
+            CardBaseData carddata = CardManager.Instance.GetCard(mCharacterData.CardID);
+            return SkillManager.Instance.GetSkill(carddata.NormalAttackSkillID);
         }
     }
 
     /// <summary>
-    /// 行动范围
+    /// 技能
     /// </summary>
-    public int ActionRange
+    public SkillData Skill
     {
         get
         {
-            return mActionRange;
+            CardBaseData carddata = CardManager.Instance.GetCard(mCharacterData.CardID);
+            return SkillManager.Instance.GetSkill(carddata.SkillID);
         }
-        set
+    }
+
+    /// <summary>
+    /// 主将技
+    /// </summary>
+    public SkillData LeaderSkill
+    {
+        get
         {
-            mActionRange = value;
+            CardBaseData carddata = CardManager.Instance.GetCard(mCharacterData.CardID);
+            return SkillManager.Instance.GetSkill(carddata.LeaderSkillID);
         }
     }
 
@@ -230,26 +193,8 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mElement;
-        }
-        set
-        {
-            mElement = value;
-        }
-    }
-
-    /// <summary>
-    /// 卡片类型
-    /// </summary>
-    public ClassType Class
-    {
-        get
-        {
-            return mClass;
-        }
-        set
-        {
-            mClass = value;
+            CardBaseData carddata = CardManager.Instance.GetCard(mCharacterData.CardID);
+            return carddata.Element;
         }
     }
 
@@ -260,11 +205,7 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mAtk;
-        }
-        set
-        {
-            mAtk = value;
+            return mCharacterData.Atk;
         }
     }
 
@@ -275,11 +216,7 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mDef;
-        }
-        set
-        {
-            mDef = value;
+            return mCharacterData.Def;
         }
     }
 
@@ -290,26 +227,7 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mSpd;
-        }
-        set
-        {
-            mSpd = value;
-        }
-    }
-
-    /// <summary>
-    /// 攻击造成的仇恨
-    /// </summary>
-    public int Hatred
-    {
-        get
-        {
-            return mHatred;
-        }
-        set
-        {
-            mHatred = value;
+            return mCharacterData.Spd;
         }
     }
 
@@ -364,7 +282,7 @@ public class CardData : MonoBehaviour {
     /// <summary>
     /// 仇恨对象，无则返回-1
     /// </summary>
-    public int LastAttackerID
+    public System.Int64 LastAttackerID
     {
         get
         {
@@ -417,6 +335,8 @@ public class CardData : MonoBehaviour {
         }
     }
 
+    CharacterData mCharacterData = null;
+
     void Awake()
     {
 
@@ -432,98 +352,24 @@ public class CardData : MonoBehaviour {
 	
 	}
     
-    public void ResetAllData(int _id, ClassType _class, PhaseType _phase)
+    public void ResetAllData(PhaseType _phase, CharacterData _data)
     {
-        mID = _id;
-
-        Class = _class;
+        mCharacterData = _data;
         Phase = _phase;
-
-        switch (_class)
-        {
-            case ClassType.WaterSaber:
-                HPMax = 84;
-                CardAction = ActionType.NormalAttack;
-                ActionRange = 1;
-                Element = ElementType.Water;
-                Atk = 23;
-                Def = 21;
-                Spd = 58;
-                mHatred = 50;
-
-                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card001";
-                break;
-            case ClassType.FireMagic:
-                CardAction = ActionType.MagicAttack;
-                HPMax = 79;
-                ActionRange = 2;
-                Element = ElementType.Fire;
-                Atk = 15;
-                Def = 17;
-                Spd = 56;
-                mHatred = 50;
-
-                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card002";
-                break;
-            case ClassType.GreenArrow:
-                HPMax = 86;
-                CardAction = ActionType.ArrowAttack;
-                ActionRange = 2;
-                Element = ElementType.Wind;
-                Atk = 18;
-                Def = 18;
-                Spd = 59;
-                mHatred = 50;
-
-                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card003";
-                break;
-            case ClassType.SLMGirl:
-                HPMax = 88;
-                CardAction = ActionType.NormalAttack;
-                ActionRange = 1;
-                Element = ElementType.Ground;
-                Atk = 20;
-                Def = 23;
-                Spd = 56;
-                mHatred = 100;
-
-                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card004";
-                break;
-            case ClassType.LightPastor:
-                HPMax = 84;
-                CardAction = ActionType.Health;
-                ActionRange = 1;
-                Element = ElementType.Light;
-                Atk = 16;
-                Def = 18;
-                Spd = 58;
-                mHatred = 50;
-
-                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card005";
-                break;
-            case ClassType.DarkGhost:
-                HPMax = 83;
-                CardAction = ActionType.NormalAttack;
-                ActionRange = 1;
-                Element = ElementType.Dark;
-                Atk = 19;
-                Def = 18;
-                Spd = 60;
-                mHatred = 50;
-
-                gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = "Card006";
-                break;
-        }
-
-        HP = HPMax;
+        HP = _data.MaxHP;
+        
+        CardBaseData carddata = CardManager.Instance.GetCard(_data.CardID);
+        gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = carddata.CardSprite;
 
         switch (Phase)
         {
             case PhaseType.Charactor:
                 gameObject.tag = "Charactor";
+                MP = 0;
                 break;
             case PhaseType.Enemy:
                 gameObject.tag = "Enemy";
+                MP = MPMax;
                 break;
         }
     }

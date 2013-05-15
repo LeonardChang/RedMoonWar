@@ -325,12 +325,13 @@ public class GameLogic : MonoBehaviour {
         foreach (int id in list.Keys)
         {
             CardLogic obj = list[id];
-            if (obj.Data.MP < 50)
+            int halfMP = obj.Data.MPMax / 2;
+            if (obj.Data.MP < halfMP)
             {
                 obj.Data.MP += 5;
-                if (obj.Data.MP > 50)
+                if (obj.Data.MP > halfMP)
                 {
-                    obj.Data.MP = 50;
+                    obj.Data.MP = halfMP;
                 }
             }
         }
@@ -369,23 +370,39 @@ public class GameLogic : MonoBehaviour {
         return fastID;
     }
 
-    public CardData GetActionTarget(CardData _selfData, PhaseType _targetPhase)
+    public CardData GetActionTarget(CardData _selfData, SkillData _skill)
     {
-        for (int i = _selfData.X - _selfData.ActionRange; i <= _selfData.X + _selfData.ActionRange; i++)
+        for (int i = _selfData.X - _skill.Range; i <= _selfData.X + _skill.Range; i++)
         {
-            for (int j = _selfData.Y - _selfData.ActionRange; j <= _selfData.Y + _selfData.ActionRange; j++)
+            for (int j = _selfData.Y - _skill.Range; j <= _selfData.Y + _skill.Range; j++)
             {
-                if (i == _selfData.X && j == _selfData.Y)
-                {
-                    continue;
-                }
-
                 CardLogic chess = GameChessboard.GetChess(i, j);
-                if (chess != null
-                    && chess.Data.Phase == _targetPhase
-                    && !chess.Data.Death)
+                switch (_skill.TargetPhase)
                 {
-                    return chess.Data;
+                    case AttackTargetType.Ememy:
+                        if (chess != null && !chess.Data.Death && chess.Data.Phase != _selfData.Phase)
+                        {
+                            return chess.Data;
+                        }
+                        break;
+                    case AttackTargetType.Self:
+                        if (chess != null && !chess.Data.Death && chess.Data.ID != _selfData.ID)
+                        {
+                            return chess.Data;
+                        }
+                        break;
+                    case AttackTargetType.Team:
+                        if (chess != null && !chess.Data.Death && chess.Data.Phase == _selfData.Phase)
+                        {
+                            return chess.Data;
+                        }
+                        break;
+                    case AttackTargetType.All:
+                        if (chess != null && !chess.Data.Death)
+                        {
+                            return chess.Data;
+                        }
+                        break;
                 }
             }
         }
@@ -393,23 +410,39 @@ public class GameLogic : MonoBehaviour {
         return null;
     }
 
-    public IEnumerable<CardData> GetActionTargets(CardData _selfData, PhaseType _targetPhase, bool _containSelf)
+    public IEnumerable<CardData> GetActionTargets(CardData _selfData, SkillData _skill)
     {
-        for (int i = _selfData.X - _selfData.ActionRange; i <= _selfData.X + _selfData.ActionRange; i++)
+        for (int i = _selfData.X - _skill.Range; i <= _selfData.X + _skill.Range; i++)
         {
-            for (int j = _selfData.Y - _selfData.ActionRange; j <= _selfData.Y + _selfData.ActionRange; j++)
+            for (int j = _selfData.Y - _skill.Range; j <= _selfData.Y + _skill.Range; j++)
             {
-                if (!_containSelf && i == _selfData.X && j == _selfData.Y)
-                {
-                    continue;
-                }
-
                 CardLogic chess = GameChessboard.GetChess(i, j);
-                if (chess != null
-                    && chess.Data.Phase == _targetPhase
-                    && !chess.Data.Death)
+                switch (_skill.TargetPhase)
                 {
-                    yield return chess.Data;
+                    case AttackTargetType.Ememy:
+                        if (chess != null && !chess.Data.Death && chess.Data.Phase != _selfData.Phase)
+                        {
+                            yield return chess.Data;
+                        }
+                        break;
+                    case AttackTargetType.Self:
+                        if (chess != null && !chess.Data.Death && chess.Data.ID != _selfData.ID)
+                        {
+                            yield return chess.Data;
+                        }
+                        break;
+                    case AttackTargetType.Team:
+                        if (chess != null && !chess.Data.Death && chess.Data.Phase == _selfData.Phase)
+                        {
+                            yield return chess.Data;
+                        }
+                        break;
+                    case AttackTargetType.All:
+                        if (chess != null && !chess.Data.Death)
+                        {
+                            yield return chess.Data;
+                        }
+                        break;
                 }
             }
         }

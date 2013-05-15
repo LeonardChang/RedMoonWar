@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum CharAnimationState
 {
@@ -175,7 +176,7 @@ public class CardLogic : MonoBehaviour {
         }
         else if (_event == "Attacking")
         {
-            if (mActionState == ActionState.Attack && mTargetObj != null)
+            if (mActionState == ActionState.Attack && mTargetObj.Count > 0)
             {
                 DoDamage();
                 NeedEndCalculate = true;
@@ -186,19 +187,25 @@ public class CardLogic : MonoBehaviour {
             switch (mActionState)
             {
                 case ActionState.Health:
-                    if (mTargetObj != null)
+                    if (mTargetObj.Count > 0)
                     {
                         int heal = 20;
-                        mTargetObj.Data.HP += heal;
-                        mTargetObj.CreateHealEffect(heal);
+                        foreach (CardLogic logic in mTargetObj)
+                        {
+                            logic.Data.HP += heal;
+                            logic.CreateHealEffect(heal);
+                        }
                         NeedEndCalculate = true;
                     }
                     break;
                 case ActionState.ArrowAttack:
-                    if (mTargetObj != null)
+                    if (mTargetObj.Count > 0)
                     {
                         mWaitingDamage = true;
-                        CreateArrowEffect(mTargetObj.gameObject.transform, 0.35f);
+                        foreach (CardLogic logic in mTargetObj)
+                        {
+                            CreateArrowEffect(logic.gameObject.transform, 0.35f);
+                        }
                         Invoke("DoDamage", 0.35f);
                         NeedEndCalculate = true;
                     }
@@ -223,49 +230,58 @@ public class CardLogic : MonoBehaviour {
     bool mWaitingDamage = false;
     void DoDamage()
     {
-        if (mTargetObj == null)
+        if (mTargetObj.Count == 0 || mCurrentSkillID == -1)
         {
             return;
         }
 
-        // 计算伤害
-        int damage = CalculateDamage(Data, mTargetObj.GetComponent<CardData>());
-        mTargetObj.Data.HP -= damage;
+        SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
 
-        // 记录仇恨
-        if (mTargetObj.Data.LastAttackerID == Data.ID)
+        // 计算伤害
+        foreach (CardLogic logic in mTargetObj)
         {
-            // 上次也是哥揍的
-            if (mTargetObj.Data.AttackerHatred < Data.Hatred)
+            int damage = CalculateDamage(Data, logic.GetComponent<CardData>());
+            logic.Data.HP -= damage;
+
+            // 记录仇恨
+            if (logic.Data.LastAttackerID == Data.ID)
             {
-                mTargetObj.Data.AttackerHatred = Data.Hatred;
+                // 上次也是哥揍的
+                if (logic.Data.AttackerHatred < skilldata.Hatred)
+                {
+                    logic.Data.AttackerHatred = skilldata.Hatred;
+                }
+                else
+                {
+                    logic.Data.AttackerHatred += (int)(skilldata.Hatred * 0.2f);
+                    if (logic.Data.AttackerHatred > skilldata.Hatred * 3)
+                    {
+                        logic.Data.AttackerHatred = skilldata.Hatred * 3;
+                    }
+                }
+                logic.Data.LastAttackerID = Data.ID;
+            }
+            else if (logic.Data.LastAttackerID != -1)
+            {
+                // 上次是被其他人揍的
+                logic.Data.AttackerHatred -= skilldata.Hatred;
+                if (logic.Data.AttackerHatred <= 0)
+                {
+                    logic.Data.AttackerHatred = skilldata.Hatred;
+                    logic.Data.LastAttackerID = Data.ID;
+                }
             }
             else
             {
-                mTargetObj.Data.AttackerHatred += (int)(Data.Hatred * 0.2f);
+                // 还没被人揍过
+                logic.Data.AttackerHatred = skilldata.Hatred;
+                logic.Data.LastAttackerID = Data.ID;
             }
-            mTargetObj.Data.LastAttackerID = Data.ID;
-        }
-        else if (mTargetObj.Data.LastAttackerID != -1)
-        {
-            // 上次是被其他人揍的
-            mTargetObj.Data.AttackerHatred -= Data.Hatred;
-            if (mTargetObj.Data.AttackerHatred <= 0)
-            {
-                mTargetObj.Data.AttackerHatred = Data.Hatred;
-                mTargetObj.Data.LastAttackerID = Data.ID;
-            }
-        }
-        else
-        {
-            // 还没被人揍过
-            mTargetObj.Data.AttackerHatred = Data.Hatred;
-            mTargetObj.Data.LastAttackerID = Data.ID;
+
+            AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
+            logic.CreateHitEffect(damage);
         }
 
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
-
-        mTargetObj.CreateHitEffect(damage);
         mWaitingDamage = false;
     }
 
@@ -368,7 +384,7 @@ public class CardLogic : MonoBehaviour {
 
     public System.Action<CardLogic> ActionFinishEvent;
 
-    CardLogic mTargetObj = null;
+    List<CardLogic> mTargetObj = new List<CardLogic>();
     bool mCalculatorAI = false;
     bool mNeedEndCalculate = false;
     bool NeedEndCalculate
@@ -398,90 +414,15 @@ public class CardLogic : MonoBehaviour {
         //print("Start calculatorAI: " + gameObject.GetInstanceID().ToString());
 
         mCalculatorAI = true;
-        CardData data = Data;
-        if (data.Phase == PhaseType.Charactor)
+        if (Data.Phase == PhaseType.Charactor)
         {
-            switch (data.CardAction)
-            {
-                case ActionType.NormalAttack:
-                case ActionType.MagicAttack:
-                    {
-                        CardData enemy = GameLogic.Instance.GetActionTarget(Data, PhaseType.Enemy);
-                        if (enemy != null)
-                        {
-                            mActionState = ActionState.Attack;
-                            mTargetObj = enemy.Logic;
-                            PlayAnimation(CharAnimationState.Attack);
-                        }
-                        else
-                        {
-                            NeedEndCalculate = true;
-                        }
-                    }
-                    break;
-                case ActionType.ArrowAttack:
-                    {
-                        CardData enemy = GameLogic.Instance.GetActionTarget(Data, PhaseType.Enemy);
-                        if (enemy != null)
-                        {
-                            mActionState = ActionState.ArrowAttack;
-                            mTargetObj = enemy.Logic;
-                            PlayAnimation(CharAnimationState.Skill);
-                        }
-                        else
-                        {
-                            NeedEndCalculate = true;
-                        }
-                    }
-                    break;
-                case ActionType.Health:
-                    {
-                        CardData target = null;
-                        foreach (CardData getChar in GameLogic.Instance.GetActionTargets(Data, PhaseType.Charactor, true))
-                        {
-                            if (getChar.HP >= getChar.HPMax)
-                            {
-                                continue;
-                            }
-
-                            if (target == null || target.HP > getChar.HP)
-                            {
-                                target = getChar;
-                            }
-                        }
-
-                        if (target != null)
-                        {
-                            mActionState = ActionState.Health;
-                            mTargetObj = target.Logic;
-                            PlayAnimation(CharAnimationState.Skill);
-                        }
-                        else
-                        {
-                            NeedEndCalculate = true;
-                        }
-                    }
-                    break;
-                default:
-                    NeedEndCalculate = true;
-                    break;
-            }
+            DoAction();
         }
         else
         {
             if (Data.EnemyAI == AIType.Slime)
             {
-                CardData enemy = GameLogic.Instance.GetActionTarget(Data, PhaseType.Charactor);
-                if (enemy != null)
-                {
-                    mActionState = ActionState.Attack;
-                    mTargetObj = enemy.Logic;
-                    PlayAnimation(CharAnimationState.Attack);
-                }
-                else
-                {
-                    NeedEndCalculate = true;
-                }
+                DoAction();
             }
             else
             {
@@ -490,12 +431,134 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
+    // CardData实现按HP排序
+    private static int CompareCardHP(CardData a, CardData b)
+    {
+        return (a.HP.CompareTo(b.HP));
+    }
+
+    void DoAction()
+    {
+        if (Data.Skill != null && Data.Skill.ManaCost <= Data.MP)
+        {
+            // 释放技能
+            if (DoSkill(Data.Skill))
+            {
+                Data.MP -= Data.Skill.ManaCost;
+            }
+        }
+        else
+        {
+            // 普通攻击
+            DoSkill(Data.NormalAttack);
+        }
+    }
+
+    int mCurrentSkillID = -1;
+    bool DoSkill(SkillData _skill)
+    {
+        bool result = false;
+
+        mCurrentSkillID = _skill.ID;
+        mTargetObj.Clear();
+
+        switch (_skill.AttackAnim)
+        {
+            case AttackAnimType.Normal:
+                {
+                    CardData enemy = GameLogic.Instance.GetActionTarget(Data, _skill);
+                    if (enemy != null)
+                    {
+                        mActionState = ActionState.Attack;
+                        mTargetObj.Add(enemy.Logic);
+                        PlayAnimation(CharAnimationState.Attack);
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
+                }
+                break;
+            case AttackAnimType.Arrow:
+                {
+                    CardData enemy = GameLogic.Instance.GetActionTarget(Data, _skill);
+                    if (enemy != null)
+                    {
+                        mActionState = ActionState.ArrowAttack;
+                        mTargetObj.Add(enemy.Logic);
+                        PlayAnimation(CharAnimationState.Skill);
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
+                }
+                break;
+            case AttackAnimType.FireBall:
+            case AttackAnimType.IceBall:
+            case AttackAnimType.WindBall:
+            case AttackAnimType.StoneBall:
+            case AttackAnimType.LightBall:
+            case AttackAnimType.DarkBall:
+            case AttackAnimType.CannonBall:
+                NeedEndCalculate = true;
+                break;
+            case AttackAnimType.HPHealth:
+                {
+                    List<CardData> tempCardList = new List<CardData>();
+                    foreach (CardData getChar in GameLogic.Instance.GetActionTargets(Data, _skill))
+                    {
+                        if (getChar.HP >= getChar.HPMax)
+                        {
+                            continue;
+                        }
+
+                        tempCardList.Add(getChar);
+                    }
+
+                    if (tempCardList.Count > 0)
+                    {
+                        tempCardList.Sort(CompareCardHP);
+
+                        int count = 0;
+                        for (int i = 0; i < tempCardList.Count; i++ )
+                        {
+                            mActionState = ActionState.Health;
+                            mTargetObj.Add(tempCardList[i].Logic);
+                            PlayAnimation(CharAnimationState.Skill);
+                            count += 1;
+
+                            if (count >= _skill.Count)
+                            {
+                                break;
+                            }
+                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
+
+                    tempCardList.Clear();
+                }
+                break;
+            case AttackAnimType.MPHealth:
+                NeedEndCalculate = true;
+                break;
+        }
+
+        return result;
+    }
+
     void EndCalculate()
     {
         //print("End calculatorAI: " + gameObject.GetInstanceID().ToString());
 
         mActionState = ActionState.None;
-        mTargetObj = null;
+        mTargetObj.Clear();
         mCalculatorAI = false;
         if (ActionFinishEvent != null)
         {
@@ -511,7 +574,6 @@ public class CardLogic : MonoBehaviour {
     /// <returns></returns>
     public static int CalculateDamage(CardData _from, CardData _target)
     {
-        
         int damage = (int)((_from.Atk - _target.Def * 0.5f) * 2);
 
         if (damage < 1)
