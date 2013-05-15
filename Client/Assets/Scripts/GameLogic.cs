@@ -315,9 +315,28 @@ public class GameLogic : MonoBehaviour {
         }
         else
         {
-            mCalculating = false;
-            Round += 1;
+            EndCalculateAI();
         }
+    }
+
+    void EndCalculateAI()
+    {
+        Dictionary<int, CardLogic> list = GameChessboard.mChessList;
+        foreach (int id in list.Keys)
+        {
+            CardLogic obj = list[id];
+            if (obj.Data.MP < 50)
+            {
+                obj.Data.MP += 5;
+                if (obj.Data.MP > 50)
+                {
+                    obj.Data.MP = 50;
+                }
+            }
+        }
+
+        mCalculating = false;
+        Round += 1;
     }
 
     void AIActionFinishCallback(CardLogic _logic)

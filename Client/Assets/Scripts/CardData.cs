@@ -57,7 +57,7 @@ public class CardData : MonoBehaviour {
     private int mHP = 100;
 
     private int mMPMax = 100;
-    private int mMP = 100;
+    private int mMP = 0;
 
     private ActionType mCardAction = ActionType.NormalAttack;
     private int mActionRange = 1;
