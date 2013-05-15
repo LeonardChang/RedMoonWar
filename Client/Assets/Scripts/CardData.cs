@@ -93,7 +93,7 @@ public class CardData : MonoBehaviour {
             if (mHP == 0)
             {
                 mDeath = true;
-                Logic.RefreshToDeath();
+                Logic.CreateDeathEffect();
             }
         }
     }

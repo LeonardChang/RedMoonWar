@@ -227,64 +227,6 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
-    bool mWaitingDamage = false;
-    void DoDamage()
-    {
-        if (mTargetObj.Count == 0 || mCurrentSkillID == -1)
-        {
-            return;
-        }
-
-        SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
-
-        // 计算伤害
-        foreach (CardLogic logic in mTargetObj)
-        {
-            int damage = CalculateDamage(Data, logic.GetComponent<CardData>());
-            logic.Data.HP -= damage;
-
-            // 记录仇恨
-            if (logic.Data.LastAttackerID == Data.ID)
-            {
-                // 上次也是哥揍的
-                if (logic.Data.AttackerHatred < skilldata.Hatred)
-                {
-                    logic.Data.AttackerHatred = skilldata.Hatred;
-                }
-                else
-                {
-                    logic.Data.AttackerHatred += (int)(skilldata.Hatred * 0.2f);
-                    if (logic.Data.AttackerHatred > skilldata.Hatred * 3)
-                    {
-                        logic.Data.AttackerHatred = skilldata.Hatred * 3;
-                    }
-                }
-                logic.Data.LastAttackerID = Data.ID;
-            }
-            else if (logic.Data.LastAttackerID != -1)
-            {
-                // 上次是被其他人揍的
-                logic.Data.AttackerHatred -= skilldata.Hatred;
-                if (logic.Data.AttackerHatred <= 0)
-                {
-                    logic.Data.AttackerHatred = skilldata.Hatred;
-                    logic.Data.LastAttackerID = Data.ID;
-                }
-            }
-            else
-            {
-                // 还没被人揍过
-                logic.Data.AttackerHatred = skilldata.Hatred;
-                logic.Data.LastAttackerID = Data.ID;
-            }
-
-            AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
-            logic.CreateHitEffect(damage);
-        }
-
-        mWaitingDamage = false;
-    }
-
     CardData mData = null;
     public CardData Data
     {
@@ -311,6 +253,9 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 创建攻击动画
+    /// </summary>
     public void CreateStartAttackEffect()
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/AttackStart", typeof(GameObject)) as GameObject;
@@ -322,6 +267,10 @@ public class CardLogic : MonoBehaviour {
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Blow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
+    /// <summary>
+    /// 创建被击动画
+    /// </summary>
+    /// <param name="_Damage"></param>
     public void CreateHitEffect(int _Damage)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/HitEffect", typeof(GameObject)) as GameObject;
@@ -342,6 +291,10 @@ public class CardLogic : MonoBehaviour {
         iTween.ShakePosition(gameObject, new Vector3(0.1f, 0.1f, 0), 0.25f);
     }
 
+    /// <summary>
+    /// 创建被治疗动画
+    /// </summary>
+    /// <param name="_Health"></param>
     public void CreateHealEffect(int _Health)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/HealEffect", typeof(GameObject)) as GameObject;
@@ -362,6 +315,11 @@ public class CardLogic : MonoBehaviour {
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Heal3", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
+    /// <summary>
+    /// 创建射箭动画
+    /// </summary>
+    /// <param name="_target"></param>
+    /// <param name="_flyTime"></param>
     public void CreateArrowEffect(Transform _target, float _flyTime)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/Arrow", typeof(GameObject)) as GameObject;
@@ -380,6 +338,14 @@ public class CardLogic : MonoBehaviour {
         Destroy(obj, _flyTime);
 
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Bow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
+    }
+
+    /// <summary>
+    /// 创建死亡动画
+    /// </summary>
+    public void CreateDeathEffect()
+    {
+        PlayAnimation(CharAnimationState.Death);
     }
 
     public System.Action<CardLogic> ActionFinishEvent;
@@ -420,19 +386,41 @@ public class CardLogic : MonoBehaviour {
         }
         else
         {
-            if (Data.EnemyAI == AIType.Slime)
+            switch (Data.EnemyAI)
             {
-                DoAction();
-            }
-            else
-            {
-                NeedEndCalculate = true;
+                case AIType.NPC:
+                case AIType.Retarded:
+                case AIType.Slime:
+                case AIType.Goblin:
+                case AIType.Pillar:
+                case AIType.Cannon:
+                case AIType.Guard:
+                case AIType.Assailant:
+                case AIType.Leader:
+                    DoAction();
+                    break;
+                default:
+                    NeedEndCalculate = true;
+                    break;
             }
         }
     }
 
+    void EndCalculate()
+    {
+        //print("End calculatorAI: " + gameObject.GetInstanceID().ToString());
+
+        mActionState = ActionState.None;
+        mTargetObj.Clear();
+        mCalculatorAI = false;
+        if (ActionFinishEvent != null)
+        {
+            ActionFinishEvent(this);
+        }
+    }
+
     // CardData实现按HP排序
-    private static int CompareCardHP(CardData a, CardData b)
+    static int CompareCardHP(CardData a, CardData b)
     {
         return (a.HP.CompareTo(b.HP));
     }
@@ -553,17 +541,62 @@ public class CardLogic : MonoBehaviour {
         return result;
     }
 
-    void EndCalculate()
+    bool mWaitingDamage = false;
+    void DoDamage()
     {
-        //print("End calculatorAI: " + gameObject.GetInstanceID().ToString());
-
-        mActionState = ActionState.None;
-        mTargetObj.Clear();
-        mCalculatorAI = false;
-        if (ActionFinishEvent != null)
+        if (mTargetObj.Count == 0 || mCurrentSkillID == -1)
         {
-            ActionFinishEvent(this);
+            return;
         }
+
+        SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
+
+        // 计算伤害
+        foreach (CardLogic logic in mTargetObj)
+        {
+            int damage = CalculateDamage(Data, logic.GetComponent<CardData>());
+            logic.Data.HP -= damage;
+
+            // 记录仇恨
+            if (logic.Data.LastAttackerID == Data.ID)
+            {
+                // 上次也是哥揍的
+                if (logic.Data.AttackerHatred < skilldata.Hatred)
+                {
+                    logic.Data.AttackerHatred = skilldata.Hatred;
+                }
+                else
+                {
+                    logic.Data.AttackerHatred += (int)(skilldata.Hatred * 0.2f);
+                    if (logic.Data.AttackerHatred > skilldata.Hatred * 3)
+                    {
+                        logic.Data.AttackerHatred = skilldata.Hatred * 3;
+                    }
+                }
+                logic.Data.LastAttackerID = Data.ID;
+            }
+            else if (logic.Data.LastAttackerID != -1)
+            {
+                // 上次是被其他人揍的
+                logic.Data.AttackerHatred -= skilldata.Hatred;
+                if (logic.Data.AttackerHatred <= 0)
+                {
+                    logic.Data.AttackerHatred = skilldata.Hatred;
+                    logic.Data.LastAttackerID = Data.ID;
+                }
+            }
+            else
+            {
+                // 还没被人揍过
+                logic.Data.AttackerHatred = skilldata.Hatred;
+                logic.Data.LastAttackerID = Data.ID;
+            }
+
+            AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
+            logic.CreateHitEffect(damage);
+        }
+
+        mWaitingDamage = false;
     }
 
     /// <summary>
@@ -592,10 +625,5 @@ public class CardLogic : MonoBehaviour {
         }
 
         return damage;
-    }
-
-    public void RefreshToDeath()
-    {
-        PlayAnimation(CharAnimationState.Death);
     }
 }
