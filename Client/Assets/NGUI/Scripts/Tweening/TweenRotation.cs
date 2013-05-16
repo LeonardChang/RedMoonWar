@@ -36,4 +36,12 @@ public class TweenRotation : UITweener
 		comp.to = rot.eulerAngles;
 		return comp;
 	}
+
+    static public TweenRotation Begin(GameObject go, float duration, Vector3 rot)
+    {
+        TweenRotation comp = UITweener.Begin<TweenRotation>(go, duration);
+        comp.from = comp.rotation.eulerAngles;
+        comp.to = rot;
+        return comp;
+    }
 }

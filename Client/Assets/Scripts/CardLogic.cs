@@ -375,7 +375,7 @@ public class CardLogic : MonoBehaviour {
 
         Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
 
-        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(-10, 10) * 10, Random.Range(-10, 10) * 10, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
+        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
         Destroy(obj, _flyTime);
 
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Fire1", typeof(AudioClip)) as AudioClip, Vector3.zero);

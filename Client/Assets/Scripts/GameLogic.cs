@@ -13,9 +13,7 @@ public class GameLogic : MonoBehaviour {
     }
 
     public Chessboard GameChessboard;
-
     public UISprite MultipleBtnBack;
-
     public UILabel RoundLabel;
 
     int mRound = -1;
