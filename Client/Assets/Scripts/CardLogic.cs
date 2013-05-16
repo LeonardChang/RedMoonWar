@@ -204,9 +204,9 @@ public class CardLogic : MonoBehaviour {
                         mWaitingDamage = true;
                         foreach (CardLogic logic in mTargetObj)
                         {
-                            CreateArrowEffect(logic.gameObject.transform, 0.35f);
+                            CreateArrowEffect(logic.gameObject.transform, 0.5f);
                         }
-                        Invoke("DoDamage", 0.35f);
+                        Invoke("DoDamage", 0.5f);
                         NeedEndCalculate = true;
                     }
                     break;
@@ -216,9 +216,9 @@ public class CardLogic : MonoBehaviour {
                         mWaitingDamage = true;
                         foreach (CardLogic logic in mTargetObj)
                         {
-                            CreateFireBallEffect(logic.gameObject.transform, 0.5f);
+                            CreateFireBallEffect(logic.gameObject.transform, 0.85f);
                         }
-                        Invoke("DoDamage", 0.5f);
+                        Invoke("DoDamage", 0.85f);
                         NeedEndCalculate = true;
                     }
                     break;
@@ -375,7 +375,7 @@ public class CardLogic : MonoBehaviour {
 
         Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
 
-        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(-10, 10) * 50, Random.Range(-10, 10) * 50, -1), to + new Vector3(0, 0, -1), 0.5f).method = UITweener.Method.EaseInOut;
+        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(-10, 10) * 10, Random.Range(-10, 10) * 10, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
         Destroy(obj, _flyTime);
 
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Fire1", typeof(AudioClip)) as AudioClip, Vector3.zero);
@@ -452,6 +452,9 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 决定释放技能还是普通攻击
+    /// </summary>
     void DoAction()
     {
         if (Data.Skill != null && Data.Skill.ManaCost <= Data.MP)
@@ -470,6 +473,12 @@ public class CardLogic : MonoBehaviour {
     }
 
     int mCurrentSkillID = -1;
+
+    /// <summary>
+    /// 释放技能
+    /// </summary>
+    /// <param name="_skill"></param>
+    /// <returns></returns>
     bool DoSkill(SkillData _skill)
     {
         bool result = false;
@@ -600,6 +609,10 @@ public class CardLogic : MonoBehaviour {
     }
 
     bool mWaitingDamage = false;
+
+    /// <summary>
+    /// 产生伤害
+    /// </summary>
     void DoDamage()
     {
         if (mTargetObj.Count == 0 || mCurrentSkillID == -1)
