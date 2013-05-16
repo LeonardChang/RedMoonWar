@@ -1,35 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-public enum PhaseType : int
-{
-    Charactor = 0,
-    Enemy,
-}
-
-public enum ElementType : int
-{
-    Fire = 0,
-    Water,
-    Wind,
-    Ground,
-    Light,
-    Dark,
-}
-
-public enum AIType : int 
-{
-    NPC,        // 随机闲逛，不攻击范围内的敌人，不追击仇恨对象
-    Retarded,   // 随机闲逛，概率攻击范围内的敌人，不追击仇恨对象
-    Slime,      // 随机闲逛，攻击范围内的敌人，不追击仇恨对象
-    Goblin,     // 随机闲逛，攻击范围内的敌人，追击仇恨对象
-    Pillar,     // 原地不动，不攻击范围内的敌人，不追击仇恨对象
-    Cannon,     // 原地不动，攻击范围内的敌人，不追击仇恨对象
-    Guard,      // 原地不动，攻击范围内的敌人，追击仇恨对象
-    Assailant,  // 主动接近，攻击范围内的敌人，不追击仇恨对象
-    Leader,     // 主动接近，攻击范围内的敌人，追击仇恨对象
-}
-
 public class CardData : MonoBehaviour {
     private int mHP = 100;
     private int mMP = 0;
@@ -195,6 +166,60 @@ public class CardData : MonoBehaviour {
         {
             CardBaseData carddata = CardManager.Instance.GetCard(mCharacterData.CardID);
             return carddata.Element;
+        }
+    }
+
+    /// <summary>
+    /// 被克制的属性
+    /// </summary>
+    public ElementType BeElement
+    {
+        get
+        {
+            switch (Element)
+            {
+                case ElementType.Fire:
+                    return ElementType.Water;
+                case ElementType.Water:
+                    return ElementType.Earth;
+                case ElementType.Wind:
+                    return ElementType.Fire;
+                case ElementType.Earth:
+                    return ElementType.Wind;
+                case ElementType.Light:
+                    return ElementType.Dark;
+                case ElementType.Dark:
+                    return ElementType.Light;
+            }
+
+            return ElementType.Dark;
+        }
+    }
+
+    /// <summary>
+    /// 克制的属性
+    /// </summary>
+    public ElementType FoElement
+    {
+        get
+        {
+            switch (Element)
+            {
+                case ElementType.Fire:
+                    return ElementType.Wind;
+                case ElementType.Water:
+                    return ElementType.Fire;
+                case ElementType.Wind:
+                    return ElementType.Earth;
+                case ElementType.Earth:
+                    return ElementType.Water;
+                case ElementType.Light:
+                    return ElementType.Dark;
+                case ElementType.Dark:
+                    return ElementType.Light;
+            }
+
+            return ElementType.Dark;
         }
     }
 

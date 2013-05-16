@@ -2,15 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum GrowType : int
-{
-    TypeA = 0,
-    TypeB,
-    TypeC,
-
-    Max,
-}
-
 /// <summary>
 /// 卡牌的固有数据
 /// </summary>
@@ -42,6 +33,13 @@ public class CardBaseData
 
     private int mMaxLevel = 99;
 
+    private float mBaseEatExp = 100;
+    private float mGrowEatExp = 1;
+    private float mBaseEatCost = 100;
+    private float mGrowEatCost = 1;
+    private float mBaseSellPrice = 100;
+    private float mGrowSellPrice = 1;
+
     private GrowType mGrowType = GrowType.TypeA;
     private ElementType mElementType = ElementType.Fire;
 
@@ -67,83 +65,53 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// 基础HP
+    /// 获取某等级的HP
     /// </summary>
-    public float BaseHP
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetHP(int _level)
     {
-        get { return mBaseHP; }
+        return Mathf.FloorToInt(mBaseHP + mGrowHP * _level);
     }
 
     /// <summary>
-    /// 基础MP
+    /// 获取某等级的MP
     /// </summary>
-    public float BaseMP
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetMP(int _level)
     {
-        get { return mBaseMP; }
+        return Mathf.FloorToInt(mBaseMP + mGrowMP * _level);
     }
 
     /// <summary>
-    /// 基础攻击力
+    /// 获取某等级的攻击力
     /// </summary>
-    public float BaseAtk
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetATK(int _level)
     {
-        get { return mBaseAtk; }
+        return Mathf.FloorToInt(mBaseAtk + mGrowAtk * _level);
     }
 
     /// <summary>
-    /// 基础防御力
+    /// 获取某等级的防御力
     /// </summary>
-    public float BaseDef
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetDEF(int _level)
     {
-        get { return mBaseDef; }
+        return Mathf.FloorToInt(mBaseDef + mGrowDef * _level);
     }
 
     /// <summary>
-    /// 基础速度
+    /// 获取某等级的速度
     /// </summary>
-    public float BaseSpd
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetSPD(int _level)
     {
-        get { return mBaseSpd; }
-    }
-
-    /// <summary>
-    /// HP成长
-    /// </summary>
-    public float GrowHP
-    {
-        get { return mGrowHP; }
-    }
-
-    /// <summary>
-    /// MP成长
-    /// </summary>
-    public float GrowMP
-    {
-        get { return mGrowMP; }
-    }
-
-    /// <summary>
-    /// 攻击力成长
-    /// </summary>
-    public float GrowAtk
-    {
-        get { return mGrowAtk; }
-    }
-
-    /// <summary>
-    /// 防御力成长
-    /// </summary>
-    public float GrowDef
-    {
-        get { return mGrowDef; }
-    }
-
-    /// <summary>
-    /// 速度成长
-    /// </summary>
-    public float GrowSpd
-    {
-        get { return mGrowSpd; }
+        return Mathf.FloorToInt(mBaseSpd + mGrowSpd * _level);
     }
 
     /// <summary>
@@ -203,6 +171,36 @@ public class CardBaseData
     }
 
     /// <summary>
+    /// 获取某等级的食用价格
+    /// </summary>
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetEatExp(int _level)
+    {
+        return Mathf.FloorToInt(mBaseEatExp + mGrowEatExp * _level);
+    }
+
+    /// <summary>
+    /// 获取某等级的食用价格
+    /// </summary>
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetEatCost(int _level)
+    {
+        return Mathf.FloorToInt(mBaseEatCost + mGrowEatCost * _level);
+    }
+
+    /// <summary>
+    /// 获取某等级的出售价格
+    /// </summary>
+    /// <param name="_level"></param>
+    /// <returns></returns>
+    public int GetSellPrice(int _level)
+    {
+        return Mathf.FloorToInt(mBaseSellPrice + mGrowSellPrice * _level);
+    }
+
+    /// <summary>
     /// 成长类型
     /// </summary>
     public GrowType Grow
@@ -221,7 +219,7 @@ public class CardBaseData
     void Initialize(string _str)
     {       
         string[] list = _str.Split(',');
-        if (list.Length != 21)
+        if (list.Length != 27)
         {
             Debug.LogError("Error Card base data: " + _str);
             return;
@@ -232,16 +230,16 @@ public class CardBaseData
             mID = int.Parse(list[0]);
             mName = list[1];
             mElementType = (ElementType)int.Parse(list[2]);
-            mBaseHP = int.Parse(list[3]);
-            mGrowHP = int.Parse(list[4]);
-            mBaseMP = int.Parse(list[5]);
-            mGrowMP = int.Parse(list[6]);
-            mBaseAtk = int.Parse(list[7]);
-            mGrowAtk = int.Parse(list[8]);
-            mBaseDef = int.Parse(list[9]);
-            mGrowDef = int.Parse(list[10]);
-            mBaseSpd = int.Parse(list[11]);
-            mGrowSpd = int.Parse(list[12]);
+            mBaseHP = float.Parse(list[3]);
+            mGrowHP = float.Parse(list[4]);
+            mBaseMP = float.Parse(list[5]);
+            mGrowMP = float.Parse(list[6]);
+            mBaseAtk = float.Parse(list[7]);
+            mGrowAtk = float.Parse(list[8]);
+            mBaseDef = float.Parse(list[9]);
+            mGrowDef = float.Parse(list[10]);
+            mBaseSpd = float.Parse(list[11]);
+            mGrowSpd = float.Parse(list[12]);
             mCardSprite = list[13];
             mStarCount = int.Parse(list[14]);
             mEquipCost = int.Parse(list[15]);
@@ -250,6 +248,12 @@ public class CardBaseData
             mNormalAttackSkillID = int.Parse(list[18]);
             mMaxLevel = int.Parse(list[19]);
             mGrowType = (GrowType)int.Parse(list[20]);
+            mBaseEatExp = float.Parse(list[21]);
+            mGrowEatExp = float.Parse(list[22]);
+            mBaseEatCost = float.Parse(list[23]);
+            mGrowEatCost = float.Parse(list[24]);
+            mBaseSellPrice = float.Parse(list[25]);
+            mGrowSellPrice = float.Parse(list[26]);
         }
         catch (System.FormatException ex)
         {

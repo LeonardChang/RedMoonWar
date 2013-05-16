@@ -13,19 +13,19 @@ public enum CharAnimationState
     Join,
 }
 
-public enum ActionState
-{
-    None,
-    Attack,
-    Health,
-    ArrowAttack,
-}
+//public enum ActionState
+//{
+//    None,
+//    Attack,
+//    Health,
+//    ArrowAttack,
+//}
 
 public class CardLogic : MonoBehaviour {
     public Animation CardAnimation;
     
     CharAnimationState mAnimationState = CharAnimationState.NotInit;
-    ActionState mActionState = ActionState.None;
+    AttackAnimType mActionState = AttackAnimType.None;
 
 	// Use this for initialization
 	void Start () {
@@ -176,7 +176,7 @@ public class CardLogic : MonoBehaviour {
         }
         else if (_event == "Attacking")
         {
-            if (mActionState == ActionState.Attack && mTargetObj.Count > 0)
+            if (mActionState == AttackAnimType.NormalAttack && mTargetObj.Count > 0)
             {
                 DoDamage();
                 NeedEndCalculate = true;
@@ -186,7 +186,7 @@ public class CardLogic : MonoBehaviour {
         {
             switch (mActionState)
             {
-                case ActionState.Health:
+                case AttackAnimType.HPHealth:
                     if (mTargetObj.Count > 0)
                     {
                         int heal = 20;
@@ -198,7 +198,7 @@ public class CardLogic : MonoBehaviour {
                         NeedEndCalculate = true;
                     }
                     break;
-                case ActionState.ArrowAttack:
+                case AttackAnimType.Arrow:
                     if (mTargetObj.Count > 0)
                     {
                         mWaitingDamage = true;
@@ -207,6 +207,18 @@ public class CardLogic : MonoBehaviour {
                             CreateArrowEffect(logic.gameObject.transform, 0.35f);
                         }
                         Invoke("DoDamage", 0.35f);
+                        NeedEndCalculate = true;
+                    }
+                    break;
+                case AttackAnimType.FireBall:
+                    if (mTargetObj.Count > 0)
+                    {
+                        mWaitingDamage = true;
+                        foreach (CardLogic logic in mTargetObj)
+                        {
+                            CreateFireBallEffect(logic.gameObject.transform, 0.5f);
+                        }
+                        Invoke("DoDamage", 0.5f);
                         NeedEndCalculate = true;
                     }
                     break;
@@ -348,6 +360,27 @@ public class CardLogic : MonoBehaviour {
         PlayAnimation(CharAnimationState.Death);
     }
 
+    /// <summary>
+    /// 创建火球动画
+    /// </summary>
+    /// <param name="_target"></param>
+    /// <param name="_flyTime"></param>
+    public void CreateFireBallEffect(Transform _target, float _flyTime)
+    {
+        GameObject perfab = Resources.Load("Cards/Perfabs/FireBall", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.parent = gameObject.transform.parent;
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        obj.transform.localScale = new Vector3(58, 70, 1);
+
+        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
+
+        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(-10, 10) * 50, Random.Range(-10, 10) * 50, -1), to + new Vector3(0, 0, -1), 0.5f).method = UITweener.Method.EaseInOut;
+        Destroy(obj, _flyTime);
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Fire1", typeof(AudioClip)) as AudioClip, Vector3.zero);
+    }
+
     public System.Action<CardLogic> ActionFinishEvent;
 
     List<CardLogic> mTargetObj = new List<CardLogic>();
@@ -410,19 +443,13 @@ public class CardLogic : MonoBehaviour {
     {
         //print("End calculatorAI: " + gameObject.GetInstanceID().ToString());
 
-        mActionState = ActionState.None;
+        mActionState = AttackAnimType.None;
         mTargetObj.Clear();
         mCalculatorAI = false;
         if (ActionFinishEvent != null)
         {
             ActionFinishEvent(this);
         }
-    }
-
-    // CardData实现按HP排序
-    static int CompareCardHP(CardData a, CardData b)
-    {
-        return (a.HP.CompareTo(b.HP));
     }
 
     void DoAction()
@@ -452,14 +479,24 @@ public class CardLogic : MonoBehaviour {
 
         switch (_skill.AttackAnim)
         {
-            case AttackAnimType.Normal:
+            case AttackAnimType.NormalAttack:
                 {
-                    CardData enemy = GameLogic.Instance.GetActionTarget(Data, _skill);
-                    if (enemy != null)
+                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
+                    if (list.Length > 0)
                     {
-                        mActionState = ActionState.Attack;
-                        mTargetObj.Add(enemy.Logic);
-                        PlayAnimation(CharAnimationState.Attack);
+                        int count = 0;
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            mActionState = AttackAnimType.NormalAttack;
+                            mTargetObj.Add(list[i].Logic);
+                            PlayAnimation(CharAnimationState.Attack);
+                            count += 1;
+
+                            if (count >= _skill.Count)
+                            {
+                                break;
+                            }
+                        }
                         result = true;
                     }
                     else
@@ -470,51 +507,14 @@ public class CardLogic : MonoBehaviour {
                 break;
             case AttackAnimType.Arrow:
                 {
-                    CardData enemy = GameLogic.Instance.GetActionTarget(Data, _skill);
-                    if (enemy != null)
+                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
+                    if (list.Length > 0)
                     {
-                        mActionState = ActionState.ArrowAttack;
-                        mTargetObj.Add(enemy.Logic);
-                        PlayAnimation(CharAnimationState.Skill);
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
-                }
-                break;
-            case AttackAnimType.FireBall:
-            case AttackAnimType.IceBall:
-            case AttackAnimType.WindBall:
-            case AttackAnimType.StoneBall:
-            case AttackAnimType.LightBall:
-            case AttackAnimType.DarkBall:
-            case AttackAnimType.CannonBall:
-                NeedEndCalculate = true;
-                break;
-            case AttackAnimType.HPHealth:
-                {
-                    List<CardData> tempCardList = new List<CardData>();
-                    foreach (CardData getChar in GameLogic.Instance.GetActionTargets(Data, _skill))
-                    {
-                        if (getChar.HP >= getChar.HPMax)
-                        {
-                            continue;
-                        }
-
-                        tempCardList.Add(getChar);
-                    }
-
-                    if (tempCardList.Count > 0)
-                    {
-                        tempCardList.Sort(CompareCardHP);
-
                         int count = 0;
-                        for (int i = 0; i < tempCardList.Count; i++ )
+                        for (int i = 0; i < list.Length; i++)
                         {
-                            mActionState = ActionState.Health;
-                            mTargetObj.Add(tempCardList[i].Logic);
+                            mActionState = AttackAnimType.Arrow;
+                            mTargetObj.Add(list[i].Logic);
                             PlayAnimation(CharAnimationState.Skill);
                             count += 1;
 
@@ -529,8 +529,66 @@ public class CardLogic : MonoBehaviour {
                     {
                         NeedEndCalculate = true;
                     }
+                }
+                break;
+            case AttackAnimType.FireBall:
+                {
+                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
+                    if (list.Length > 0)
+                    {
+                        int count = 0;
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            mActionState = AttackAnimType.FireBall;
+                            mTargetObj.Add(list[i].Logic);
+                            PlayAnimation(CharAnimationState.Skill);
+                            count += 1;
 
-                    tempCardList.Clear();
+                            if (count >= _skill.Count)
+                            {
+                                break;
+                            }
+                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
+                }
+                break;
+            case AttackAnimType.IceBall:
+            case AttackAnimType.WindBall:
+            case AttackAnimType.StoneBall:
+            case AttackAnimType.LightBall:
+            case AttackAnimType.DarkBall:
+            case AttackAnimType.CannonBall:
+                NeedEndCalculate = true;
+                break;
+            case AttackAnimType.HPHealth:
+                {
+                    CardData[] list = GetTargets(FindTargetConditionType.BeingHurt, _skill);
+                    if (list.Length > 0)
+                    {
+                        int count = 0;
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            mActionState = AttackAnimType.HPHealth;
+                            mTargetObj.Add(list[i].Logic);
+                            PlayAnimation(CharAnimationState.Skill);
+                            count += 1;
+
+                            if (count >= _skill.Count)
+                            {
+                                break;
+                            }
+                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
                 }
                 break;
             case AttackAnimType.MPHealth:
@@ -554,7 +612,7 @@ public class CardLogic : MonoBehaviour {
         // 计算伤害
         foreach (CardLogic logic in mTargetObj)
         {
-            int damage = CalculateDamage(Data, logic.GetComponent<CardData>());
+            int damage = EquationTool.CalculateDamage(Data, logic.GetComponent<CardData>());
             logic.Data.HP -= damage;
 
             // 记录仇恨
@@ -600,30 +658,105 @@ public class CardLogic : MonoBehaviour {
     }
 
     /// <summary>
-    /// 伤害计算公式
+    /// CardData实现按HP排序
     /// </summary>
-    /// <param name="_from"></param>
-    /// <param name="_target"></param>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
     /// <returns></returns>
-    public static int CalculateDamage(CardData _from, CardData _target)
+    static int CompareCardHP(CardData a, CardData b)
     {
-        int damage = (int)((_from.Atk - _target.Def * 0.5f) * 2);
+        return (a.HP.CompareTo(b.HP));
+    }
 
-        if (damage < 1)
+    /// <summary>
+    ///  CardData实现按Element排序
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    static int CompareCardElement(CardData a, CardData b)
+    {
+        return (a.Element.CompareTo(b.Element));
+    }
+
+    CardData[] GetTargets(FindTargetConditionType _type, SkillData _skill)
+    {
+        List<CardData> tempCardList = new List<CardData>();
+        foreach (CardData getChar in GameLogic.Instance.GetActionTargets(Data, _skill))
         {
-            damage = 1;
+            switch (_type)
+            {
+                case FindTargetConditionType.Random:
+                    if (tempCardList.Count == 0)
+                    {
+                        tempCardList.Add(getChar);
+                    }
+                    else
+                    {
+                        tempCardList.Insert(Random.Range(0, tempCardList.Count), getChar);
+                    }
+                    break;
+                case FindTargetConditionType.BeingHurt:
+                    if (getChar.HP < getChar.HPMax)
+                    {
+                        tempCardList.Add(getChar);
+                    }
+                    break;
+                case FindTargetConditionType.LowHP:
+                    tempCardList.Add(getChar);
+                    break;
+                case FindTargetConditionType.HighHP:
+                    tempCardList.Add(getChar);
+                    break;
+                case FindTargetConditionType.DiElement:
+                    tempCardList.Add(getChar);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        if ((_from.Element == ElementType.Fire && _target.Element == ElementType.Wind)
-            || (_from.Element == ElementType.Wind && _target.Element == ElementType.Ground)
-            || (_from.Element == ElementType.Ground && _target.Element == ElementType.Water)
-            || (_from.Element == ElementType.Water && _target.Element == ElementType.Fire)
-            || (_from.Element == ElementType.Light && _target.Element == ElementType.Dark)
-            || (_from.Element == ElementType.Dark && _target.Element == ElementType.Light))
+        switch (_type)
         {
-            damage *= 2;
+            case FindTargetConditionType.Random:
+                break;
+            case FindTargetConditionType.BeingHurt:
+                tempCardList.Sort(CompareCardHP);
+                break;
+            case FindTargetConditionType.LowHP:
+                tempCardList.Sort(CompareCardHP);
+                break;
+            case FindTargetConditionType.HighHP:
+                tempCardList.Sort(CompareCardHP);
+                tempCardList.Reverse();
+                break;
+            case FindTargetConditionType.DiElement:
+                {
+                    List<CardData> temp = new List<CardData>();
+                    for (int i = 0; i < tempCardList.Count; i++ )
+                    {
+                        if (tempCardList[i].Element != Data.FoElement)
+                        {
+                            temp.Add(tempCardList[i]);
+                        }
+                    }
+
+                    foreach (CardData data in temp)
+                    {
+                        tempCardList.Remove(data);
+                    }
+                    foreach (CardData data in temp)
+                    {
+                        tempCardList.Add(data);
+                    }
+                    temp.Clear();
+                    temp = null;
+                }
+                break;
+            default:
+                break;
         }
 
-        return damage;
+        return tempCardList.ToArray();
     }
 }

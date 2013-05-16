@@ -2,34 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum AttackAnimType : int
-{
-    Normal = 0,
-    Arrow = 1,
-    FireBall = 2,
-    IceBall = 3,
-    WindBall = 4,
-    StoneBall = 5,
-    LightBall = 6,
-    DarkBall = 7,
-    CannonBall = 8,
-
-    HPHealth = 9,
-    MPHealth = 10,
-
-    Max,
-}
-
-public enum AttackTargetType : int
-{
-    Self = 0,
-    Team,
-    Ememy,
-    All,
-
-    Max,
-}
-
 /// <summary>
 /// 主动技能数据
 /// </summary>
@@ -38,6 +10,7 @@ public class SkillData
     private int mID = 0;
 
     private string mName = "";
+    private string mDescription = "";
     private float mMultiplyDamage = 1;
     private int mFixedDamage = 0;
     private int mRange = 1;
@@ -49,7 +22,7 @@ public class SkillData
     private int mMaxLevel = 6;
 
     private AttackTargetType mTargetPhase = AttackTargetType.Ememy;
-    private AttackAnimType mAttackAnim = AttackAnimType.Normal;
+    private AttackAnimType mAttackAnim = AttackAnimType.NormalAttack;
 
     public SkillData(string _init)
     {
@@ -75,6 +48,17 @@ public class SkillData
         get
         {
             return mName;
+        }
+    }
+
+    /// <summary>
+    /// 技能描述
+    /// </summary>
+    public string Description
+    {
+        get
+        {
+            return mDescription;
         }
     }
 
@@ -191,7 +175,7 @@ public class SkillData
     void Initialize(string _str)
     {
         string[] list = _str.Split(',');
-        if (list.Length != 12)
+        if (list.Length != 13)
         {
             Debug.LogError("Error Skill data: " + _str);
             return;
@@ -201,16 +185,17 @@ public class SkillData
         {
             mID = int.Parse(list[0]);
             mName = list[1];
-            mMultiplyDamage = float.Parse(list[2]);
-            mFixedDamage = int.Parse(list[3]);
-            mRange = int.Parse(list[4]);
-            mCount = int.Parse(list[5]);
-            mAddBuff = int.Parse(list[6]);
-            mManaCost = int.Parse(list[7]);
-            mHatred = int.Parse(list[8]);
-            mMaxLevel = int.Parse(list[9]);
-            mTargetPhase = (AttackTargetType)int.Parse(list[10]);
-            mAttackAnim = (AttackAnimType)int.Parse(list[11]);
+            mDescription = list[2];
+            mMultiplyDamage = float.Parse(list[3]);
+            mFixedDamage = int.Parse(list[4]);
+            mRange = int.Parse(list[5]);
+            mCount = int.Parse(list[6]);
+            mAddBuff = int.Parse(list[7]);
+            mManaCost = int.Parse(list[8]);
+            mHatred = int.Parse(list[9]);
+            mMaxLevel = int.Parse(list[10]);
+            mTargetPhase = (AttackTargetType)int.Parse(list[11]);
+            mAttackAnim = (AttackAnimType)int.Parse(list[12]);
         }
         catch (System.FormatException ex)
         {

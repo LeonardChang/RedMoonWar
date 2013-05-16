@@ -14,12 +14,10 @@ public class CharacterData
     private int mAtk = 100;
     private int mDef = 100;
     private int mSpd = 100;
-
     private int mCardID = 0;
-
     private int mLevel = 1;
     private int mSkillLevel = 1;
-
+    private int mExp = 0;
     private System.DateTime mGetDate = System.DateTime.Now;
 
     /// <summary>
@@ -104,6 +102,15 @@ public class CharacterData
     }
 
     /// <summary>
+    /// 卡片的经验
+    /// </summary>
+    public int EXP
+    {
+        get { return mExp; }
+        set { mExp = value; }
+    }
+
+    /// <summary>
     /// 获得日期
     /// </summary>
     public System.DateTime GetDate
@@ -160,11 +167,11 @@ public class CharacterManager
         data.GetDate = System.DateTime.Now;
         
         CardBaseData carddata = CardManager.Instance.GetCard(data.CardID);
-        data.MaxHP = (int)carddata.BaseHP;
-        data.MaxMP = (int)carddata.BaseMP;
-        data.Atk = (int)carddata.BaseAtk;
-        data.Def = (int)carddata.BaseDef;
-        data.Spd = (int)carddata.BaseSpd;
+        data.MaxHP = carddata.GetHP(data.Level);
+        data.MaxMP = carddata.GetMP(data.Level);
+        data.Atk = carddata.GetATK(data.Level);
+        data.Def = carddata.GetDEF(data.Level);
+        data.Spd = carddata.GetSPD(data.Level);
         
         return data;
     }
