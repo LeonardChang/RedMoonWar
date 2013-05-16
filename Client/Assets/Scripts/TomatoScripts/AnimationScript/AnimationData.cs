@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 
 
-struct SDataAniFrameCell
+public struct SDataAniFrameCell
 {
     public int Pattern;
     public int X;
@@ -16,7 +16,7 @@ struct SDataAniFrameCell
     public int BlendType;
 };
 
-struct SDataAniTiming
+public struct SDataAniTiming
 {
     public uint Frame;
 
@@ -36,7 +36,7 @@ struct SDataAniTiming
 };
 
 
-struct SDataAniFrame
+public struct SDataAniFrame
 {
     public uint CellNumber;
     public List<SDataAniFrameCell> CellList;
@@ -50,7 +50,7 @@ struct SDataAniFrame
 
 
 
-struct SDataAnimation
+public struct SDataAnimation
 {
     public uint AniID;
     public string Name;
@@ -63,7 +63,8 @@ struct SDataAnimation
     public List<SDataAniFrame> FrameList;
     public uint TimingNumber;
     public List<SDataAniTiming> TimingList;
-    public uint TotalWeight;		///<	总权重（用于计算动画打点伤害等）
+    public uint TotalWeight;
+    public int MaxCellCount;
 };
 
 
@@ -71,23 +72,19 @@ struct SDataAnimation
 
 
 
-public class AnimationData : MonoBehaviour {
-    List<SDataAnimation> animationDatas;
+public class AnimationData{
 
+    public List<SDataAnimation> animationDatas;
 
-
-    void Start()
+    public void Init()
     {
-        ReadAnimationDatas("animation/animation/Animations.asset");
+        animationDatas = new List<SDataAnimation>();
     }
 
 
     public void ReadAnimationDatas(string fileName)
     {
-        animationDatas = new List<SDataAnimation>();
-
-
-        string path = Application.dataPath + "/" + fileName;
+        string path = Application.dataPath + "/animation/animation/" + fileName + ".asset";
         Debug.Log(path);
         FileStream fs;
         fs = new FileStream(path,FileMode.Open);
@@ -97,6 +94,7 @@ public class AnimationData : MonoBehaviour {
         {
             //id
             SDataAnimation aniData = new SDataAnimation();
+            aniData.MaxCellCount = 0;
             aniData.AniID = br.ReadUInt32();
 
             //name
@@ -137,8 +135,12 @@ public class AnimationData : MonoBehaviour {
             {
                 SDataAniFrame frameData = new SDataAniFrame();
                 frameData.CellNumber = br.ReadUInt32();
+                if (frameData.CellNumber > aniData.MaxCellCount)
+                {
+                    aniData.MaxCellCount = (int)frameData.CellNumber;
+                }
                 frameData.CellList = new List<SDataAniFrameCell>();
-                print("----------------------------------");
+                Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
                 for (int cellidx = 0; cellidx < frameData.CellNumber; cellidx++ )
                 {
                     SDataAniFrameCell cellData = new SDataAniFrameCell();
@@ -153,7 +155,8 @@ public class AnimationData : MonoBehaviour {
                     cellData.BlendType = br.ReadInt32();
                     frameData.CellList.Add(cellData);
                 }
-                print("----------------------------------");
+
+                Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
                 aniData.FrameList.Add(frameData);
             }

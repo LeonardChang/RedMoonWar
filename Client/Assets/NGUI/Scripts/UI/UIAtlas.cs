@@ -44,7 +44,7 @@ public class UIAtlas : MonoBehaviour
 	}
 
 	// Material used by this atlas. Name is kept only for backwards compatibility, it used to be public.
-	[SerializeField] Material material;
+	[SerializeField] public Material material;
 
 	// List of all sprites inside the atlas. Name is kept only for backwards compatibility, it used to be public.
 	[SerializeField] List<Sprite> sprites = new List<Sprite>();
