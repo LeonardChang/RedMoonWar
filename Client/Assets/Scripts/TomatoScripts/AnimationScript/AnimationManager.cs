@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class AnimationManager : MonoBehaviour {
     public static AnimationData animationData;
-    public string[] animationFileNames;
     public static GameObject atlasObject;
 
     public static List<UIAtlas> atlasList;
@@ -14,16 +13,15 @@ public class AnimationManager : MonoBehaviour {
         atlasList = new List<UIAtlas>();
         animationData = new AnimationData();
         animationData.Init();
-        int animationFileCount = animationFileNames.Length;
-        for (int i = 0; i < animationFileCount; i++ )
-        {
-            string fileName = animationFileNames[i];
-            animationData.ReadAnimationDatas(fileName);
-        }
+        //int animationFileCount = animationFileNames.Length;
+        //for (int i = 0; i < animationFileCount; i++)
+        //{
+        //    string fileName = animationFileNames[i];
+        //    animationData.ReadAnimationDatas(fileName);
+        //}
+        animationData.ReadFromXml();
 
         AnimationManager.atlasObject = gameObject;
-        //MakeAnimation("GeDou/Lei");
-        //MakeAnimation("wind",GameObject.Find("Panel"));
 	}
 	
 	// Update is called once per frame
@@ -31,6 +29,7 @@ public class AnimationManager : MonoBehaviour {
 	    if(Input.GetKeyDown(KeyCode.C))
         {
             MakeAnimation("wind", GameObject.Find("Panel"));
+            
         }
 	}
 

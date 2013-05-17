@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using System;
 
-
+[Serializable]
 public struct SDataAniFrameCell
 {
     public int Pattern;
@@ -16,6 +18,7 @@ public struct SDataAniFrameCell
     public int BlendType;
 };
 
+[Serializable]
 public struct SDataAniTiming
 {
     public uint Frame;
@@ -35,21 +38,14 @@ public struct SDataAniTiming
     public int Weight;
 };
 
-
+[Serializable]
 public struct SDataAniFrame
 {
     public uint CellNumber;
     public List<SDataAniFrameCell> CellList;
 };
 
-
-
-
-
-
-
-
-
+[Serializable]
 public struct SDataAnimation
 {
     public uint AniID;
@@ -71,7 +67,7 @@ public struct SDataAnimation
 
 
 
-
+[Serializable]
 public class AnimationData{
 
     public List<SDataAnimation> animationDatas;
@@ -200,5 +196,34 @@ public class AnimationData{
         }
 
         
+    }
+
+    public void ReadFromXml()
+    {
+        TextAsset text = (TextAsset)Resources.Load("AnimationDatas/animation");
+        string str = text.text;
+
+        MemoryStream ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(str));
+
+        if (ms != null)
+        {
+            ms.Flush();
+            XmlSerializer xmls = new XmlSerializer(typeof(AnimationData));
+            AnimationManager.animationData = xmls.Deserialize(ms) as AnimationData;
+            ms.Close();
+            Debug.Log("[data] ----------------> AnimationData loaded");
+        }
+    }
+
+
+    public void Write()
+    {
+        StreamWriter writer = new StreamWriter(Application.dataPath + "/Resources/AnimationDatas/animation.xml", false);
+        XmlSerializer xmls = new XmlSerializer(typeof(AnimationData));
+        MemoryStream ms = new MemoryStream();
+        xmls.Serialize(ms, this);
+        ms.Flush();
+        writer.Write(System.Text.Encoding.UTF8.GetString(ms.ToArray()));
+        writer.Close();
     }
 }
