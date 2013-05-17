@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Ğ¡¹Ø¿¨
+/// å°å…³å¡
 /// </summary>
 [System.Serializable]
 public class Battle
@@ -14,7 +14,7 @@ public class Battle
 }
 
 /// <summary>
-/// ´ó¹Ø¿¨
+/// å¤§å…³å¡
 /// </summary>
 [System.Serializable]
 public class BigBattle
@@ -24,7 +24,7 @@ public class BigBattle
 }
 
 /// <summary>
-/// Õ½³¡Êı¾İ
+/// æˆ˜åœºæ•°æ®
 /// </summary>
 [System.Serializable]
 public class Battles 

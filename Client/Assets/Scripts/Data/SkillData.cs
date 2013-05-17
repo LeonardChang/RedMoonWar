@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Ö÷¶¯¼¼ÄÜÊı¾İ
+/// ä¸»åŠ¨æŠ€èƒ½æ•°æ®
 /// </summary>
 public class SkillData 
 {
@@ -30,7 +30,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¼¼ÄÜID
+    /// æŠ€èƒ½ID
     /// </summary>
     public int ID
     {
@@ -41,7 +41,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¼¼ÄÜÃû³Æ
+    /// æŠ€èƒ½åç§°
     /// </summary>
     public string Name
     {
@@ -52,7 +52,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¼¼ÄÜÃèÊö
+    /// æŠ€èƒ½æè¿°
     /// </summary>
     public string Description
     {
@@ -63,7 +63,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¹¥»÷Á¦ÉËº¦±¶ÂÊ
+    /// æ”»å‡»åŠ›ä¼¤å®³å€ç‡
     /// </summary>
     public float MultiplyDamage
     {
@@ -74,7 +74,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¹Ì¶¨ÉËº¦
+    /// å›ºå®šä¼¤å®³
     /// </summary>
     public int FixedDamage
     {
@@ -85,7 +85,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¹¥»÷¾àÀë
+    /// æ”»å‡»è·ç¦»
     /// </summary>
     public int Range
     {
@@ -96,7 +96,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¹¥»÷Ä¿±êÊı
+    /// æ”»å‡»ç›®æ ‡æ•°
     /// </summary>
     public int Count
     {
@@ -107,7 +107,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¸½¼ÓBuff
+    /// é™„åŠ Buff
     /// </summary>
     public int AddBuff
     {
@@ -118,7 +118,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ManaÏûºÄ
+    /// Manaæ¶ˆè€—
     /// </summary>
     public int ManaCost
     {
@@ -129,7 +129,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¼¼ÄÜ²úÉúµÄ³ğºŞ
+    /// æŠ€èƒ½äº§ç”Ÿçš„ä»‡æ¨
     /// </summary>
     public int Hatred
     {
@@ -140,7 +140,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// Ä¿±êÊÆÁ¦
+    /// ç›®æ ‡åŠ¿åŠ›
     /// </summary>
     public AttackTargetType TargetPhase
     {
@@ -151,7 +151,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ¶¯»­ĞÎÊ½
+    /// åŠ¨ç”»å½¢å¼
     /// </summary>
     public AttackAnimType AttackAnim
     {
@@ -162,7 +162,7 @@ public class SkillData
     }
 
     /// <summary>
-    /// ×î´óµÈ¼¶
+    /// æœ€å¤§ç­‰çº§
     /// </summary>
     public int MaxLevel
     {
@@ -205,7 +205,7 @@ public class SkillData
 }
 
 /// <summary>
-/// Ö÷¶¯¼¼ÄÜ¹ÜÀíÆ÷
+/// ä¸»åŠ¨æŠ€èƒ½ç®¡ç†å™¨
 /// </summary>
 public class SkillManager
 {
@@ -251,7 +251,7 @@ public class SkillManager
     }
 
     /// <summary>
-    /// »ñÈ¡¼¼ÄÜÊı¾İ
+    /// è·å–æŠ€èƒ½æ•°æ®
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>

@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// ¶ÓÎé³ÉÔ±µÄĞÅÏ¢
+/// é˜Ÿä¼æˆå‘˜çš„ä¿¡æ¯
 /// </summary>
 [System.Serializable]
 public class FormationData
@@ -13,7 +13,7 @@ public class FormationData
     private int mY;
 
     /// <summary>
-    /// ½ÇÉ«µÄID
+    /// è§’è‰²çš„ID
     /// </summary>
     public System.Int64 CharacterID
     {
@@ -28,7 +28,7 @@ public class FormationData
     }
 
     /// <summary>
-    /// ´¦ÓÚ±à¶ÓÖĞµÄxÎ»ÖÃ
+    /// å¤„äºç¼–é˜Ÿä¸­çš„xä½ç½®
     /// </summary>
     public int X
     {
@@ -43,7 +43,7 @@ public class FormationData
     }
 
     /// <summary>
-    /// ´¦ÓÚ±à¶ÓÖĞµÄyÎ»ÖÃ
+    /// å¤„äºç¼–é˜Ÿä¸­çš„yä½ç½®
     /// </summary>
     public int Y
     {
@@ -59,7 +59,7 @@ public class FormationData
 }
 
 /// <summary>
-/// Íæ¼Ò¶ÓÎéÊı¾İ¹ÜÀíÆ÷
+/// ç©å®¶é˜Ÿä¼æ•°æ®ç®¡ç†å™¨
 /// </summary>
 [System.Serializable]
 public class Formation
@@ -85,13 +85,13 @@ public class Formation
         }
     }
 
-    private Dictionary<System.Int64, CharacterData> mTeam = new Dictionary<System.Int64, CharacterData>(); // Íæ¼ÒËùÓĞ¿¨Æ¬ÁĞ±í
-    private List<FormationData> mFormation = new List<FormationData>(); // Íæ¼Ò±à¶Ó¿¨Æ¬ÁĞ±í£¨µÚÒ»¸öÎª¶Ó³¤£©
+    private Dictionary<System.Int64, CharacterData> mTeam = new Dictionary<System.Int64, CharacterData>(); // ç©å®¶æ‰€æœ‰å¡ç‰‡åˆ—è¡¨
+    private List<FormationData> mFormation = new List<FormationData>(); // ç©å®¶ç¼–é˜Ÿå¡ç‰‡åˆ—è¡¨ï¼ˆç¬¬ä¸€ä¸ªä¸ºé˜Ÿé•¿ï¼‰
 
     private int mFriendPosition;
 
     /// <summary>
-    /// ºÃÓÑµÄ¿¨ÅÆ´¦ÓÚ±à¶ÓÖĞµÄÎ»ÖÃ
+    /// å¥½å‹çš„å¡ç‰Œå¤„äºç¼–é˜Ÿä¸­çš„ä½ç½®
     /// </summary>
     public int FriendPosition
     {
@@ -106,7 +106,7 @@ public class Formation
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³¸ö½ÇÉ«µÄÊı¾İ
+    /// è·å–æŸä¸ªè§’è‰²çš„æ•°æ®
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
@@ -151,7 +151,7 @@ public class Formation
     }
 
     /// <summary>
-    /// °´ÕÕÅÅĞò¹æÔò»ñÈ¡¿¨ÅÆÁĞ±í
+    /// æŒ‰ç…§æ’åºè§„åˆ™è·å–å¡ç‰Œåˆ—è¡¨
     /// </summary>
     /// <param name="_sequence"></param>
     /// <returns></returns>
@@ -197,7 +197,7 @@ public class Formation
     }
 
     /// <summary>
-    /// »ñÈ¡±à¶Ó
+    /// è·å–ç¼–é˜Ÿ
     /// </summary>
     /// <returns></returns>
     public IEnumerable<FormationData> GetFormation()
@@ -209,7 +209,7 @@ public class Formation
     }
 
     /// <summary>
-    /// »ñÈ¡±à¶ÓÖĞµÄËùÓĞ½ÇÉ«
+    /// è·å–ç¼–é˜Ÿä¸­çš„æ‰€æœ‰è§’è‰²
     /// </summary>
     /// <returns></returns>
     public IEnumerable<CharacterData> GetFormationCharacter()

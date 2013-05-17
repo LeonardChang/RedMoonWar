@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// ½±ÀøÊı¾İ
+/// å¥–åŠ±æ•°æ®
 /// </summary>
 [System.Serializable]
 public class Reward
@@ -12,7 +12,7 @@ public class Reward
 }
 
 /// <summary>
-/// Õ½³¡ÅäÖÃÊı¾İ
+/// æˆ˜åœºé…ç½®æ•°æ®
 /// </summary>
 [System.Serializable]
 public class Stage 
@@ -42,10 +42,10 @@ public class Stage
     private int mHeight;
     private int mBackground;
 
-    private Dictionary<System.Int64, CharacterData> mCharacters = new Dictionary<System.Int64, CharacterData>(); // ¹Ø¿¨ÖĞµÄËùÓĞ½ÇÉ«
+    private Dictionary<System.Int64, CharacterData> mCharacters = new Dictionary<System.Int64, CharacterData>(); // å…³å¡ä¸­çš„æ‰€æœ‰è§’è‰²
 
-    private List<FormationData> mFormation = new List<FormationData>(); // ÎÒ·½½ÇÉ«
+    private List<FormationData> mFormation = new List<FormationData>(); // æˆ‘æ–¹è§’è‰²
 
-    private List<FormationData> mEnemy = new List<FormationData>(); // µĞ·½½ÇÉ«
-    private Dictionary<System.Int64, DropRewardType> mDropRewards = new Dictionary<System.Int64, DropRewardType>(); // µĞ·½µôÂäÎïÆ·ÀàĞÍÁĞ±í
+    private List<FormationData> mEnemy = new List<FormationData>(); // æ•Œæ–¹è§’è‰²
+    private Dictionary<System.Int64, DropRewardType> mDropRewards = new Dictionary<System.Int64, DropRewardType>(); // æ•Œæ–¹æ‰è½ç‰©å“ç±»å‹åˆ—è¡¨
 }

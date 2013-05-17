@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// ½ÇÉ«Êı¾İ
+/// è§’è‰²æ•°æ®
 /// </summary>
 public class CharacterData 
 {
@@ -21,7 +21,7 @@ public class CharacterData
     private System.DateTime mGetDate = System.DateTime.Now;
 
     /// <summary>
-    /// ¿¨Æ¬ID
+    /// å¡ç‰‡ID
     /// </summary>
     public System.Int64 ID
     {
@@ -30,7 +30,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ×î´óHP
+    /// æœ€å¤§HP
     /// </summary>
     public int MaxHP
     {
@@ -39,7 +39,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ×î´óMP
+    /// æœ€å¤§MP
     /// </summary>
     public int MaxMP
     {
@@ -48,7 +48,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ¹¥»÷Á¦
+    /// æ”»å‡»åŠ›
     /// </summary>
     public int Atk
     {
@@ -57,7 +57,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ·ÀÓùÁ¦
+    /// é˜²å¾¡åŠ›
     /// </summary>
     public int Def
     {
@@ -66,7 +66,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ËÙ¶È
+    /// é€Ÿåº¦
     /// </summary>
     public int Spd
     {
@@ -75,7 +75,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ¶ÔÓ¦µÄ¿¨Æ¬ID
+    /// å¯¹åº”çš„å¡ç‰‡ID
     /// </summary>
     public int CardID
     {
@@ -84,7 +84,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// µ±Ç°µÈ¼¶
+    /// å½“å‰ç­‰çº§
     /// </summary>
     public int Level
     {
@@ -93,7 +93,7 @@ public class CharacterData
     }
     
     /// <summary>
-    /// µ±Ç°¼¼ÄÜµÈ¼¶
+    /// å½“å‰æŠ€èƒ½ç­‰çº§
     /// </summary>
     public int SkillLevel
     {
@@ -102,7 +102,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// ¿¨Æ¬µÄ¾­Ñé
+    /// å¡ç‰‡çš„ç»éªŒ
     /// </summary>
     public int EXP
     {
@@ -111,7 +111,7 @@ public class CharacterData
     }
 
     /// <summary>
-    /// »ñµÃÈÕÆÚ
+    /// è·å¾—æ—¥æœŸ
     /// </summary>
     public System.DateTime GetDate
     {
@@ -121,7 +121,7 @@ public class CharacterData
 }
 
 /// <summary>
-/// ½ÇÉ«¹ÜÀíÆ÷
+/// è§’è‰²ç®¡ç†å™¨
 /// </summary>
 public class CharacterManager
 {
@@ -177,7 +177,7 @@ public class CharacterManager
     }
 
     /// <summary>
-    /// »ñÈ¡½ÇÉ«Êı¾İ
+    /// è·å–è§’è‰²æ•°æ®
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>

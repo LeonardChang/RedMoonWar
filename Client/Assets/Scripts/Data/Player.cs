@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Íæ¼ÒÊı¾İ
+/// ç©å®¶æ•°æ®
 /// </summary>
 [System.Serializable]
 public class Player 
@@ -29,23 +29,23 @@ public class Player
         }
     }
 
-    private string mUserName; // ÕÊºÅ
-    private string mPassword; // ÃÜÂë
-    private string mNickName; // Íæ¼ÒÃû×Ö
-    private System.Int64 mPlayerID; // Íæ¼ÒID
-    private int mCoin; // ½ğ±ÒÊıÁ¿
-    private int mGem; // ±¦Ê¯±ÒÊıÁ¿
-    private int mPower; // ÌåÁ¦
-    private int mPowerMax; // ÌåÁ¦ÉÏÏŞ
-    private float mPowerAddSpeed; // ÌåÁ¦»Ö¸´ËÙ¶È£¨Ãë£©
-    private int mLevel; // µÈ¼¶
-    private int mEXP; // ¾­ÑéÖµ
-    private int mEXPMax; // Éı¼¶ËùĞè¾­Ñé
-    private int mFriendshipPoint; // ÓÑÇéµãÊı
-    private int mAddFriendRequest; // Î´´¦ÀíµÄºÃÓÑÇëÇóÊı
+    private string mUserName; // å¸å·
+    private string mPassword; // å¯†ç 
+    private string mNickName; // ç©å®¶åå­—
+    private System.Int64 mPlayerID; // ç©å®¶ID
+    private int mCoin; // é‡‘å¸æ•°é‡
+    private int mGem; // å®çŸ³å¸æ•°é‡
+    private int mPower; // ä½“åŠ›
+    private int mPowerMax; // ä½“åŠ›ä¸Šé™
+    private float mPowerAddSpeed; // ä½“åŠ›æ¢å¤é€Ÿåº¦ï¼ˆç§’ï¼‰
+    private int mLevel; // ç­‰çº§
+    private int mEXP; // ç»éªŒå€¼
+    private int mEXPMax; // å‡çº§æ‰€éœ€ç»éªŒ
+    private int mFriendshipPoint; // å‹æƒ…ç‚¹æ•°
+    private int mAddFriendRequest; // æœªå¤„ç†çš„å¥½å‹è¯·æ±‚æ•°
 
     /// <summary>
-    /// ÕÊºÅ
+    /// å¸å·
     /// </summary>
     public string UserName
     {
@@ -54,7 +54,7 @@ public class Player
     }
 
     /// <summary>
-    /// ÃÜÂë
+    /// å¯†ç 
     /// </summary>
     public string Password
     {
@@ -63,7 +63,7 @@ public class Player
     }
 
     /// <summary>
-    /// Íæ¼ÒÃû×Ö
+    /// ç©å®¶åå­—
     /// </summary>
     public string NickName
     {
@@ -72,7 +72,7 @@ public class Player
     }
 
     /// <summary>
-    /// Íæ¼ÒID
+    /// ç©å®¶ID
     /// </summary>
     public System.Int64 PlayerID
     {
@@ -81,7 +81,7 @@ public class Player
     }
 
     /// <summary>
-    /// ½ğ±ÒÊıÁ¿
+    /// é‡‘å¸æ•°é‡
     /// </summary>
     public int Coin
     {
@@ -90,7 +90,7 @@ public class Player
     }
 
     /// <summary>
-    /// ±¦Ê¯±ÒÊıÁ¿
+    /// å®çŸ³å¸æ•°é‡
     /// </summary>
     public int Gem
     {
@@ -99,7 +99,7 @@ public class Player
     }
 
     /// <summary>
-    /// ÌåÁ¦
+    /// ä½“åŠ›
     /// </summary>
     public int Power
     {
@@ -108,7 +108,7 @@ public class Player
     }
 
     /// <summary>
-    /// ÌåÁ¦ÉÏÏŞ
+    /// ä½“åŠ›ä¸Šé™
     /// </summary>
     public int PowerMax
     {
@@ -117,7 +117,7 @@ public class Player
     }
 
     /// <summary>
-    /// ÌåÁ¦»Ö¸´ËÙ¶È£¨Ãë£©
+    /// ä½“åŠ›æ¢å¤é€Ÿåº¦ï¼ˆç§’ï¼‰
     /// </summary>
     public float PowerAddSpeed
     {
@@ -126,7 +126,7 @@ public class Player
     }
 
     /// <summary>
-    /// µÈ¼¶
+    /// ç­‰çº§
     /// </summary>
     public int Level
     {
@@ -135,7 +135,7 @@ public class Player
     }
 
     /// <summary>
-    /// ¾­ÑéÖµ
+    /// ç»éªŒå€¼
     /// </summary>
     public int EXP
     {
@@ -144,7 +144,7 @@ public class Player
     }
 
     /// <summary>
-    /// Éı¼¶ËùĞè¾­Ñé
+    /// å‡çº§æ‰€éœ€ç»éªŒ
     /// </summary>
     public int EXPMax
     {
@@ -153,7 +153,7 @@ public class Player
     }
 
     /// <summary>
-    /// ÓÑÇéµãÊı
+    /// å‹æƒ…ç‚¹æ•°
     /// </summary>
     public int FriendshipPoint
     {
@@ -162,7 +162,7 @@ public class Player
     }
 
     /// <summary>
-    /// Î´´¦ÀíµÄºÃÓÑÇëÇóÊı
+    /// æœªå¤„ç†çš„å¥½å‹è¯·æ±‚æ•°
     /// </summary>
     public int AddFriendRequest
     {
