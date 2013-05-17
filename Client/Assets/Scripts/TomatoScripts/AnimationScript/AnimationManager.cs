@@ -28,7 +28,7 @@ public class AnimationManager : MonoBehaviour {
 	void Update () {
 	    if(Input.GetKeyDown(KeyCode.C))
         {
-            MakeAnimation("wind", GameObject.Find("Panel"));
+            MakeAnimation("Attacking", GameObject.Find("Panel"));
             
         }
 	}

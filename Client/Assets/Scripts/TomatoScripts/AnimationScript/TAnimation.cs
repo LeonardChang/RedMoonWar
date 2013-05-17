@@ -92,10 +92,17 @@ public class TAnimation : MonoBehaviour {
                 position.x = cellData.X;
                 position.y = -cellData.Y;
 
+
+                GameObject sGame = sprites[cellIndex].gameObject;
+
+                Debug.Log(cellData.Rotate);
+                sGame.transform.rotation = Quaternion.identity;
+                sGame.transform.RotateAround(sGame.transform.forward, cellData.Rotate);
+
                 Vector3 scale = new Vector3(cellData.Scaling/100*192,cellData.Scaling/100*192,1);
 
-                sprites[cellIndex].gameObject.transform.localPosition = position;
-                sprites[cellIndex].gameObject.transform.localScale = scale;
+                sGame.transform.localPosition = position;
+                sGame.transform.localScale = scale;
                 Color color = sprites[cellIndex].color;
                 color.a = (float)cellData.Opacity/255;
                 sprites[cellIndex].color = color;
