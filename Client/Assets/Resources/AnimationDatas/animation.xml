@@ -4,7 +4,7 @@
     <SDataAnimation>
       <AniID>1</AniID>
       <Name>Attack</Name>
-      <AniImg01>Attack6.png</AniImg01>
+      <AniImg01>Attack6</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
@@ -128,7 +128,7 @@
     <SDataAnimation>
       <AniID>2</AniID>
       <Name>Attacking</Name>
-      <AniImg01>Blow1.png</AniImg01>
+      <AniImg01>Blow1</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
@@ -256,9 +256,9 @@
     <SDataAnimation>
       <AniID>3</AniID>
       <Name>HealthHP</Name>
-      <AniImg01>Heal4.png</AniImg01>
+      <AniImg01>Heal4</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
-      <AniImg02>Heal2.png</AniImg02>
+      <AniImg02>Heal2</AniImg02>
       <AniImg02Hue>230</AniImg02Hue>
       <Position>1</Position>
       <FrameNumber>25</FrameNumber>
@@ -1028,9 +1028,9 @@
     <SDataAnimation>
       <AniID>4</AniID>
       <Name>HealthMP</Name>
-      <AniImg01>Heal5.png</AniImg01>
+      <AniImg01>Heal5</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
-      <AniImg02>Heal6.png</AniImg02>
+      <AniImg02>Heal6</AniImg02>
       <AniImg02Hue>0</AniImg02Hue>
       <Position>1</Position>
       <FrameNumber>17</FrameNumber>
@@ -1533,9 +1533,9 @@
     <SDataAnimation>
       <AniID>5</AniID>
       <Name>Fireball</Name>
-      <AniImg01>Attack1.png</AniImg01>
+      <AniImg01>Attack1</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
-      <AniImg02>Attack2.png</AniImg02>
+      <AniImg02>Attack2</AniImg02>
       <AniImg02Hue>0</AniImg02Hue>
       <Position>1</Position>
       <FrameNumber>10</FrameNumber>
@@ -1743,7 +1743,7 @@
     <SDataAnimation>
       <AniID>6</AniID>
       <Name>Iceball</Name>
-      <AniImg01>Ice2.png</AniImg01>
+      <AniImg01>Ice2</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
@@ -2229,7 +2229,7 @@
     <SDataAnimation>
       <AniID>7</AniID>
       <Name>Windball</Name>
-      <AniImg01>Wind1.png</AniImg01>
+      <AniImg01>Wind1</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
@@ -2484,7 +2484,7 @@
     <SDataAnimation>
       <AniID>8</AniID>
       <Name>Earthball</Name>
-      <AniImg01>Earth1.png</AniImg01>
+      <AniImg01>Earth1</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
@@ -2706,7 +2706,7 @@
     <SDataAnimation>
       <AniID>9</AniID>
       <Name>Lightball</Name>
-      <AniImg01>Thunder2.png</AniImg01>
+      <AniImg01>Thunder2</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
@@ -2971,7 +2971,7 @@
     <SDataAnimation>
       <AniID>10</AniID>
       <Name>Darkball</Name>
-      <AniImg01>Darkness1.png</AniImg01>
+      <AniImg01>Darkness1</AniImg01>
       <AniImg01Hue>0</AniImg01Hue>
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
