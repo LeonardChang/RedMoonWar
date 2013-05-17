@@ -31,8 +31,30 @@ public class GameLogic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+        if (mClickBuff > 0)
+        {
+            mClickBuff -= Time.deltaTime;
+            if (mClickBuff < 0)
+            {
+                mClickBuff = 0;
+            }
+        }
+        
+	    if (Input.GetMouseButtonDown(0))
+	    {
+            if (mClickBuff <= 0)
+            {
+                mClickBuff = 0.2f;
+            }
+            else
+            {
+                mClickBuff = 0;
+                ClickAll();
+            }
+	    }
 	}
+
+    float mClickBuff = 0;
 
     void BattleStart()
     {
@@ -275,7 +297,8 @@ public class GameLogic : MonoBehaviour {
     void ClickMultiple()
     {
         mIsMultiple = !mIsMultiple;
-        MultipleBtnBack.spriteName = mIsMultiple ? "UIText06" : "UIText07";
+        MultipleBtnBack.spriteName = mIsMultiple ? "BtnIcon07" : "BtnIcon06";
+        MultipleBtnBack.MakePixelPerfect();
     }
 
     void GameChessboardRefreshFinish(int _bottomLine)

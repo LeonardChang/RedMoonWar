@@ -13,14 +13,6 @@ public enum CharAnimationState
     Join,
 }
 
-//public enum ActionState
-//{
-//    None,
-//    Attack,
-//    Health,
-//    ArrowAttack,
-//}
-
 public class CardLogic : MonoBehaviour {
     public Animation CardAnimation;
     
@@ -265,25 +257,38 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// 创建攻击动画
-    /// </summary>
-    public void CreateStartAttackEffect()
+    void CreateTAnimation(string _animation)
     {
-        GameObject perfab = Resources.Load("Cards/Perfabs/AttackStart", typeof(GameObject)) as GameObject;
+        GameObject perfab = Resources.Load("Cards/Perfabs/TAnimation", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
         obj.transform.localScale = Vector3.one;
 
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Blow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
+        obj.GetComponent<TAnimObject>().Name = _animation;
+    }
+    
+    /// <summary>
+    /// 创建攻击动画
+    /// </summary>
+    void CreateStartAttackEffect()
+    {
+        //GameObject perfab = Resources.Load("Cards/Perfabs/AttackStart", typeof(GameObject)) as GameObject;
+        //GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        //obj.transform.parent = gameObject.transform.parent;
+        //obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        //obj.transform.localScale = Vector3.one;
+
+        //AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Blow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
+
+        CreateTAnimation("Attack");
     }
 
     /// <summary>
     /// 创建被击动画
     /// </summary>
     /// <param name="_Damage"></param>
-    public void CreateHitEffect(int _Damage)
+    void CreateHitEffect(int _Damage)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/HitEffect", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -307,7 +312,7 @@ public class CardLogic : MonoBehaviour {
     /// 创建被治疗动画
     /// </summary>
     /// <param name="_Health"></param>
-    public void CreateHealEffect(int _Health)
+    void CreateHealEffect(int _Health)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/HealEffect", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -332,7 +337,7 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     /// <param name="_target"></param>
     /// <param name="_flyTime"></param>
-    public void CreateArrowEffect(Transform _target, float _flyTime)
+    void CreateArrowEffect(Transform _target, float _flyTime)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/Arrow", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -365,7 +370,7 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     /// <param name="_target"></param>
     /// <param name="_flyTime"></param>
-    public void CreateFireBallEffect(Transform _target, float _flyTime)
+    void CreateFireBallEffect(Transform _target, float _flyTime)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/FireBall", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
