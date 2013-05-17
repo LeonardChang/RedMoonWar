@@ -281,7 +281,7 @@ public class CardLogic : MonoBehaviour {
 
         //AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Blow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
 
-        CreateTAnimation("Attack");
+        CreateTAnimation("Attacking");
     }
 
     /// <summary>
@@ -290,14 +290,16 @@ public class CardLogic : MonoBehaviour {
     /// <param name="_Damage"></param>
     void CreateHitEffect(int _Damage)
     {
-        GameObject perfab = Resources.Load("Cards/Perfabs/HitEffect", typeof(GameObject)) as GameObject;
-        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        obj.transform.localScale = Vector3.one;
+        //GameObject perfab = Resources.Load("Cards/Perfabs/HitEffect", typeof(GameObject)) as GameObject;
+        //GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        //obj.transform.parent = gameObject.transform.parent;
+        //obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        //obj.transform.localScale = Vector3.one;
 
-        perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
-        obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        CreateTAnimation("Attack");
+
+        GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 70, -2);
         obj.transform.localScale = new Vector3(50, 50, 1);
