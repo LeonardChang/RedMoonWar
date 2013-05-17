@@ -71,11 +71,11 @@ public class TAnimation : MonoBehaviour {
         }
         SDataAniFrame frameData = data.FrameList[nowFrameIndex];
         //Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        foreach (UISprite sprite in sprites)
-        {
-            sprite.gameObject.active = false;
-        }
 
+        for (int start = (int)frameData.CellNumber; start < data.MaxCellCount; start++)
+        {
+            sprites[start].gameObject.active = false;
+        }
 
 
         for (int cellIndex = 0; cellIndex < frameData.CellNumber; cellIndex++)
