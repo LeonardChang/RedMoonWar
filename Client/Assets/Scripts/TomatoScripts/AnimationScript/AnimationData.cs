@@ -99,14 +99,17 @@ public class AnimationData{
 
             //name
             uint Length = br.ReadUInt32();
-            byte[] data = br.ReadBytes((int)Length * 2);
+            byte[] data = br.ReadBytes((int)Length * 2-1);
+            br.ReadBytes(1);
             aniData.Name = System.Text.Encoding.Unicode.GetString(data);
             Debug.Log("[data][Name]--------------------------------->" + aniData.Name);
 
             //animation1
             Length = br.ReadUInt32();
-            data = br.ReadBytes((int)Length * 2);
+            data = br.ReadBytes((int)Length * 2-1);
+            br.ReadBytes(1);
             aniData.AniImg01 = System.Text.Encoding.Unicode.GetString(data);
+            aniData.AniImg01 = aniData.AniImg01.ToString();
             Debug.Log("[data][AniImg01]--------------------------------->" + aniData.AniImg01);
 
             //	ani image 01 hue
@@ -115,7 +118,8 @@ public class AnimationData{
 
             //animation2
             Length = br.ReadUInt32();
-            data = br.ReadBytes((int)Length * 2);
+            data = br.ReadBytes((int)Length * 2-1);
+            br.ReadBytes(1);
             aniData.AniImg02 = System.Text.Encoding.Unicode.GetString(data);
             Debug.Log("[data][AniImg01]--------------------------------->" + aniData.AniImg02);
 
@@ -171,7 +175,8 @@ public class AnimationData{
 
                 timeData.Frame = br.ReadUInt32();
                 Length = br.ReadUInt32();
-                data = br.ReadBytes((int)Length * 2);
+                data = br.ReadBytes((int)Length * 2-1);
+                br.ReadBytes(1);
                 timeData.SeName = System.Text.Encoding.Unicode.GetString(data);
                 Debug.Log(timeData.SeName);
 
