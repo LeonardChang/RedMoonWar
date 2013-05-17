@@ -50,7 +50,7 @@ public class AnimationManager : MonoBehaviour {
         return null;
     }
 
-    static void CreateAnimationObject(SDataAnimation data,GameObject target)
+    static TAnimation CreateAnimationObject(SDataAnimation data, GameObject target)
     {
         GameObject newGame = new GameObject();
         GameObject father = (GameObject)Instantiate(newGame);
@@ -98,7 +98,7 @@ public class AnimationManager : MonoBehaviour {
             ani.sprites.Add(sprite);
         }
         Destroy(newGame);
-
+        return ani;
         
 
     }
@@ -107,16 +107,17 @@ public class AnimationManager : MonoBehaviour {
     /// 生成一个动画
     /// </summary>
     /// <param name="name"></param>
-    public static void MakeAnimation(string name,GameObject target)
+    public static TAnimation MakeAnimation(string name,GameObject target)
     {
         object data = GetAnimationByName(name);
         if (data != null)
         {
-            CreateAnimationObject((SDataAnimation)data, target);
+            return CreateAnimationObject((SDataAnimation)data, target);
         }
         else
         {
             Debug.Log("data is null");
+            return null;
         }
     }
 

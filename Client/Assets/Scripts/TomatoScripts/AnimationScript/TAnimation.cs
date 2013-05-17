@@ -3,10 +3,24 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 public class TAnimation : MonoBehaviour {
+    [HideInInspector]
     public SDataAnimation data;
+    [HideInInspector]
     public List<UIAtlas> atlases;
+    [HideInInspector]
     public List<UISprite> sprites;
 
+
+    public bool loop = false;
+    public GameObject endTarget;
+    public string endMessage;
+
+    public GameObject timeTarget;
+    public string timeMessage;
+
+
+
+    [HideInInspector]
     public UISprite sprite;
 
     int nowFrameIndex = 0;
@@ -22,37 +36,15 @@ public class TAnimation : MonoBehaviour {
     }
 
 
-    void Temp()
-    {
-        UIAtlas atlas = sprite.gameObject.AddComponent<UIAtlas>();
-        sprite.atlas = atlas;
-
-        Material atlasMaterial = new Material(Shader.Find("Unlit/Transparent Colored"));
-        Texture texture = (Texture)Resources.Load("TempAnimation/1");
-
-        int col = texture.width / 192;
-        int raw = texture.height / 192;
-
-        atlasMaterial.mainTexture = texture;
-
-        atlas.name = "testAtlas";
-        atlas.material = atlasMaterial;
-
-
-        UIAtlas.Sprite aSprite = new UIAtlas.Sprite();
-        aSprite.name = "testsprite_1";
-        Rect outer = new Rect(0, 0, 192, 192);
-        aSprite.outer = outer;
-
-        atlas.spriteList.Add(aSprite);
-
-        sprite.atlas = atlas;
-        sprite.spriteName = "testsprite_1";
-    }
+    
 
 
     void Update()
     {
+        if (nowFrameIndex == data.FrameNumber)
+        {
+            return;
+        }
         frameTime += Time.deltaTime;
         if (frameTime <= frame)
         {
@@ -63,7 +55,23 @@ public class TAnimation : MonoBehaviour {
             frameTime = 0;
         }
 
+        for (int timeIndex = 0; timeIndex < data.TimingNumber; timeIndex++)
+        {
+            //Debug.Log(data.TimingList[timeIndex].Frame);
+            if (nowFrameIndex == data.TimingList[timeIndex].Frame)
+            {
+                Debug.Log(data.TimingList[timeIndex].SeName);
+                if (timeTarget != null)
+                {
+                    if (timeMessage != "")
+                    {
+                        timeTarget.SendMessage(timeMessage,data.TimingList[timeIndex],SendMessageOptions.DontRequireReceiver);
+                    }
+                }
+            }
+        }
         SDataAniFrame frameData = data.FrameList[nowFrameIndex];
+        
         for (int cellIndex = 0; cellIndex < frameData.CellNumber; cellIndex++)
         {
             
@@ -100,7 +108,21 @@ public class TAnimation : MonoBehaviour {
         nowFrameIndex++;
         if (nowFrameIndex == data.FrameNumber)
         {
-            nowFrameIndex = 0;
+            if (loop)
+            {
+                nowFrameIndex = 0;
+            }
+            else
+            {
+                if (endTarget != null)
+                {
+                    if (endMessage != "")
+                    {
+                        endTarget.SendMessage(endMessage, SendMessageOptions.DontRequireReceiver);
+                    }
+                }
+            }
+            
         }
 
     }
