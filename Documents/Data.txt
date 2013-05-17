@@ -1,0 +1,10 @@
+本地静态数据表：
+CardBaseData.cs - 卡牌基本数据
+SkillData.cs - 技能基本数据
+
+动态数据表：
+Player.cs - 玩家数据
+CharacterData.cs - 卡片角色数据
+Formation.cs - 编队数据
+Friends.cs - 好友数据
+
