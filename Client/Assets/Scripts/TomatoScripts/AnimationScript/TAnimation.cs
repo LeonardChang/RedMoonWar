@@ -26,7 +26,7 @@ public class TAnimation : MonoBehaviour {
     int nowFrameIndex = 0;
 
     float frameTime = 0;
-    float frame = 0.033f;
+    float frame = 0.05f;
     //float frame = 5f;
 
     public void Init()

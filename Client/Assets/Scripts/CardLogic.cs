@@ -262,7 +262,7 @@ public class CardLogic : MonoBehaviour {
         GameObject perfab = Resources.Load("Cards/Perfabs/TAnimation", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 40, -1);
         obj.transform.localScale = Vector3.one;
 
         obj.GetComponent<TAnimObject>().Name = _animation;
@@ -316,14 +316,16 @@ public class CardLogic : MonoBehaviour {
     /// <param name="_Health"></param>
     void CreateHealEffect(int _Health)
     {
-        GameObject perfab = Resources.Load("Cards/Perfabs/HealEffect", typeof(GameObject)) as GameObject;
-        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        obj.transform.localScale = Vector3.one * 2;
+        //GameObject perfab = Resources.Load("Cards/Perfabs/HealEffect", typeof(GameObject)) as GameObject;
+        //GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        //obj.transform.parent = gameObject.transform.parent;
+        //obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        //obj.transform.localScale = Vector3.one * 2;
 
-        perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
-        obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        CreateTAnimation("HealthHP");
+
+        GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 70, -2);
         obj.transform.localScale = new Vector3(50, 50, 1);
@@ -386,6 +388,11 @@ public class CardLogic : MonoBehaviour {
         Destroy(obj, _flyTime);
 
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Fire1", typeof(AudioClip)) as AudioClip, Vector3.zero);
+    }
+
+    public void CreateFireBallEndEffect()
+    {
+        CreateTAnimation("Fireball");
     }
 
     public System.Action<CardLogic> ActionFinishEvent;
@@ -671,6 +678,14 @@ public class CardLogic : MonoBehaviour {
             }
 
             AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
+            switch (mActionState)
+            {
+                case AttackAnimType.FireBall:
+                    logic.CreateFireBallEndEffect();
+                    break;
+                default:
+                    break;
+            }
             logic.CreateHitEffect(damage);
         }
 
