@@ -60,7 +60,6 @@ public class TAnimation : MonoBehaviour {
             //Debug.Log(data.TimingList[timeIndex].Frame);
             if (nowFrameIndex == data.TimingList[timeIndex].Frame)
             {
-                Debug.Log(data.TimingList[timeIndex].SeName);
                 if (timeTarget != null)
                 {
                     if (timeMessage != "")
@@ -71,11 +70,19 @@ public class TAnimation : MonoBehaviour {
             }
         }
         SDataAniFrame frameData = data.FrameList[nowFrameIndex];
-        
+        //Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        foreach (UISprite sprite in sprites)
+        {
+            sprite.gameObject.active = false;
+        }
+
+
+
         for (int cellIndex = 0; cellIndex < frameData.CellNumber; cellIndex++)
         {
             
             SDataAniFrameCell cellData = frameData.CellList[cellIndex];
+            //Debug.Log(cellData.Pattern);
             if (cellData.Pattern != -1)
             {
                 sprites[cellIndex].gameObject.active = true;
@@ -95,7 +102,6 @@ public class TAnimation : MonoBehaviour {
 
                 GameObject sGame = sprites[cellIndex].gameObject;
 
-                Debug.Log(cellData.Rotate);
                 sGame.transform.rotation = Quaternion.identity;
                 sGame.transform.RotateAround(sGame.transform.forward, cellData.Rotate);
 
@@ -112,6 +118,7 @@ public class TAnimation : MonoBehaviour {
                 sprites[cellIndex].gameObject.active = false;
             }
         }
+
         nowFrameIndex++;
         if (nowFrameIndex == data.FrameNumber)
         {
