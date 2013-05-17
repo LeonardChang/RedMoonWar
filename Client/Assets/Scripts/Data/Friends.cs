@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// ºÃÓÑµÄÊı¾İ
+/// å¥½å‹çš„æ•°æ®
 /// </summary>
 [System.Serializable]
 public class FriendData
@@ -16,7 +16,7 @@ public class FriendData
     private int mTodayFriendshipPoint;
 
     /// <summary>
-    /// Íæ¼ÒID
+    /// ç©å®¶ID
     /// </summary>
     public System.Int64 PlayerID
     {
@@ -25,7 +25,7 @@ public class FriendData
     }
 
     /// <summary>
-    /// êÇ³Æ
+    /// æ˜µç§°
     /// </summary>
     public string NickName
     {
@@ -34,7 +34,7 @@ public class FriendData
     }
 
     /// <summary>
-    /// µÈ¼¶
+    /// ç­‰çº§
     /// </summary>
     public int Level
     {
@@ -43,7 +43,7 @@ public class FriendData
     }
 
     /// <summary>
-    /// ¶Ó³¤¿¨ÅÆ
+    /// é˜Ÿé•¿å¡ç‰Œ
     /// </summary>
     public CharacterData LeaderCharacter
     {
@@ -52,7 +52,7 @@ public class FriendData
     }
 
     /// <summary>
-    /// ×îºóµÇÂ¼ÈÕÆÚ
+    /// æœ€åç™»å½•æ—¥æœŸ
     /// </summary>
     public System.DateTime LastLoginTime
     {
@@ -61,7 +61,7 @@ public class FriendData
     }
 
     /// <summary>
-    /// Ê£ÓàµÄÓÑÇéµã
+    /// å‰©ä½™çš„å‹æƒ…ç‚¹
     /// </summary>
     public int TodayFriendshipPoint
     {
@@ -71,7 +71,7 @@ public class FriendData
 }
 
 /// <summary>
-/// ºÃÓÑ¹ÜÀíÆ÷
+/// å¥½å‹ç®¡ç†å™¨
 /// </summary>
 [System.Serializable]
 public class Friends
@@ -97,11 +97,11 @@ public class Friends
         }
     }
 
-    private Dictionary<System.Int64, FriendData> mFriends = new Dictionary<System.Int64, FriendData>(); // ºÃÓÑÁĞ±í
-    private Dictionary<System.Int64, FriendData> mStrangers = new Dictionary<System.Int64, FriendData>(); // ÇëÇó¼ÓºÃÓÑµÄÄ°ÉúÈË
+    private Dictionary<System.Int64, FriendData> mFriends = new Dictionary<System.Int64, FriendData>(); // å¥½å‹åˆ—è¡¨
+    private Dictionary<System.Int64, FriendData> mStrangers = new Dictionary<System.Int64, FriendData>(); // è¯·æ±‚åŠ å¥½å‹çš„é™Œç”Ÿäºº
 
     /// <summary>
-    /// »ñÈ¡ËùÓĞºÃÓÑ
+    /// è·å–æ‰€æœ‰å¥½å‹
     /// </summary>
     /// <returns></returns>
     public IEnumerable<FriendData> GetFriends()
@@ -113,7 +113,7 @@ public class Friends
     }
 
     /// <summary>
-    /// Í¨¹ıid»ñÈ¡Ä³¸öºÃÓÑ
+    /// é€šè¿‡idè·å–æŸä¸ªå¥½å‹
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
@@ -128,7 +128,7 @@ public class Friends
     }
 
     /// <summary>
-    /// »ñÈ¡ËùÓĞÄ°ÉúÈË
+    /// è·å–æ‰€æœ‰é™Œç”Ÿäºº
     /// </summary>
     /// <returns></returns>
     public IEnumerable<FriendData> GetStrangers()
@@ -140,7 +140,7 @@ public class Friends
     }
 
     /// <summary>
-    /// Í¨¹ıid»ñÈ¡Ä³¸öÄ°ÉúÈÈ
+    /// é€šè¿‡idè·å–æŸä¸ªé™Œç”Ÿçƒ­
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
@@ -155,7 +155,7 @@ public class Friends
     }
 
     /// <summary>
-    /// µ±Ç°Ä°ÉúÈËÊıÁ¿
+    /// å½“å‰é™Œç”Ÿäººæ•°é‡
     /// </summary>
     public int StrangerCount
     {

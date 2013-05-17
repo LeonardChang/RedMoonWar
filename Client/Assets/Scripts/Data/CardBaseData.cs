@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// ¿¨ÅÆµÄ¹ÌÓĞÊı¾İ
+/// å¡ç‰Œçš„å›ºæœ‰æ•°æ®
 /// </summary>
 public class CardBaseData 
 {
@@ -49,7 +49,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ¿¨Æ¬ID
+    /// å¡ç‰‡ID
     /// </summary>
     public int ID
     {
@@ -57,7 +57,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// Ãû³Æ
+    /// åç§°
     /// </summary>
     public string Name
     {
@@ -65,7 +65,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄHP
+    /// è·å–æŸç­‰çº§çš„HP
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -75,7 +75,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄMP
+    /// è·å–æŸç­‰çº§çš„MP
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -85,7 +85,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄ¹¥»÷Á¦
+    /// è·å–æŸç­‰çº§çš„æ”»å‡»åŠ›
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -95,7 +95,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄ·ÀÓùÁ¦
+    /// è·å–æŸç­‰çº§çš„é˜²å¾¡åŠ›
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -105,7 +105,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄËÙ¶È
+    /// è·å–æŸç­‰çº§çš„é€Ÿåº¦
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -115,7 +115,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ¿¨Æ¬¾«Áé
+    /// å¡ç‰‡ç²¾çµ
     /// </summary>
     public string CardSprite
     {
@@ -123,7 +123,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ĞÇÊı
+    /// æ˜Ÿæ•°
     /// </summary>
     public int StarCount
     {
@@ -131,7 +131,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ÏûºÄµÄÁìµ¼Á¦
+    /// æ¶ˆè€—çš„é¢†å¯¼åŠ›
     /// </summary>
     public int EquipCost
     {
@@ -139,7 +139,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ÆÕ¹¥¼¼ÄÜID
+    /// æ™®æ”»æŠ€èƒ½ID
     /// </summary>
     public int NormalAttackSkillID
     {
@@ -147,7 +147,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ¼¼ÄÜID
+    /// æŠ€èƒ½ID
     /// </summary>
     public int SkillID
     {
@@ -155,7 +155,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// Ö÷½«¼¼ID
+    /// ä¸»å°†æŠ€ID
     /// </summary>
     public int LeaderSkillID
     {
@@ -163,7 +163,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ×î´óµÈ¼¶
+    /// æœ€å¤§ç­‰çº§
     /// </summary>
     public int MaxLevel
     {
@@ -171,7 +171,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄÊ³ÓÃ¼Û¸ñ
+    /// è·å–æŸç­‰çº§çš„é£Ÿç”¨ä»·æ ¼
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -181,7 +181,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄÊ³ÓÃ¼Û¸ñ
+    /// è·å–æŸç­‰çº§çš„é£Ÿç”¨ä»·æ ¼
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -191,7 +191,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// »ñÈ¡Ä³µÈ¼¶µÄ³öÊÛ¼Û¸ñ
+    /// è·å–æŸç­‰çº§çš„å‡ºå”®ä»·æ ¼
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
@@ -201,7 +201,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ³É³¤ÀàĞÍ
+    /// æˆé•¿ç±»å‹
     /// </summary>
     public GrowType Grow
     {
@@ -209,7 +209,7 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// ÊôĞÔ
+    /// å±æ€§
     /// </summary>
     public ElementType Element
     {
@@ -263,7 +263,7 @@ public class CardBaseData
 }
 
 /// <summary>
-/// ¿¨ÅÆÊı¾İ¹ÜÀíÆ÷
+/// å¡ç‰Œæ•°æ®ç®¡ç†å™¨
 /// </summary>
 public class CardManager
 {
@@ -309,7 +309,7 @@ public class CardManager
     }
 
     /// <summary>
-    /// »ñÈ¡¿¨ÅÆÊı¾İ
+    /// è·å–å¡ç‰Œæ•°æ®
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
