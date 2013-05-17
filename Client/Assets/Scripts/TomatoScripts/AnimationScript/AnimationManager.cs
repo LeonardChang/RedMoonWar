@@ -23,12 +23,15 @@ public class AnimationManager : MonoBehaviour {
 
         AnimationManager.atlasObject = gameObject;
         //MakeAnimation("GeDou/Lei");
-        MakeAnimation("wind",GameObject.Find("Panel"));
+        //MakeAnimation("wind",GameObject.Find("Panel"));
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    if(Input.GetKeyDown(KeyCode.C))
+        {
+            MakeAnimation("wind", GameObject.Find("Panel"));
+        }
 	}
 
     /// <summary>
@@ -62,7 +65,8 @@ public class AnimationManager : MonoBehaviour {
 
         if (data.AniImg01 != "")
         {
-            UIAtlas at1 = CheckAtlas(data.AniImg01);
+            string name1 =  "1_" + data.Name;
+            UIAtlas at1 = CheckAtlas(name1);
             if (at1 == null)
             {
                 at1 = MakeAtlas(data, 1);
@@ -73,7 +77,8 @@ public class AnimationManager : MonoBehaviour {
 
         if (data.AniImg02 != "")
         {
-            UIAtlas at2 = CheckAtlas(data.AniImg02);
+            string name2 = "2_" + data.Name;
+            UIAtlas at2 = CheckAtlas(name2);
             if (at2 == null)
             {
                 at2 = MakeAtlas(data, 2);
@@ -120,7 +125,8 @@ public class AnimationManager : MonoBehaviour {
     {
         foreach (UIAtlas atlas in atlasList)
         {
-            if(atlas.name == name)
+
+            if(atlas.gameObject.name == name)
             {
                 return atlas;
             }
@@ -133,7 +139,7 @@ public class AnimationManager : MonoBehaviour {
         GameObject atObj = new GameObject();
         atObj.transform.parent = atlasObject.transform;
         UIAtlas atlas = atObj.AddComponent<UIAtlas>();
-        atObj.name = index.ToString() + "-" +  data.Name;
+        atObj.name = index.ToString() + "_" +  data.Name;
         Texture texture;
         Material atlasMaterial = new Material(Shader.Find("Unlit/Transparent Colored"));
         if (index == 1)
