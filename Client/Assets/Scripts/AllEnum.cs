@@ -104,3 +104,24 @@ public enum FindTargetConditionType : int
 
     Max,
 }
+
+public enum DropRewardType : int
+{
+    None = 0,
+    Coin,
+    Card,
+    
+    Max,
+}
+
+public enum CharacterSequenceType : int
+{
+    Element = 0,
+    HP,
+    ATK,
+    DEF,
+    SPD,
+    GetTime,
+
+    Max,
+}
