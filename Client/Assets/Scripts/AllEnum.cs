@@ -64,11 +64,11 @@ public enum PhaseType : int
 public enum ElementType : int
 {
     Fire = 0,   // 火
-    Water,      // 水
-    Wind,       // 风
-    Earth,      // 地
-    Light,      // 光
-    Dark,       // 暗
+    Water = 1,  // 水
+    Wind = 2,   // 风
+    Earth = 3,  // 地
+    Light = 4,  // 光
+    Dark = 5,   // 暗
 
     Max,
 }

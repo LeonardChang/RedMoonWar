@@ -395,7 +395,8 @@ public class CardData : MonoBehaviour {
         HP = _data.MaxHP;
         
         CardBaseData carddata = CardManager.Instance.GetCard(_data.CardID);
-        gameObject.transform.FindChild("CardSprite").FindChild("Sprite").gameObject.GetComponent<UISprite>().spriteName = carddata.CardSprite;
+        UI.SpriteName = carddata.CardSprite;
+        UI.Element = carddata.Element;
 
         switch (Phase)
         {

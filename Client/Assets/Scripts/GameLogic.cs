@@ -95,6 +95,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoUp();
         GameChessboard.AllEmemyMove();
@@ -110,6 +111,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoDown();
         GameChessboard.AllEmemyMove();
@@ -125,6 +127,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoLeft();
         GameChessboard.AllEmemyMove();
@@ -140,6 +143,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoRight();
         GameChessboard.AllEmemyMove();
@@ -155,6 +159,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoUpLeft();
         GameChessboard.AllEmemyMove();
@@ -170,6 +175,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoDownLeft();
         GameChessboard.AllEmemyMove();
@@ -185,6 +191,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoUpRight();
         GameChessboard.AllEmemyMove();
@@ -200,6 +207,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.GoDownRight();
         GameChessboard.AllEmemyMove();
@@ -283,6 +291,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
+        mClickBuff = 0;
         mCalculating = true;
         GameChessboard.AllEmemyMove();
         //CalculateAI();
@@ -296,6 +305,7 @@ public class GameLogic : MonoBehaviour {
 
     void ClickMultiple()
     {
+        mClickBuff = 0;
         mIsMultiple = !mIsMultiple;
         MultipleBtnBack.spriteName = mIsMultiple ? "BtnIcon07" : "BtnIcon06";
         MultipleBtnBack.MakePixelPerfect();
@@ -328,7 +338,7 @@ public class GameLogic : MonoBehaviour {
         {
             CardLogic data = mAIActionList[fastID];
             mAIActionList.RemoveAt(fastID);
-                        
+
             data.ActionFinishEvent += AIActionFinishCallback;
             data.CalculateAI();
 
