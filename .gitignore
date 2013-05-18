@@ -6,3 +6,7 @@
 *.csproj
 *.unityproj
 *.sln
+/Client/Assembly-CSharp.pidb
+/Client/Assembly-CSharp-Editor.pidb
+/Client/Client.userprefs
+/Client/Client-csharp.suo
