@@ -7,41 +7,41 @@ using System.Collections.Generic;
 /// </summary>
 public class CardBaseData 
 {
-    private int mID = 0;
+    private int mID = 0; // 卡片索引ID
 
-    private string mName = "";
+    private string mName = ""; // 卡片的名字
 
-    private float mBaseHP = 100;
-    private float mBaseMP = 100;
-    private float mBaseAtk = 100;
-    private float mBaseDef = 100;
-    private float mBaseSpd = 100;
+    private float mBaseHP = 100; // 卡片基础HP
+    private float mBaseMP = 100; // 卡片基础MP
+    private float mBaseAtk = 100; // 卡片基础ATK
+    private float mBaseDef = 100; // 卡片基础DEF
+    private float mBaseSpd = 100; // 卡片基础SPD
 
-    private float mGrowHP = 10;
-    private float mGrowMP = 0;
-    private float mGrowAtk = 5;
-    private float mGrowDef = 2;
-    private float mGrowSpd = 1;
+    private float mGrowHP = 10; // 卡片HP成长
+    private float mGrowMP = 0; // 卡片MP成长
+    private float mGrowAtk = 5; // 卡片ATK成长
+    private float mGrowDef = 2; // 卡片DEF成长
+    private float mGrowSpd = 1; // 卡片SPD成长
 
-    private string mCardSprite = "";
-    private int mStarCount = 1;
-    private int mEquipCost = 1;
+    private string mCardSprite = ""; // 卡片对应的sprite名字
+    private int mStarCount = 1; // 星星数
+    private int mEquipCost = 1; // 装备COST
 
-    private int mNormalAttackSkillID = -1;
-    private int mSkillID = -1;
-    private int mLeaderSkillID = -1;
+    private int mNormalAttackSkillID = -1; // 普通攻击技能ID
+    private int mSkillID = -1; // 技能ID
+    private int mLeaderSkillID = -1; // 主将技能ID
 
-    private int mMaxLevel = 99;
+    private int mMaxLevel = 99; // 最大等级
 
-    private float mBaseEatExp = 100;
-    private float mGrowEatExp = 1;
-    private float mBaseEatCost = 100;
-    private float mGrowEatCost = 1;
-    private float mBaseSellPrice = 100;
-    private float mGrowSellPrice = 1;
+    private float mBaseEatExp = 100; // 吃掉获得经验基础值
+    private float mGrowEatExp = 1; // 吃掉获得经验成长
+    private float mBaseEatCost = 100; // 吃掉需要花费基础值
+    private float mGrowEatCost = 1; // 吃掉需要花费成长
+    private float mBaseSellPrice = 100; // 卖掉获得金币基础值
+    private float mGrowSellPrice = 1; // 卖掉获得金币成长值
 
-    private GrowType mGrowType = GrowType.TypeA;
-    private ElementType mElementType = ElementType.Fire;
+    private GrowType mGrowType = GrowType.TypeA; // 经验曲线类型
+    private ElementType mElementType = ElementType.Fire; // 属性
 
     public CardBaseData(string _init)
     {
@@ -71,7 +71,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetHP(int _level)
     {
-        return Mathf.FloorToInt(mBaseHP + mGrowHP * _level);
+        return Mathf.FloorToInt(mBaseHP + mGrowHP * (_level - 1));
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetMP(int _level)
     {
-        return Mathf.FloorToInt(mBaseMP + mGrowMP * _level);
+        return Mathf.FloorToInt(mBaseMP + mGrowMP * (_level - 1));
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetATK(int _level)
     {
-        return Mathf.FloorToInt(mBaseAtk + mGrowAtk * _level);
+        return Mathf.FloorToInt(mBaseAtk + mGrowAtk * (_level - 1));
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetDEF(int _level)
     {
-        return Mathf.FloorToInt(mBaseDef + mGrowDef * _level);
+        return Mathf.FloorToInt(mBaseDef + mGrowDef * (_level - 1));
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetSPD(int _level)
     {
-        return Mathf.FloorToInt(mBaseSpd + mGrowSpd * _level);
+        return Mathf.FloorToInt(mBaseSpd + mGrowSpd * (_level - 1));
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetEatExp(int _level)
     {
-        return Mathf.FloorToInt(mBaseEatExp + mGrowEatExp * _level);
+        return Mathf.FloorToInt(mBaseEatExp + mGrowEatExp * (_level - 1));
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetEatCost(int _level)
     {
-        return Mathf.FloorToInt(mBaseEatCost + mGrowEatCost * _level);
+        return Mathf.FloorToInt(mBaseEatCost + mGrowEatCost * (_level - 1));
     }
 
     /// <summary>
@@ -197,7 +197,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetSellPrice(int _level)
     {
-        return Mathf.FloorToInt(mBaseSellPrice + mGrowSellPrice * _level);
+        return Mathf.FloorToInt(mBaseSellPrice + mGrowSellPrice * (_level - 1));
     }
 
     /// <summary>
@@ -288,7 +288,7 @@ public class CardManager
         }
     }
 
-    private Dictionary<int, CardBaseData> mCardDatas = new Dictionary<int, CardBaseData>();
+    private Dictionary<int, CardBaseData> mCardDatas = new Dictionary<int, CardBaseData>(); // 卡片队列
 
     public CardManager()
     {
