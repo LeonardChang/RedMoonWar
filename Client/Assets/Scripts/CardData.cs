@@ -130,6 +130,17 @@ public class CardData : MonoBehaviour {
     }
 
     /// <summary>
+    /// 技能等级
+    /// </summary>
+    public int SkillLevel
+    {
+        get
+        {
+            return mCharacterData.SkillLevel;
+        }
+    }
+
+    /// <summary>
     /// 主将技
     /// </summary>
     public SkillData LeaderSkill

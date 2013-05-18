@@ -181,6 +181,8 @@ public class CardLogic : MonoBehaviour {
                 case AttackAnimType.HPHealth:
                     if (mTargetObj.Count > 0)
                     {
+                        CreateTAnimation("Skilling");
+
                         int heal = 20;
                         foreach (CardLogic logic in mTargetObj)
                         {
@@ -205,6 +207,8 @@ public class CardLogic : MonoBehaviour {
                 case AttackAnimType.FireBall:
                     if (mTargetObj.Count > 0)
                     {
+                        CreateTAnimation("Skilling");
+
                         mWaitingDamage = true;
                         foreach (CardLogic logic in mTargetObj)
                         {
@@ -471,12 +475,12 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     void DoAction()
     {
-        if (Data.Skill != null && Data.Skill.ManaCost <= Data.MP)
+        if (Data.Skill != null && Data.Skill.GetManaCost(Data.SkillLevel) <= Data.MP)
         {
             // ÊÍ·Å¼¼ÄÜ
             if (DoSkill(Data.Skill))
             {
-                Data.MP -= Data.Skill.ManaCost;
+                Data.MP -= Data.Skill.GetManaCost(Data.SkillLevel);
             }
         }
         else

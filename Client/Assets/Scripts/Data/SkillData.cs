@@ -7,19 +7,20 @@ using System.Collections.Generic;
 /// </summary>
 public class SkillData 
 {
-    private int mID = 0;
+    private int mID = 0; // 技能的索引ID
 
-    private string mName = "";
-    private string mDescription = "";
-    private float mMultiplyDamage = 1;
-    private int mFixedDamage = 0;
-    private int mRange = 1;
-    private int mCount = 1;
-    private int mAddBuff = -1;
-    private int mManaCost = 10;
-    private int mHatred = 100;
+    private string mName = ""; // 技能的名称
+    private string mDescription = ""; // 技能的描述
+    private float mMultiplyDamage = 1; // 技能的攻击力倍率
+    private int mFixedDamage = 0; // 技能造成的固定伤害
+    private int mRange = 1; // 释放范围
+    private int mCount = 1; // 目标数量
+    private int mAddBuff = -1; // 附加的Buff
+    private int mManaCost = 10; // 需花费的mana
+    private int mManaCostGrow = -1; // 需花费的mana的成长
+    private int mHatred = 100; // 增加的仇恨度
 
-    private int mMaxLevel = 6;
+    private int mMaxLevel = 6; // 最大等级
 
     private AttackTargetType mTargetPhase = AttackTargetType.Ememy;
     private AttackAnimType mAttackAnim = AttackAnimType.NormalAttack;
@@ -120,12 +121,9 @@ public class SkillData
     /// <summary>
     /// Mana消耗
     /// </summary>
-    public int ManaCost
+    public int GetManaCost(int _level)
     {
-        get
-        {
-            return mManaCost;
-        }
+        return mManaCost + mManaCostGrow * (_level - 1);
     }
 
     /// <summary>
@@ -175,7 +173,7 @@ public class SkillData
     void Initialize(string _str)
     {
         string[] list = _str.Split(',');
-        if (list.Length != 13)
+        if (list.Length != 14)
         {
             Debug.LogError("Error Skill data: " + _str);
             return;
@@ -192,10 +190,11 @@ public class SkillData
             mCount = int.Parse(list[6]);
             mAddBuff = int.Parse(list[7]);
             mManaCost = int.Parse(list[8]);
-            mHatred = int.Parse(list[9]);
-            mMaxLevel = int.Parse(list[10]);
-            mTargetPhase = (AttackTargetType)int.Parse(list[11]);
-            mAttackAnim = (AttackAnimType)int.Parse(list[12]);
+            mManaCostGrow = int.Parse(list[9]);
+            mHatred = int.Parse(list[10]);
+            mMaxLevel = int.Parse(list[11]);
+            mTargetPhase = (AttackTargetType)int.Parse(list[12]);
+            mAttackAnim = (AttackAnimType)int.Parse(list[13]);
         }
         catch (System.FormatException ex)
         {
