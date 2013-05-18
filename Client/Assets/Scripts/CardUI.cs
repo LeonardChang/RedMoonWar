@@ -7,6 +7,9 @@ public class CardUI : MonoBehaviour {
     public UISprite SelectSprite;
     public UISprite PhaseStoneSprite;
 
+    public UISprite FrontSprite;
+    public UISprite AvatarSprite;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -54,6 +57,43 @@ public class CardUI : MonoBehaviour {
         set
         {
             SelectSprite.gameObject.active = value;
+        }
+    }
+
+    public ElementType Element
+    {
+        set
+        {
+            switch (value)
+            {
+                case ElementType.Fire:
+                    FrontSprite.spriteName = "CardFrontground1";
+                    break;
+                case ElementType.Water:
+                    FrontSprite.spriteName = "CardFrontground2";
+                    break;
+                case ElementType.Wind:
+                    FrontSprite.spriteName = "CardFrontground3";
+                    break;
+                case ElementType.Earth:
+                    FrontSprite.spriteName = "CardFrontground4";
+                    break;
+                case ElementType.Light:
+                    FrontSprite.spriteName = "CardFrontground5";
+                    break;
+                case ElementType.Dark:
+                    FrontSprite.spriteName = "CardFrontground6";
+                    break;
+            }
+        }
+    }
+
+    public string SpriteName
+    {
+        set
+        {
+            AvatarSprite.spriteName = value;
+            AvatarSprite.MakePixelPerfect();
         }
     }
 }

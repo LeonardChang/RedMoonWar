@@ -97,11 +97,17 @@ public class CardLogic : MonoBehaviour {
 
         if (mSelect)
         {
-            PlayAnimation(CharAnimationState.Select);
+            if (!mCalculatorAI)
+            {
+                PlayAnimation(CharAnimationState.Select);
+            }
         }
         else
         {
-            PlayAnimation(CharAnimationState.Idle);
+            if (!mCalculatorAI)
+            {
+                PlayAnimation(CharAnimationState.Idle);
+            }
         }
     }
 
@@ -131,7 +137,7 @@ public class CardLogic : MonoBehaviour {
         {
             return;
         }
-
+        
         switch (_state)
         {
             case CharAnimationState.Idle:
@@ -213,6 +219,20 @@ public class CardLogic : MonoBehaviour {
                         foreach (CardLogic logic in mTargetObj)
                         {
                             CreateFireBallEffect(logic.gameObject.transform, 0.85f);
+                        }
+                        Invoke("DoDamage", 0.85f);
+                        NeedEndCalculate = true;
+                    }
+                    break;
+                case AttackAnimType.LightBall:
+                    if (mTargetObj.Count > 0)
+                    {
+                        CreateTAnimation("Skilling");
+
+                        mWaitingDamage = true;
+                        foreach (CardLogic logic in mTargetObj)
+                        {
+                            CreateLightBallEffect(logic.gameObject.transform, 0.85f);
                         }
                         Invoke("DoDamage", 0.85f);
                         NeedEndCalculate = true;
@@ -394,9 +414,41 @@ public class CardLogic : MonoBehaviour {
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Fire1", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
+    /// <summary>
+    /// 创建火球爆炸动画
+    /// </summary>
     public void CreateFireBallEndEffect()
     {
         CreateTAnimation("Fireball");
+    }
+
+    /// <summary>
+    /// 创建火球动画
+    /// </summary>
+    /// <param name="_target"></param>
+    /// <param name="_flyTime"></param>
+    void CreateLightBallEffect(Transform _target, float _flyTime)
+    {
+        GameObject perfab = Resources.Load("Cards/Perfabs/LightBall", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.parent = gameObject.transform.parent;
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        obj.transform.localScale = new Vector3(58, 70, 1);
+
+        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
+
+        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
+        Destroy(obj, _flyTime);
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Saint5", typeof(AudioClip)) as AudioClip, Vector3.zero);
+    }
+
+    /// <summary>
+    /// 创建火球爆炸动画
+    /// </summary>
+    public void CreateLightBallEndEffect()
+    {
+        CreateTAnimation("Lightball");
     }
 
     public System.Action<CardLogic> ActionFinishEvent;
@@ -427,9 +479,7 @@ public class CardLogic : MonoBehaviour {
             EndCalculate();
             return;
         }
-
-        //print("Start calculatorAI: " + gameObject.GetInstanceID().ToString());
-
+        
         mCalculatorAI = true;
         if (Data.Phase == PhaseType.Charactor)
         {
@@ -459,8 +509,6 @@ public class CardLogic : MonoBehaviour {
 
     void EndCalculate()
     {
-        //print("End calculatorAI: " + gameObject.GetInstanceID().ToString());
-
         mActionState = AttackAnimType.None;
         mTargetObj.Clear();
         mCalculatorAI = false;
@@ -587,7 +635,34 @@ public class CardLogic : MonoBehaviour {
             case AttackAnimType.IceBall:
             case AttackAnimType.WindBall:
             case AttackAnimType.StoneBall:
+                NeedEndCalculate = true;
+                break;
             case AttackAnimType.LightBall:
+                {
+                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
+                    if (list.Length > 0)
+                    {
+                        int count = 0;
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            mActionState = AttackAnimType.LightBall;
+                            mTargetObj.Add(list[i].Logic);
+                            PlayAnimation(CharAnimationState.Skill);
+                            count += 1;
+
+                            if (count >= _skill.Count)
+                            {
+                                break;
+                            }
+                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
+                }
+                break;
             case AttackAnimType.DarkBall:
             case AttackAnimType.CannonBall:
                 NeedEndCalculate = true;
@@ -686,6 +761,9 @@ public class CardLogic : MonoBehaviour {
             {
                 case AttackAnimType.FireBall:
                     logic.CreateFireBallEndEffect();
+                    break;
+                case AttackAnimType.LightBall:
+                    logic.CreateLightBallEndEffect();
                     break;
                 default:
                     break;

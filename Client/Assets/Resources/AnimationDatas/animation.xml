@@ -141,7 +141,7 @@
             <SDataAniFrameCell>
               <Pattern>0</Pattern>
               <X>0</X>
-              <Y>-40</Y>
+              <Y>-20</Y>
               <Scaling>130</Scaling>
               <Rotate>300</Rotate>
               <Mirror>0</Mirror>
@@ -156,7 +156,7 @@
             <SDataAniFrameCell>
               <Pattern>1</Pattern>
               <X>0</X>
-              <Y>-40</Y>
+              <Y>-20</Y>
               <Scaling>130</Scaling>
               <Rotate>300</Rotate>
               <Mirror>0</Mirror>
@@ -171,7 +171,7 @@
             <SDataAniFrameCell>
               <Pattern>2</Pattern>
               <X>0</X>
-              <Y>-40</Y>
+              <Y>-20</Y>
               <Scaling>130</Scaling>
               <Rotate>300</Rotate>
               <Mirror>0</Mirror>
@@ -186,7 +186,7 @@
             <SDataAniFrameCell>
               <Pattern>3</Pattern>
               <X>0</X>
-              <Y>-40</Y>
+              <Y>-20</Y>
               <Scaling>130</Scaling>
               <Rotate>300</Rotate>
               <Mirror>0</Mirror>
@@ -201,7 +201,7 @@
             <SDataAniFrameCell>
               <Pattern>4</Pattern>
               <X>0</X>
-              <Y>-40</Y>
+              <Y>-20</Y>
               <Scaling>130</Scaling>
               <Rotate>300</Rotate>
               <Mirror>0</Mirror>
@@ -216,7 +216,7 @@
             <SDataAniFrameCell>
               <Pattern>5</Pattern>
               <X>0</X>
-              <Y>-40</Y>
+              <Y>-20</Y>
               <Scaling>130</Scaling>
               <Rotate>300</Rotate>
               <Mirror>0</Mirror>
@@ -3366,7 +3366,7 @@
       <AniImg02 />
       <AniImg02Hue>0</AniImg02Hue>
       <Position>1</Position>
-      <FrameNumber>13</FrameNumber>
+      <FrameNumber>7</FrameNumber>
       <FrameList>
         <SDataAniFrame>
           <CellNumber>1</CellNumber>
@@ -3374,47 +3374,7 @@
             <SDataAniFrameCell>
               <Pattern>1</Pattern>
               <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>1</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>1</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>2</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>2</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>4</Pattern>
-              <X>0</X>
-              <Y>-10</Y>
+              <Y>-42</Y>
               <Scaling>100</Scaling>
               <Rotate>0</Rotate>
               <Mirror>0</Mirror>
@@ -3424,336 +3384,16 @@
           </CellList>
         </SDataAniFrame>
         <SDataAniFrame>
-          <CellNumber>3</CellNumber>
+          <CellNumber>1</CellNumber>
           <CellList>
-            <SDataAniFrameCell>
-              <Pattern>0</Pattern>
-              <X>0</X>
-              <Y>46</Y>
-              <Scaling>300</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>100</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
             <SDataAniFrameCell>
               <Pattern>2</Pattern>
               <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>4</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>3</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>3</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>5</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>0</Pattern>
-              <X>0</X>
-              <Y>46</Y>
-              <Scaling>230</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>180</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>3</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>3</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>195</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>200</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>6</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>0</Pattern>
-              <X>0</X>
-              <Y>46</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>4</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>3</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>11</Pattern>
-              <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>5</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>0</Pattern>
-              <X>0</X>
-              <Y>46</Y>
-              <Scaling>140</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>4</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>3</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>195</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>200</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>12</Pattern>
-              <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>6</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>0</Pattern>
-              <X>0</X>
-              <Y>46</Y>
-              <Scaling>130</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>200</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>4</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>3</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>13</Pattern>
-              <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>5</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>0</Pattern>
-              <X>0</X>
-              <Y>46</Y>
-              <Scaling>120</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>150</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>3</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>14</Pattern>
-              <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>3</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>195</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>200</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>5</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>3</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>15</Pattern>
-              <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>17</Pattern>
-              <X>8</X>
               <Y>-42</Y>
-              <Scaling>150</Scaling>
+              <Scaling>100</Scaling>
               <Rotate>0</Rotate>
               <Mirror>0</Mirror>
               <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>4</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-          </CellList>
-        </SDataAniFrame>
-        <SDataAniFrame>
-          <CellNumber>2</CellNumber>
-          <CellList>
-            <SDataAniFrameCell>
-              <Pattern>16</Pattern>
-              <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>255</Opacity>
-              <BlendType>1</BlendType>
-            </SDataAniFrameCell>
-            <SDataAniFrameCell>
-              <Pattern>4</Pattern>
-              <X>0</X>
-              <Y>-74</Y>
-              <Scaling>200</Scaling>
-              <Rotate>0</Rotate>
-              <Mirror>0</Mirror>
-              <Opacity>150</Opacity>
               <BlendType>1</BlendType>
             </SDataAniFrameCell>
           </CellList>
@@ -3762,19 +3402,79 @@
           <CellNumber>1</CellNumber>
           <CellList>
             <SDataAniFrameCell>
-              <Pattern>17</Pattern>
+              <Pattern>3</Pattern>
               <X>0</X>
-              <Y>-50</Y>
-              <Scaling>150</Scaling>
+              <Y>-42</Y>
+              <Scaling>100</Scaling>
               <Rotate>0</Rotate>
               <Mirror>0</Mirror>
-              <Opacity>200</Opacity>
+              <Opacity>255</Opacity>
+              <BlendType>1</BlendType>
+            </SDataAniFrameCell>
+          </CellList>
+        </SDataAniFrame>
+        <SDataAniFrame>
+          <CellNumber>1</CellNumber>
+          <CellList>
+            <SDataAniFrameCell>
+              <Pattern>3</Pattern>
+              <X>0</X>
+              <Y>-42</Y>
+              <Scaling>100</Scaling>
+              <Rotate>0</Rotate>
+              <Mirror>0</Mirror>
+              <Opacity>255</Opacity>
+              <BlendType>1</BlendType>
+            </SDataAniFrameCell>
+          </CellList>
+        </SDataAniFrame>
+        <SDataAniFrame>
+          <CellNumber>1</CellNumber>
+          <CellList>
+            <SDataAniFrameCell>
+              <Pattern>3</Pattern>
+              <X>0</X>
+              <Y>-31</Y>
+              <Scaling>83</Scaling>
+              <Rotate>0</Rotate>
+              <Mirror>0</Mirror>
+              <Opacity>196</Opacity>
+              <BlendType>1</BlendType>
+            </SDataAniFrameCell>
+          </CellList>
+        </SDataAniFrame>
+        <SDataAniFrame>
+          <CellNumber>1</CellNumber>
+          <CellList>
+            <SDataAniFrameCell>
+              <Pattern>3</Pattern>
+              <X>0</X>
+              <Y>-20</Y>
+              <Scaling>66</Scaling>
+              <Rotate>0</Rotate>
+              <Mirror>0</Mirror>
+              <Opacity>138</Opacity>
+              <BlendType>1</BlendType>
+            </SDataAniFrameCell>
+          </CellList>
+        </SDataAniFrame>
+        <SDataAniFrame>
+          <CellNumber>1</CellNumber>
+          <CellList>
+            <SDataAniFrameCell>
+              <Pattern>3</Pattern>
+              <X>0</X>
+              <Y>-10</Y>
+              <Scaling>50</Scaling>
+              <Rotate>0</Rotate>
+              <Mirror>0</Mirror>
+              <Opacity>80</Opacity>
               <BlendType>1</BlendType>
             </SDataAniFrameCell>
           </CellList>
         </SDataAniFrame>
       </FrameList>
-      <TimingNumber>2</TimingNumber>
+      <TimingNumber>1</TimingNumber>
       <TimingList>
         <SDataAniTiming>
           <Frame>0</Frame>
@@ -3789,22 +3489,9 @@
           <FlashDuration>8</FlashDuration>
           <Weight>0</Weight>
         </SDataAniTiming>
-        <SDataAniTiming>
-          <Frame>0</Frame>
-          <SeName>Heal3</SeName>
-          <SeVolume>100</SeVolume>
-          <SePitch>100</SePitch>
-          <FlashScope>0</FlashScope>
-          <FlashColorR>170</FlashColorR>
-          <FlashColorG>204</FlashColorG>
-          <FlashColorB>255</FlashColorB>
-          <FlashColorA>221</FlashColorA>
-          <FlashDuration>8</FlashDuration>
-          <Weight>0</Weight>
-        </SDataAniTiming>
       </TimingList>
       <TotalWeight>0</TotalWeight>
-      <MaxCellCount>4</MaxCellCount>
+      <MaxCellCount>1</MaxCellCount>
     </SDataAnimation>
     <SDataAnimation>
       <AniID>12</AniID>
