@@ -200,7 +200,7 @@ public class AnimationData{
 
     public void ReadFromXml()
     {
-        TextAsset text = (TextAsset)Resources.Load("AnimationDatas/animation");
+        TextAsset text = (TextAsset)Resources.Load("AnimationDatas/animation.xml");
         string str = text.text;
 
         MemoryStream ms = new MemoryStream(System.Text.Encoding.Unicode.GetBytes(str));
