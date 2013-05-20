@@ -352,19 +352,11 @@ public class GameLogic : MonoBehaviour {
 
     void EndCalculateAI()
     {
+        // 所有人每回合回5点Mana
         Dictionary<int, CardLogic> list = GameChessboard.mChessList;
         foreach (int id in list.Keys)
         {
-            CardLogic obj = list[id];
-            int halfMP = obj.Data.MPMax / 2;
-            if (obj.Data.MP < halfMP)
-            {
-                obj.Data.MP += 5;
-                if (obj.Data.MP > halfMP)
-                {
-                    obj.Data.MP = halfMP;
-                }
-            }
+            list[id].Data.MP += 5;
         }
 
         mCalculating = false;

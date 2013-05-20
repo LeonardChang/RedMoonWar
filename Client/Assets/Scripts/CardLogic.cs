@@ -718,7 +718,7 @@ public class CardLogic : MonoBehaviour {
         // ¼ÆËãÉËº¦
         foreach (CardLogic logic in mTargetObj)
         {
-            int damage = EquationTool.CalculateDamage(Data, logic.GetComponent<CardData>());
+            int damage = EquationTool.CalculateDamage(Data, logic.GetComponent<CardData>(), skilldata);
             logic.Data.HP -= damage;
 
             // ¼ÇÂ¼³ðºÞ
