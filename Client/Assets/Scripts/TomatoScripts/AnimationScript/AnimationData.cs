@@ -200,10 +200,10 @@ public class AnimationData{
 
     public void ReadFromXml()
     {
-        TextAsset text = (TextAsset)Resources.Load("AnimationDatas/animation.xml");
+        TextAsset text = (TextAsset)Resources.Load("AnimationDatas/animation");
         string str = text.text;
 
-        MemoryStream ms = new MemoryStream(System.Text.Encoding.Unicode.GetBytes(str));
+        MemoryStream ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(str));
 
         if (ms != null)
         {
@@ -223,7 +223,7 @@ public class AnimationData{
         MemoryStream ms = new MemoryStream();
         xmls.Serialize(ms, this);
         ms.Flush();
-        writer.Write(System.Text.Encoding.Unicode.GetString(ms.ToArray()));
+        writer.Write(System.Text.Encoding.UTF8.GetString(ms.ToArray()));
         writer.Close();
     }
 }
