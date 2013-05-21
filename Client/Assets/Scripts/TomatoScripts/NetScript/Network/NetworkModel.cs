@@ -61,6 +61,9 @@ public class Head
 /// </summary>
 public struct PkgResponse
 {
+    public string tag;
+    public string cmd;
+    public string ret;
     public Head head;
     public string value;
 }

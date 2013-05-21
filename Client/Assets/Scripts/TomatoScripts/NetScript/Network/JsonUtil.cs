@@ -43,10 +43,16 @@ public class JsonUtil
     {
         PkgResponse result = new PkgResponse();
         JsonData jd = JsonMapper.ToObject(value);
-        result.head = JsonMapper.ToObject<Head>(JsonMapper.ToJson(jd["head"]));
+        //result.head = JsonMapper.ToObject<Head>(JsonMapper.ToJson(jd["head"]));
+        result.cmd = JsonMapper.ToJson(jd["cmd"]);
+        result.tag = JsonMapper.ToJson(jd["tag"]);
+        Debug.Log(result.cmd);
+        Debug.Log(result.tag);
         try
         {
-            result.value = JsonMapper.ToJson(jd["value"]);
+            //result.value = JsonMapper.ToJson(jd["value"]);
+            result.ret = JsonMapper.ToJson(jd["ret"]);
+            Debug.Log(result.ret);
         }
         catch (Exception)
         {
