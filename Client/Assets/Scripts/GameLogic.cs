@@ -15,6 +15,7 @@ public class GameLogic : MonoBehaviour {
     public Chessboard GameChessboard;
     public UISprite MultipleBtnBack;
     public UILabel RoundLabel;
+    public GameObject InfomationPanel;
 
     int mRound = -1;
     bool mCalculating = false;
@@ -469,5 +470,16 @@ public class GameLogic : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void ShowInfomation(CardData _data)
+    {
+        InfomationPanel.SetActiveRecursively(true);
+    }
+
+    public void HideInfomation()
+    {
+
+        InfomationPanel.SetActiveRecursively(false);
     }
 }
