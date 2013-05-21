@@ -16,6 +16,8 @@ public class CardData : MonoBehaviour {
     private System.Int64 mLastAttackerID = -1;
     private int mAttackerHatred = 0;
 
+    private bool mAutoSkill = true;
+
     /// <summary>
     /// 棋子在棋盘中的ID
     /// </summary>
@@ -372,6 +374,47 @@ public class CardData : MonoBehaviour {
     }
 
     CharacterData mCharacterData = null;
+
+    public CardBaseData BaseData
+    {
+        get
+        {
+            if (mCharacterData == null)
+            {
+                return null;
+            }
+
+            return CardManager.Instance.GetCard(mCharacterData.CardID);
+        }
+    }
+
+    public int Level
+    {
+        get
+        {
+            if (mCharacterData == null)
+            {
+                return 1;
+            }
+
+            return mCharacterData.Level;
+        }
+    }
+
+    /// <summary>
+    /// 自动释放技能
+    /// </summary>
+    public bool AutoSkill
+    {
+        get
+        {
+            return mAutoSkill;
+        }
+        set
+        {
+            mAutoSkill = value;
+        }
+    }
 
     void Awake()
     {

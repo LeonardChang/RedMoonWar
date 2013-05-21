@@ -19,6 +19,8 @@ public class CardLogic : MonoBehaviour {
     CharAnimationState mAnimationState = CharAnimationState.NotInit;
     AttackAnimType mActionState = AttackAnimType.None;
 
+    float mClickBuff = 0;
+
 	// Use this for initialization
 	void Start () {
         mSelect = false;
@@ -42,6 +44,15 @@ public class CardLogic : MonoBehaviour {
                 PlayAnimation(CharAnimationState.Idle);
             }
 	    }
+
+        if (mClickBuff > 0)
+        {
+            mClickBuff -= Time.deltaTime;
+            if (mClickBuff < 0)
+            {
+                mClickBuff = 0;
+            }
+        }
 	}
 
     void OnEnable()
@@ -60,6 +71,24 @@ public class CardLogic : MonoBehaviour {
         get
         {
             return mSelect;
+        }
+    }
+
+    void OnPress(bool isPressed)
+    {
+        if (isPressed)
+        {
+            GameLogic.Instance.CleanClickBuff();
+
+            if (mClickBuff <= 0)
+            {
+                mClickBuff = 0.2f;
+            }
+            else
+            {
+                mClickBuff = 0;
+                GameLogic.Instance.ShowInfomation(Data);
+            }
         }
     }
 

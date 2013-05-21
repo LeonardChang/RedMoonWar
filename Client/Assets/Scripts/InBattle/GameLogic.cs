@@ -37,7 +37,7 @@ public class GameLogic : MonoBehaviour {
             mClickBuff -= Time.deltaTime;
             if (mClickBuff < 0)
             {
-                mClickBuff = 0;
+                CleanClickBuff();
             }
         }
         
@@ -49,7 +49,7 @@ public class GameLogic : MonoBehaviour {
             }
             else
             {
-                mClickBuff = 0;
+                CleanClickBuff();
                 ClickAll();
             }
 	    }
@@ -96,7 +96,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoUp();
         GameChessboard.AllEmemyMove();
@@ -112,7 +112,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoDown();
         GameChessboard.AllEmemyMove();
@@ -128,7 +128,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoLeft();
         GameChessboard.AllEmemyMove();
@@ -144,7 +144,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoRight();
         GameChessboard.AllEmemyMove();
@@ -160,7 +160,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoUpLeft();
         GameChessboard.AllEmemyMove();
@@ -176,7 +176,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoDownLeft();
         GameChessboard.AllEmemyMove();
@@ -192,7 +192,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoUpRight();
         GameChessboard.AllEmemyMove();
@@ -208,7 +208,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoDownRight();
         GameChessboard.AllEmemyMove();
@@ -292,7 +292,7 @@ public class GameLogic : MonoBehaviour {
             return;
         }
 
-        mClickBuff = 0;
+        CleanClickBuff();
         mCalculating = true;
         GameChessboard.AllEmemyMove();
         //CalculateAI();
@@ -306,10 +306,15 @@ public class GameLogic : MonoBehaviour {
 
     void ClickMultiple()
     {
-        mClickBuff = 0;
+        CleanClickBuff();
         mIsMultiple = !mIsMultiple;
         MultipleBtnBack.spriteName = mIsMultiple ? "BtnIcon07" : "BtnIcon06";
         MultipleBtnBack.MakePixelPerfect();
+    }
+
+    public void CleanClickBuff()
+    {
+        mClickBuff = 0;
     }
 
     void GameChessboardRefreshFinish(int _bottomLine)
@@ -474,12 +479,24 @@ public class GameLogic : MonoBehaviour {
 
     public void ShowInfomation(CardData _data)
     {
+        InfomationPanel.GetComponent<UIInformation>().StoreData = _data;
         InfomationPanel.SetActiveRecursively(true);
+
+        TweenScale ts = TweenScale.Begin(InfomationPanel, 0.15f, Vector3.one);
+        ts.from = new Vector3(1, 0.01f, 1);
+        ts.eventReceiver = null;
+        ts.callWhenFinished = "";
     }
 
     public void HideInfomation()
     {
+        TweenScale ts = TweenScale.Begin(InfomationPanel, 0.15f, new Vector3(1, 0.01f, 1));
+        ts.eventReceiver = gameObject;
+        ts.callWhenFinished = "RealHideInfomation";
+    }
 
+    void RealHideInfomation()
+    {
         InfomationPanel.SetActiveRecursively(false);
     }
 }
