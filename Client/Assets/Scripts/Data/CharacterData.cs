@@ -162,7 +162,7 @@ public class CharacterManager
         CharacterData data = new CharacterData();
         data.ID = _id;
         data.CardID = Random.Range(1, 19);
-        data.Level = 1;
+        data.Level = 15;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
         

@@ -45,7 +45,7 @@ public class GameLogic : MonoBehaviour {
 	    {
             if (mClickBuff <= 0)
             {
-                mClickBuff = 0.2f;
+                mClickBuff = 0.3f;
             }
             else
             {

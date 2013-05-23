@@ -82,7 +82,7 @@ public class CardLogic : MonoBehaviour {
 
             if (mClickBuff <= 0)
             {
-                mClickBuff = 0.2f;
+                mClickBuff = 0.3f;
             }
             else
             {
@@ -218,7 +218,8 @@ public class CardLogic : MonoBehaviour {
                     {
                         CreateTAnimation("Skilling");
 
-                        int heal = 20;
+                        SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
+                        int heal = skilldata.FixedDamage;
                         foreach (CardLogic logic in mTargetObj)
                         {
                             logic.Data.HP += heal;
@@ -340,14 +341,6 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     void CreateStartAttackEffect()
     {
-        //GameObject perfab = Resources.Load("Cards/Perfabs/AttackStart", typeof(GameObject)) as GameObject;
-        //GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        //obj.transform.parent = gameObject.transform.parent;
-        //obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        //obj.transform.localScale = Vector3.one;
-
-        //AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Blow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
-
         CreateTAnimation("Attacking");
     }
 
@@ -355,14 +348,8 @@ public class CardLogic : MonoBehaviour {
     /// 创建被击动画
     /// </summary>
     /// <param name="_Damage"></param>
-    void CreateHitEffect(int _Damage)
+    void CreateHitEffect(int _Damage, bool _double)
     {
-        //GameObject perfab = Resources.Load("Cards/Perfabs/HitEffect", typeof(GameObject)) as GameObject;
-        //GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        //obj.transform.parent = gameObject.transform.parent;
-        //obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        //obj.transform.localScale = Vector3.one;
-
         CreateTAnimation("Attack");
 
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
@@ -371,7 +358,14 @@ public class CardLogic : MonoBehaviour {
         obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 70, -2);
         obj.transform.localScale = new Vector3(50, 50, 1);
         UILabel label = obj.GetComponent<UILabel>();
-        label.text = "-" + _Damage;
+        if (_double)
+        {
+            label.text = "-" + _Damage + "×2";
+        }
+        else
+        {
+            label.text = "-" + _Damage;
+        }
         label.color = new Color(1, 0, 0);
 
         iTween.ShakePosition(gameObject, new Vector3(0.1f, 0.1f, 0), 0.25f);
@@ -383,12 +377,6 @@ public class CardLogic : MonoBehaviour {
     /// <param name="_Health"></param>
     void CreateHealEffect(int _Health)
     {
-        //GameObject perfab = Resources.Load("Cards/Perfabs/HealEffect", typeof(GameObject)) as GameObject;
-        //GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        //obj.transform.parent = gameObject.transform.parent;
-        //obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        //obj.transform.localScale = Vector3.one * 2;
-
         CreateTAnimation("HealthHP");
 
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
@@ -413,7 +401,7 @@ public class CardLogic : MonoBehaviour {
         GameObject perfab = Resources.Load("Cards/Perfabs/Arrow", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 50, -1);
         obj.transform.localScale = new Vector3(9, 50, 1);
 
         Vector3 from = transform.localPosition + new Vector3(0, 50, 0);
@@ -422,7 +410,7 @@ public class CardLogic : MonoBehaviour {
         dir.Normalize();
         obj.transform.up = dir;
 
-        TweenPosition.Begin(obj, _flyTime, to + new Vector3(0, 0, -1));
+        TweenPosition.Begin(obj, _flyTime, to + new Vector3(0, 0, -1)).from = from;
         Destroy(obj, _flyTime);
 
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Bow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
@@ -816,7 +804,13 @@ public class CardLogic : MonoBehaviour {
         // 计算伤害
         foreach (CardLogic logic in mTargetObj)
         {
-            int damage = EquationTool.CalculateDamage(Data, logic.GetComponent<CardData>(), skilldata);
+            int damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata);
+            bool doubledamage = false;
+            if (Data.FoElement == logic.Data.Element)
+            {
+                damage = damage * 2;
+                doubledamage = true;
+            }
             logic.Data.HP -= damage;
 
             // 记录仇恨
@@ -869,7 +863,7 @@ public class CardLogic : MonoBehaviour {
                 default:
                     break;
             }
-            logic.CreateHitEffect(damage);
+            logic.CreateHitEffect(damage, doubledamage);
         }
 
         mWaitingDamage = false;

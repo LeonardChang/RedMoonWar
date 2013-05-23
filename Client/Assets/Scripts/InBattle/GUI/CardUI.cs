@@ -5,10 +5,10 @@ public class CardUI : MonoBehaviour {
     public UISlider BloodBar;
     public UISlider ManaBar;
     public UISprite SelectSprite;
-    public UISprite PhaseStoneSprite;
 
     public UISprite FrontSprite;
     public UISprite AvatarSprite;
+    public UISprite BackSprite;
 
     public GameObject TalkRoot;
     public UILabel TalkLabel;
@@ -47,10 +47,10 @@ public class CardUI : MonoBehaviour {
             switch (value)
             {
                 case PhaseType.Charactor:
-                    PhaseStoneSprite.spriteName = "Bloodbar06";
+                    BackSprite.color = new Color(0, 0, 0);
                     break;
                 case PhaseType.Enemy:
-                    PhaseStoneSprite.spriteName = "Bloodbar05";
+                    BackSprite.color = new Color(1, 1, 1);
                     break;
             }
         }

@@ -20,6 +20,7 @@ public class UIInformation : MonoBehaviour {
 
     public UISprite CardFrontground;
     public UISprite CardSprite;
+    public UISprite CardBackground;
 
     public UISlider BloodBar;
     public UISlider ManaBar;
@@ -90,6 +91,7 @@ public class UIInformation : MonoBehaviour {
 
             EnemyLabel.text = "[Enemy]";
             EnemyLabel.color = new Color(1, 0, 0);
+            CardBackground.color = new Color(1, 1, 1);
 
             AutoSkillLabel.text = "";
         }
@@ -101,6 +103,7 @@ public class UIInformation : MonoBehaviour {
 
             EnemyLabel.text = "[Own]";
             EnemyLabel.color = new Color(0.1f, 0.5f, 1);
+            CardBackground.color = new Color(0, 0, 0);
 
             AutoSkillLabel.text = StoreData.AutoSkill ? "[Auto]" : "[Manual]";
         }
