@@ -8,20 +8,8 @@ using System.Collections.Generic;
 public class CardBaseData 
 {
     private int mID = 0; // 卡片索引ID
-
     private string mName = ""; // 卡片的名字
-
-    private float mBaseHP = 100; // 卡片基础HP
-    private float mBaseMP = 100; // 卡片基础MP
-    private float mBaseAtk = 100; // 卡片基础ATK
-    private float mBaseDef = 100; // 卡片基础DEF
-    private float mBaseSpd = 100; // 卡片基础SPD
-
-    private float mGrowHP = 10; // 卡片HP成长
-    private float mGrowMP = 0; // 卡片MP成长
-    private float mGrowAtk = 5; // 卡片ATK成长
-    private float mGrowDef = 2; // 卡片DEF成长
-    private float mGrowSpd = 1; // 卡片SPD成长
+    private int mGrowingType = 0;
 
     private string mCardSprite = ""; // 卡片对应的sprite名字
     private int mStarCount = 1; // 星星数
@@ -33,14 +21,11 @@ public class CardBaseData
 
     private int mMaxLevel = 99; // 最大等级
 
-    private float mBaseEatExp = 100; // 吃掉获得经验基础值
-    private float mGrowEatExp = 1; // 吃掉获得经验成长
-    private float mBaseEatCost = 100; // 吃掉需要花费基础值
-    private float mGrowEatCost = 1; // 吃掉需要花费成长
-    private float mBaseSellPrice = 100; // 卖掉获得金币基础值
-    private float mGrowSellPrice = 1; // 卖掉获得金币成长值
+    private int mBaseEatExp = 100; // 吃掉获得经验基础值
+ 
+    private int mSellPrice = 100; // 卖掉获得金币基础值
 
-    private GrowType mGrowType = GrowType.TypeA; // 经验曲线类型
+    private GrowType mEXPGrowingType = GrowType.TypeA; // 经验曲线类型
     private ElementType mElementType = ElementType.Fire; // 属性
 
     public CardBaseData(string _init)
@@ -65,53 +50,14 @@ public class CardBaseData
     }
 
     /// <summary>
-    /// 获取某等级的HP
+    /// 成长类型
     /// </summary>
-    /// <param name="_level"></param>
-    /// <returns></returns>
-    public int GetHP(int _level)
+    public int GrowingType
     {
-        return Mathf.FloorToInt(mBaseHP + mGrowHP * (_level - 1));
-    }
-
-    /// <summary>
-    /// 获取某等级的MP
-    /// </summary>
-    /// <param name="_level"></param>
-    /// <returns></returns>
-    public int GetMP(int _level)
-    {
-        return Mathf.FloorToInt(mBaseMP + mGrowMP * (_level - 1));
-    }
-
-    /// <summary>
-    /// 获取某等级的攻击力
-    /// </summary>
-    /// <param name="_level"></param>
-    /// <returns></returns>
-    public int GetATK(int _level)
-    {
-        return Mathf.FloorToInt(mBaseAtk + mGrowAtk * (_level - 1));
-    }
-
-    /// <summary>
-    /// 获取某等级的防御力
-    /// </summary>
-    /// <param name="_level"></param>
-    /// <returns></returns>
-    public int GetDEF(int _level)
-    {
-        return Mathf.FloorToInt(mBaseDef + mGrowDef * (_level - 1));
-    }
-
-    /// <summary>
-    /// 获取某等级的速度
-    /// </summary>
-    /// <param name="_level"></param>
-    /// <returns></returns>
-    public int GetSPD(int _level)
-    {
-        return Mathf.FloorToInt(mBaseSpd + mGrowSpd * (_level - 1));
+        get
+        {
+            return mGrowingType;
+        }
     }
 
     /// <summary>
@@ -177,7 +123,7 @@ public class CardBaseData
     /// <returns></returns>
     public int GetEatExp(int _level)
     {
-        return Mathf.FloorToInt(mBaseEatExp + mGrowEatExp * (_level - 1));
+        return mBaseEatExp * _level;
     }
 
     /// <summary>
@@ -185,9 +131,9 @@ public class CardBaseData
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
-    public int GetEatCost(int _level)
+    public int GetEatCost(int _level, int _count)
     {
-        return Mathf.FloorToInt(mBaseEatCost + mGrowEatCost * (_level - 1));
+        return _level * _count * 100;
     }
 
     /// <summary>
@@ -195,9 +141,12 @@ public class CardBaseData
     /// </summary>
     /// <param name="_level"></param>
     /// <returns></returns>
-    public int GetSellPrice(int _level)
+    public int SellPrice
     {
-        return Mathf.FloorToInt(mBaseSellPrice + mGrowSellPrice * (_level - 1));
+        get
+        {
+            return mSellPrice;
+        }
     }
 
     /// <summary>
@@ -205,7 +154,7 @@ public class CardBaseData
     /// </summary>
     public GrowType Grow
     {
-        get { return mGrowType; }
+        get { return mEXPGrowingType; }
     }
 
     /// <summary>
@@ -219,7 +168,7 @@ public class CardBaseData
     void Initialize(string _str)
     {       
         string[] list = _str.Split(',');
-        if (list.Length != 27)
+        if (list.Length != 14)
         {
             Debug.LogError("Error Card base data: " + _str);
             return;
@@ -230,30 +179,17 @@ public class CardBaseData
             mID = int.Parse(list[0]);
             mName = list[1];
             mElementType = (ElementType)int.Parse(list[2]);
-            mBaseHP = float.Parse(list[3]);
-            mGrowHP = float.Parse(list[4]);
-            mBaseMP = float.Parse(list[5]);
-            mGrowMP = float.Parse(list[6]);
-            mBaseAtk = float.Parse(list[7]);
-            mGrowAtk = float.Parse(list[8]);
-            mBaseDef = float.Parse(list[9]);
-            mGrowDef = float.Parse(list[10]);
-            mBaseSpd = float.Parse(list[11]);
-            mGrowSpd = float.Parse(list[12]);
-            mCardSprite = list[13];
-            mStarCount = int.Parse(list[14]);
-            mEquipCost = int.Parse(list[15]);
-            mSkillID = int.Parse(list[16]);
-            mLeaderSkillID = int.Parse(list[17]);
-            mNormalAttackSkillID = int.Parse(list[18]);
-            mMaxLevel = int.Parse(list[19]);
-            mGrowType = (GrowType)int.Parse(list[20]);
-            mBaseEatExp = float.Parse(list[21]);
-            mGrowEatExp = float.Parse(list[22]);
-            mBaseEatCost = float.Parse(list[23]);
-            mGrowEatCost = float.Parse(list[24]);
-            mBaseSellPrice = float.Parse(list[25]);
-            mGrowSellPrice = float.Parse(list[26]);
+            mGrowingType = int.Parse(list[3]);
+            mCardSprite = list[4];
+            mStarCount = int.Parse(list[5]);
+            mEquipCost = int.Parse(list[6]);
+            mSkillID = int.Parse(list[7]);
+            mLeaderSkillID = int.Parse(list[8]);
+            mNormalAttackSkillID = int.Parse(list[9]);
+            mMaxLevel = int.Parse(list[10]);
+            mEXPGrowingType = (GrowType)int.Parse(list[11]);
+            mBaseEatExp = int.Parse(list[12]);
+            mSellPrice = int.Parse(list[13]);
         }
         catch (System.FormatException ex)
         {

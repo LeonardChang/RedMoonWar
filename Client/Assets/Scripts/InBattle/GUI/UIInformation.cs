@@ -5,6 +5,8 @@ public class UIInformation : MonoBehaviour {
     [HideInInspector]
     public CardData StoreData = null;
 
+    public UILabel TitleLabel;
+
     public UILabel HPLabel;
     public UILabel MPLabel;
     public UILabel AtkLabel;
@@ -41,6 +43,8 @@ public class UIInformation : MonoBehaviour {
         {
             return;
         }
+
+        TitleLabel.text = StoreData.BaseData.Name;
 
         HPLabel.text = StoreData.HP.ToString();
         MPLabel.text = StoreData.MP.ToString();

@@ -14,6 +14,8 @@ public class EquationTool
         // 基础伤害
         int damage = Mathf.CeilToInt((_from.Atk * 4 - _target.Def * 2) * _skill.MultiplyDamage) + _skill.FixedDamage;
 
+        UnityEngine.Debug.Log(string.Format("(Atk[{0:D}] * 4 - Def[{1:D}] * 2) * Skill[{2:S}] = {3:D}", _from.Atk, _target.Def, _skill.MultiplyDamage.ToString("f2"), damage));
+
         // 属性克制, 2倍伤害
         if (_from.FoElement == _target.Element)
         {

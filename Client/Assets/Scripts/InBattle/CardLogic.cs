@@ -267,6 +267,20 @@ public class CardLogic : MonoBehaviour {
                         NeedEndCalculate = true;
                     }
                     break;
+                case AttackAnimType.DarkBall:
+                    if (mTargetObj.Count > 0)
+                    {
+                        CreateTAnimation("Skilling");
+
+                        mWaitingDamage = true;
+                        foreach (CardLogic logic in mTargetObj)
+                        {
+                            CreateDarkBallEffect(logic.gameObject.transform, 0.85f);
+                        }
+                        Invoke("DoDamage", 0.85f);
+                        NeedEndCalculate = true;
+                    }
+                    break;
             }
         }
         else if (_event == "Joining")
@@ -452,7 +466,7 @@ public class CardLogic : MonoBehaviour {
     }
 
     /// <summary>
-    /// 创建火球动画
+    /// 创建光球动画
     /// </summary>
     /// <param name="_target"></param>
     /// <param name="_flyTime"></param>
@@ -473,11 +487,40 @@ public class CardLogic : MonoBehaviour {
     }
 
     /// <summary>
-    /// 创建火球爆炸动画
+    /// 创建光球爆炸动画
     /// </summary>
     public void CreateLightBallEndEffect()
     {
         CreateTAnimation("Lightball");
+    }
+
+    /// <summary>
+    /// 创建暗球动画
+    /// </summary>
+    /// <param name="_target"></param>
+    /// <param name="_flyTime"></param>
+    void CreateDarkBallEffect(Transform _target, float _flyTime)
+    {
+        GameObject perfab = Resources.Load("Cards/Perfabs/DarkBall", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.parent = gameObject.transform.parent;
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+        obj.transform.localScale = new Vector3(58, 70, 1);
+
+        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
+
+        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
+        Destroy(obj, _flyTime);
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Saint5", typeof(AudioClip)) as AudioClip, Vector3.zero);
+    }
+
+    /// <summary>
+    /// 创建暗球爆炸动画
+    /// </summary>
+    public void CreateDarkBallEndEffect()
+    {
+        CreateTAnimation("Darkball");
     }
 
     public System.Action<CardLogic> ActionFinishEvent;
@@ -558,6 +601,7 @@ public class CardLogic : MonoBehaviour {
             if (DoSkill(Data.Skill))
             {
                 Data.MP -= Data.Skill.GetManaCost(Data.SkillLevel);
+                UI.ShowTalk(Data.Skill.Name);
             }
         }
         else
@@ -693,6 +737,31 @@ public class CardLogic : MonoBehaviour {
                 }
                 break;
             case AttackAnimType.DarkBall:
+                {
+                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
+                    if (list.Length > 0)
+                    {
+                        int count = 0;
+                        for (int i = 0; i < list.Length; i++)
+                        {
+                            mActionState = AttackAnimType.DarkBall;
+                            mTargetObj.Add(list[i].Logic);
+                            PlayAnimation(CharAnimationState.Skill);
+                            count += 1;
+
+                            if (count >= _skill.Count)
+                            {
+                                break;
+                            }
+                        }
+                        result = true;
+                    }
+                    else
+                    {
+                        NeedEndCalculate = true;
+                    }
+                }
+                break;
             case AttackAnimType.CannonBall:
                 NeedEndCalculate = true;
                 break;
@@ -793,6 +862,9 @@ public class CardLogic : MonoBehaviour {
                     break;
                 case AttackAnimType.LightBall:
                     logic.CreateLightBallEndEffect();
+                    break;
+                case AttackAnimType.DarkBall:
+                    logic.CreateDarkBallEndEffect();
                     break;
                 default:
                     break;

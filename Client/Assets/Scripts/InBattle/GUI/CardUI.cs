@@ -10,9 +10,13 @@ public class CardUI : MonoBehaviour {
     public UISprite FrontSprite;
     public UISprite AvatarSprite;
 
+    public GameObject TalkRoot;
+    public UILabel TalkLabel;
+    public UISprite TalkBackground;
+
 	// Use this for initialization
 	void Start () {
-	
+        RealHideTalk();
 	}
 	
 	// Update is called once per frame
@@ -95,5 +99,33 @@ public class CardUI : MonoBehaviour {
             AvatarSprite.spriteName = value;
             AvatarSprite.MakePixelPerfect();
         }
+    }
+
+    public void ShowTalk(string _talk)
+    {
+        TalkRoot.SetActiveRecursively(true);
+
+        TalkLabel.text = _talk;
+        TweenColor.Begin(TalkLabel.gameObject, 0.15f, new Color(1, 0, 0, 1)).from = new Color(1, 0, 0, 0);
+        TweenColor tc = TweenColor.Begin(TalkBackground.gameObject, 0.15f, new Color(1, 1, 1, 1));
+        tc.from = new Color(1, 1, 1, 0);
+        tc.eventReceiver = null;
+        tc.callWhenFinished = "";
+
+        Invoke("HideTalk", 1);
+    }
+
+    void HideTalk()
+    {
+        TweenColor.Begin(TalkLabel.gameObject, 0.15f, new Color(1, 0, 0, 0)).from = new Color(1, 0, 0, 1);
+        TweenColor tc = TweenColor.Begin(TalkBackground.gameObject, 0.15f, new Color(1, 1, 1, 0));
+        tc.from = new Color(1, 1, 1, 1);
+        tc.eventReceiver = gameObject;
+        tc.callWhenFinished = "RealHideTalk";
+    }
+
+    void RealHideTalk()
+    {
+        TalkRoot.SetActiveRecursively(false);
     }
 }
