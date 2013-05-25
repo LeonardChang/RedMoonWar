@@ -14,21 +14,63 @@ public class CardUI : MonoBehaviour {
     public UILabel TalkLabel;
     public UISprite TalkBackground;
 
+    float mBloodTargetValue = 0;
+    float mManaTargetValue = 0;
+
 	// Use this for initialization
 	void Start () {
+        BloodBar.sliderValue = mBloodTargetValue;
+        ManaBar.sliderValue = mManaTargetValue;
         RealHideTalk();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+        if (BloodBar.sliderValue < mBloodTargetValue)
+	    {
+            float val = BloodBar.sliderValue + 0.5f * Time.deltaTime;
+            if (val >= mBloodTargetValue)
+            {
+                val = mBloodTargetValue;
+            }
+            BloodBar.sliderValue = val;
+	    }
+        else if (BloodBar.sliderValue > mBloodTargetValue)
+        {
+            float val = BloodBar.sliderValue - 0.5f * Time.deltaTime;
+            if (val <= mBloodTargetValue)
+            {
+                val = mBloodTargetValue;
+            }
+            BloodBar.sliderValue = val;
+        }
+
+        if (ManaBar.sliderValue < mManaTargetValue)
+        {
+            float val = ManaBar.sliderValue + 0.5f * Time.deltaTime;
+            if (val >= mManaTargetValue)
+            {
+                val = mManaTargetValue;
+            }
+            ManaBar.sliderValue = val;
+        }
+        else if (ManaBar.sliderValue > mManaTargetValue)
+        {
+            float val = ManaBar.sliderValue - 0.5f * Time.deltaTime;
+            if (val <= mManaTargetValue)
+            {
+                val = mManaTargetValue;
+            }
+            ManaBar.sliderValue = val;
+        }
 	}
 
     public float Blood
     {
         set
         {
-            BloodBar.sliderValue = value;
+            //BloodBar.sliderValue = value;
+            mBloodTargetValue = value;
         }
     }
 
@@ -36,7 +78,8 @@ public class CardUI : MonoBehaviour {
     {
         set
         {
-            ManaBar.sliderValue = value;
+            //ManaBar.sliderValue = value;
+            mManaTargetValue = value;
         }
     }
 

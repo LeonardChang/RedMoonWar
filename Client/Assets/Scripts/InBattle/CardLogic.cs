@@ -219,7 +219,7 @@ public class CardLogic : MonoBehaviour {
                         CreateTAnimation("Skilling");
 
                         SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
-                        int heal = skilldata.FixedDamage;
+                        int heal = skilldata.FixedDamage + (int)(Data.Atk * skilldata.MultiplyDamage);
                         foreach (CardLogic logic in mTargetObj)
                         {
                             logic.Data.HP += heal;
@@ -325,7 +325,7 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
-    void CreateTAnimation(string _animation)
+    public void CreateTAnimation(string _animation)
     {
         GameObject perfab = Resources.Load("Cards/Perfabs/TAnimation", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -375,7 +375,7 @@ public class CardLogic : MonoBehaviour {
     /// 创建被治疗动画
     /// </summary>
     /// <param name="_Health"></param>
-    void CreateHealEffect(int _Health)
+    public void CreateHealEffect(int _Health)
     {
         CreateTAnimation("HealthHP");
 
@@ -387,6 +387,26 @@ public class CardLogic : MonoBehaviour {
         UILabel label = obj.GetComponent<UILabel>();
         label.text = "+" + _Health;
         label.color = new Color(0.2f, 1, 0.2f);
+
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Heal3", typeof(AudioClip)) as AudioClip, Vector3.zero);
+    }
+
+    /// <summary>
+    /// 创建被加魔动画
+    /// </summary>
+    /// <param name="_Health"></param>
+    public void CreateHealManaEffect(int _Health)
+    {
+        CreateTAnimation("HealthHP");
+
+        GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.parent = gameObject.transform.parent;
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 70, -2);
+        obj.transform.localScale = new Vector3(50, 50, 1);
+        UILabel label = obj.GetComponent<UILabel>();
+        label.text = "+" + _Health;
+        label.color = new Color(0.2f, 0.2f, 1);
 
         AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Heal3", typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
@@ -808,10 +828,10 @@ public class CardLogic : MonoBehaviour {
             bool doubledamage = false;
             if (Data.FoElement == logic.Data.Element)
             {
-                damage = damage * 2;
                 doubledamage = true;
             }
-            logic.Data.HP -= damage;
+            logic.CreateHitEffect(damage, doubledamage);
+            logic.Data.HP -= damage * (doubledamage ? 2 : 1);
 
             // 记录仇恨
             if (logic.Data.LastAttackerID == Data.ID)
@@ -863,7 +883,6 @@ public class CardLogic : MonoBehaviour {
                 default:
                     break;
             }
-            logic.CreateHitEffect(damage, doubledamage);
         }
 
         mWaitingDamage = false;

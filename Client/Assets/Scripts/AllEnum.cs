@@ -125,3 +125,21 @@ public enum CharacterSequenceType : int
 
     Max,
 }
+
+public enum MapItemType : int
+{
+    None = 0,
+
+    HPFood1,
+    HPFood2,
+    HPFood3,
+    MPFood1,
+    MPFood2,
+    MPFood3,
+
+    Chest1,
+    Chest2,
+    Chest3,
+
+    Max,
+}

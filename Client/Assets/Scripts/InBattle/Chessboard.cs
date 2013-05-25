@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Chessboard : MonoBehaviour {
     private int[,] mChessboardData = null;
+    private Food[,] mItemData = null;
+
     private int mWidth;
     private int mHeight;
 
@@ -106,11 +108,13 @@ public class Chessboard : MonoBehaviour {
         mWidth = _width;
         mHeight = _height;
         mChessboardData = new int[_width, _height];
+        mItemData = new Food[_width, _height];
         for (int i = 0; i < _width; i++)
         {
             for (int j = 0; j < _height; j++)
             {
                 mChessboardData[i, j] = -1;
+                mItemData[i, j] = null;
             }
         }
 
@@ -325,6 +329,8 @@ public class Chessboard : MonoBehaviour {
     const float RectSize = 82.0f;
     void Refresh(bool _init)
     {
+        CalculatorItems();
+
         for (int i = 0; i < mWidth; i++)
         {
             for (int j = 0; j < mHeight; j++)
@@ -367,7 +373,7 @@ public class Chessboard : MonoBehaviour {
         }
         else
         {
-            Invoke("RefreshFinish", 0.25f);
+            Invoke("RefreshFinish", 0.4f);
         }
     }
 
@@ -394,6 +400,110 @@ public class Chessboard : MonoBehaviour {
         }
 
         mBottomLine = bottomline;
+    }
+
+    void CalculatorItems()
+    {
+        int count = GameObject.FindGameObjectsWithTag("Food").Length;
+        if (count < 5)
+        {
+            for (int i = 0; i < mWidth; i++)
+            {
+                for (int j = 0; j < mHeight; j++)
+                {
+                    if (mItemData[i, j] == null)
+                    {
+                        GameObject obj = null;
+
+                        int type = Random.Range(0, 500);
+                        if (type < 2)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/HPFood1") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 3)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/HPFood2") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 4)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/HPFood3") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 6)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/MPFood1") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 7)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/MPFood2") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 8)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/MPFood3") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 9)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/Chest1") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 10)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/Chest3") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else if (type < 11)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/Chest1") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+
+                        if (obj != null)
+                        {
+                            obj.transform.parent = CardRoot;
+                            TweenScale.Begin(obj, 0.25f, new Vector3(2, 2, 1)).from = new Vector3(0.1f, 0.1f, 1);
+
+                            Vector3 target = new Vector3((float)(i - 2) * RectSize - RectSize * 0.5f + 3, (j + 3) * RectSize + 3, 0);
+                            obj.transform.localPosition = target;
+                            mItemData[i, j] = obj.GetComponent<Food>();
+                        }
+                    }
+                }
+            }
+        }
+
+        //for (int i = 0; i < mWidth; i++)
+        //{
+        //    for (int j = 0; j < mHeight; j++)
+        //    {
+        //        if (mItemData[i, j] != null && Random.Range(0, 10) == 0)
+        //        {
+        //            TweenScale.Begin(mItemData[i, j].gameObject, 0.25f, new Vector3(0.1f, 0.1f, 1)).from = new Vector3(2, 2, 1);
+        //            Destroy(mItemData[i, j].gameObject, 0.25f);
+        //            mItemData[i, j] = null;
+        //        }
+        //    }
+        //}
+    }
+
+    public MapItemType TryEatItem(int _x, int _y)
+    {
+        if (mItemData[_x, _y] != null)
+        {
+            MapItemType type = mItemData[_x, _y].FoodType;
+
+            TweenScale.Begin(mItemData[_x, _y].gameObject, 0.25f, new Vector3(0.1f, 0.1f, 1)).from = new Vector3(2, 2, 1);
+            Destroy(mItemData[_x, _y].gameObject, 0.25f);
+            mItemData[_x, _y] = null;
+
+            return type;
+        }
+
+        return MapItemType.None;
     }
 
     void RefreshFinish()

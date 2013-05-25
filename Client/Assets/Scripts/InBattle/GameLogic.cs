@@ -18,6 +18,8 @@ public class GameLogic : MonoBehaviour {
     public GameObject InfomationPanel;
 
     int mRound = -1;
+    int mGetCoin = 0;
+    int mGetCard = 0;
     bool mCalculating = false;
 
     void Awake()
@@ -319,6 +321,81 @@ public class GameLogic : MonoBehaviour {
 
     void GameChessboardRefreshFinish(int _bottomLine)
     {
+        Dictionary<int, CardLogic> list = GameChessboard.mChessList;
+        foreach (int id in list.Keys)
+        {
+            CardLogic obj = list[id];
+            MapItemType type = GameChessboard.TryEatItem(obj.Data.X, obj.Data.Y);
+            switch (type)
+            {
+                case MapItemType.HPFood1:
+                    {
+                        int value = 100;
+                        obj.Data.HP += value;
+                        obj.CreateTAnimation("HealthHP");
+                        obj.CreateHealEffect(value);
+                    }
+                    break;
+                case MapItemType.HPFood2:
+                    {
+                        int value = (int)(obj.Data.HPMax * 0.5f);
+                        obj.Data.HP += value;
+                        obj.CreateTAnimation("HealthHP");
+                        obj.CreateHealEffect(value);
+                    }
+                    break;
+                case MapItemType.HPFood3:
+                    {
+                        int value = obj.Data.HPMax;
+                        obj.Data.HP += value;
+                        obj.CreateTAnimation("HealthHP");
+                        obj.CreateHealEffect(value);
+                    }
+                    break;
+                case MapItemType.MPFood1:
+                    {
+                        int value = 10;
+                        obj.Data.MP += value;
+                        obj.CreateTAnimation("HealthMP");
+                        obj.CreateHealManaEffect(value);
+                    }
+                    break;
+                case MapItemType.MPFood2:
+                    {
+                        int value = (int)(obj.Data.MPMax * 0.5f);
+                        obj.Data.MP += value;
+                        obj.CreateTAnimation("HealthMP");
+                        obj.CreateHealManaEffect(value);
+                    }
+                    break;
+                case MapItemType.MPFood3:
+                    {
+                        int value = obj.Data.MPMax;
+                        obj.Data.MP += value;
+                        obj.CreateTAnimation("HealthMP");
+                        obj.CreateHealManaEffect(value);
+                    }
+                    break;
+                case MapItemType.Chest1:
+                    if (obj.Data.Phase == PhaseType.Charactor)
+                    {
+                        mGetCoin += 100;
+                    }
+                    break;
+                case MapItemType.Chest2:
+                    if (obj.Data.Phase == PhaseType.Charactor)
+                    {
+                        mGetCoin += 1000;
+                    }
+                    break;
+                case MapItemType.Chest3:
+                    if (obj.Data.Phase == PhaseType.Charactor)
+                    {
+                        mGetCoin += 10000;
+                    }
+                    break;
+            }
+        }
         CalculateAI();
     }
 
@@ -362,6 +439,7 @@ public class GameLogic : MonoBehaviour {
         Dictionary<int, CardLogic> list = GameChessboard.mChessList;
         foreach (int id in list.Keys)
         {
+            list[id].Data.HP += 10;
             list[id].Data.MP += 5;
         }
 
