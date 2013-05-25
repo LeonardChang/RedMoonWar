@@ -161,18 +161,18 @@ public class CharacterManager
     {
         CharacterData data = new CharacterData();
         data.ID = _id;
-        data.CardID = Random.Range(1, 19);
-        data.Level = 15;
+        data.CardID = Random.Range(1, 18);
+        data.Level = 10;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
-        
+
         CardBaseData carddata = CardManager.Instance.GetCard(data.CardID);
         data.MaxHP = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetHP(data.Level);
         data.MaxMP = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetMP(data.Level);
         data.Atk = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetATK(data.Level);
         data.Def = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetDEF(data.Level);
         data.Spd = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetSPD(data.Level);
-        
+
         return data;
     }
 

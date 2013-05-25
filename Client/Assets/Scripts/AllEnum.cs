@@ -97,7 +97,7 @@ public enum AIType : int
 public enum FindTargetConditionType : int
 {
     Random = 0, // 随机
-    BeingHurt,  // 伤过血的人
+    BeingHurt,  // 只搜索伤过血的人
     LowHP,      // 低血量优先
     HighHP,     // 高血量优先
     DiElement,  // 属性克制优先
@@ -105,6 +105,9 @@ public enum FindTargetConditionType : int
     Max,
 }
 
+/// <summary>
+/// 掉落道具的类型
+/// </summary>
 public enum DropRewardType : int
 {
     None = 0,
@@ -114,6 +117,9 @@ public enum DropRewardType : int
     Max,
 }
 
+/// <summary>
+/// 卡牌排序方式
+/// </summary>
 public enum CharacterSequenceType : int
 {
     Element = 0,
@@ -126,6 +132,9 @@ public enum CharacterSequenceType : int
     Max,
 }
 
+/// <summary>
+/// 地图道具种类
+/// </summary>
 public enum MapItemType : int
 {
     None = 0,
