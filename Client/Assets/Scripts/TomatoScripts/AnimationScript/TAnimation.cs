@@ -74,7 +74,7 @@ public class TAnimation : MonoBehaviour {
 
         for (int start = (int)frameData.CellNumber; start < data.MaxCellCount; start++)
         {
-            sprites[start].gameObject.active = false;
+            sprites[start].gameObject.SetActive(false);
         }
 
 
@@ -85,7 +85,7 @@ public class TAnimation : MonoBehaviour {
             //Debug.Log(cellData.Pattern);
             if (cellData.Pattern != -1)
             {
-                sprites[cellIndex].gameObject.active = true;
+                sprites[cellIndex].gameObject.SetActive(true);
                 if (cellData.Pattern < 100)
                 {
                     sprites[cellIndex].atlas = atlases[0];
@@ -115,7 +115,7 @@ public class TAnimation : MonoBehaviour {
             }
             else
             {
-                sprites[cellIndex].gameObject.active = false;
+                sprites[cellIndex].gameObject.SetActive(false);
             }
         }
 

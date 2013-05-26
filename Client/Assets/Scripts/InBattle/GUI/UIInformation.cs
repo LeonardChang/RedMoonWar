@@ -85,9 +85,9 @@ public class UIInformation : MonoBehaviour {
 
         if (StoreData.Phase == PhaseType.Enemy)
         {
-            AutoSkillBtn.SetActiveRecursively(false);
-            UseSkillBtn.SetActiveRecursively(false);
-            BuyEnemyBtn.SetActiveRecursively(true);
+            AutoSkillBtn.SetActive(false);
+            UseSkillBtn.SetActive(false);
+            BuyEnemyBtn.SetActive(true);
 
             EnemyLabel.text = "[Enemy]";
             EnemyLabel.color = new Color(1, 0, 0);
@@ -97,9 +97,9 @@ public class UIInformation : MonoBehaviour {
         }
         else
         {
-            AutoSkillBtn.SetActiveRecursively(true);
-            UseSkillBtn.SetActiveRecursively(true);
-            BuyEnemyBtn.SetActiveRecursively(false);
+            AutoSkillBtn.SetActive(true);
+            UseSkillBtn.SetActive(true);
+            BuyEnemyBtn.SetActive(false);
 
             EnemyLabel.text = "[Own]";
             EnemyLabel.color = new Color(0.1f, 0.5f, 1);

@@ -23,7 +23,7 @@ public class TweenPositionEx : UITweener
 	public Transform cachedTransform { get { if (mTrans == null) mTrans = transform; return mTrans; } }
 	public Vector3 position { get { return cachedTransform.localPosition; } set { cachedTransform.localPosition = value; } }
 
-	override protected void OnUpdate (float factor)
+    override protected void OnUpdate(float factor, bool isFinished)
     {
         Vector3 old = factor <= midPosition ? from : mid;
         Vector3 target = factor <= midPosition ? mid : to;

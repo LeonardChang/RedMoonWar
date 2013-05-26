@@ -252,7 +252,7 @@ public class CardLogic : MonoBehaviour {
 
             if (Data.Death)
             {
-                gameObject.SetActiveRecursively(false);
+                gameObject.SetActive(false);
             }
         }
     }

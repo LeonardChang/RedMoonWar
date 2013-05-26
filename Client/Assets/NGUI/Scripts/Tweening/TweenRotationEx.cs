@@ -24,7 +24,7 @@ public class TweenRotationEx : UITweener
 
 	void Awake () { mTrans = transform; }
 
-	override protected void OnUpdate (float factor)
+    override protected void OnUpdate(float factor, bool isFinished)
 	{
         Vector3 old = factor <= midPosition ? from : mid;
         Vector3 target = factor <= midPosition ? mid : to;
@@ -46,14 +46,4 @@ public class TweenRotationEx : UITweener
         comp.midPosition = mid;
 		return comp;
 	}
-
-    static public TweenRotationEx Begin(GameObject go, float duration, Vector3 midRot, Vector3 rot, float mid)
-    {
-        TweenRotationEx comp = UITweener.Begin<TweenRotationEx>(go, duration);
-        comp.from = comp.rotation.eulerAngles;
-        comp.mid = midRot;
-        comp.to = rot;
-        comp.midPosition = mid;
-        return comp;
-    }
 }

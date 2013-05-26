@@ -25,7 +25,7 @@ public class TweenScaleEx : UITweener
         if (updateTable) mTable = NGUITools.FindInParents<UITable>(gameObject);
     }
 
-    override protected void OnUpdate(float factor)
+    override protected void OnUpdate(float factor, bool isFinished)
     {
         Vector3 old = factor <= midPosition ? from : mid;
         Vector3 target = factor <= midPosition ? mid : to;

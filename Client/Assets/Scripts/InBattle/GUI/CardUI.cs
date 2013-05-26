@@ -103,7 +103,7 @@ public class CardUI : MonoBehaviour {
     {
         set
         {
-            SelectSprite.gameObject.active = value;
+            SelectSprite.gameObject.SetActive(value);
         }
     }
 
@@ -146,7 +146,7 @@ public class CardUI : MonoBehaviour {
 
     public void ShowTalk(string _talk)
     {
-        TalkRoot.SetActiveRecursively(true);
+        TalkRoot.SetActive(true);
 
         TalkLabel.text = _talk;
         TweenColor.Begin(TalkLabel.gameObject, 0.15f, new Color(1, 0, 0, 1)).from = new Color(1, 0, 0, 0);
@@ -169,6 +169,6 @@ public class CardUI : MonoBehaviour {
 
     void RealHideTalk()
     {
-        TalkRoot.SetActiveRecursively(false);
+        TalkRoot.SetActive(false);
     }
 }

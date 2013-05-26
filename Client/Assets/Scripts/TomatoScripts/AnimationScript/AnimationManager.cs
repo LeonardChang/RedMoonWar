@@ -154,7 +154,7 @@ public class AnimationManager : MonoBehaviour {
         }
 
         atlasMaterial.mainTexture = texture;
-        atlas.material = atlasMaterial;
+        atlas.spriteMaterial = atlasMaterial;
 
         int col = texture.width / 192;
         int raw = texture.height / 192;

@@ -558,7 +558,7 @@ public class GameLogic : MonoBehaviour {
     public void ShowInfomation(CardData _data)
     {
         InfomationPanel.GetComponent<UIInformation>().StoreData = _data;
-        InfomationPanel.SetActiveRecursively(true);
+        InfomationPanel.SetActive(true);
 
         TweenScale ts = TweenScale.Begin(InfomationPanel, 0.15f, Vector3.one);
         ts.from = new Vector3(1, 0.01f, 1);
@@ -575,6 +575,6 @@ public class GameLogic : MonoBehaviour {
 
     void RealHideInfomation()
     {
-        InfomationPanel.SetActiveRecursively(false);
+        InfomationPanel.SetActive(false);
     }
 }
