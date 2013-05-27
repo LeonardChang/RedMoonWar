@@ -465,6 +465,7 @@ public class Chessboard : MonoBehaviour {
                         if (obj != null)
                         {
                             obj.transform.parent = CardRoot;
+                            obj.transform.localScale = Vector3.one;
                             TweenScale.Begin(obj, 0.25f, new Vector3(2, 2, 1)).from = new Vector3(0.1f, 0.1f, 1);
 
                             Vector3 target = new Vector3((float)(i - 2) * RectSize - RectSize * 0.5f + 3, (j + 3) * RectSize + 3, 0);
@@ -523,5 +524,15 @@ public class Chessboard : MonoBehaviour {
 
         int id = mChessboardData[_x, _y];
         return id == -1 ? null : mChessList[id];
+    }
+
+    public void ShakeMap(int _level)
+    {
+        int level = _level;
+        if (level < 1)
+        {
+            level = 1;
+        }
+        iTween.ShakePosition(GameMap.gameObject, new Vector3(0.05f, 0.05f, 0) * level, 0.5f * level);
     }
 }

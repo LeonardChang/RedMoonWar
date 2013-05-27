@@ -452,6 +452,8 @@ public class CardData : MonoBehaviour {
                 MP = MPMax;
                 break;
         }
+
+        UI.ForceReset();
     }
 
     public void SetPosition(int _x, int _y)

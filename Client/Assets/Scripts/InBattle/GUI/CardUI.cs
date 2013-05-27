@@ -83,6 +83,12 @@ public class CardUI : MonoBehaviour {
         }
     }
 
+    public void ForceReset()
+    {
+        BloodBar.sliderValue = mBloodTargetValue;
+        ManaBar.sliderValue = mManaTargetValue;
+    }
+
     public PhaseType Phase
     {
         set

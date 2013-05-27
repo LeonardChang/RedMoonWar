@@ -14,12 +14,17 @@ public class GameLogic : MonoBehaviour {
 
     public Chessboard GameChessboard;
     public UISprite MultipleBtnBack;
-    public UILabel RoundLabel;
     public GameObject InfomationPanel;
+    public GameObject BigButtonPanel;
+
+    public UILabel CoinLabel;
+    public UILabel CardLabel;
+    public UILabel AppleLabel;
 
     int mRound = -1;
     int mGetCoin = 0;
     int mGetCard = 0;
+    int mApple = 10000;
     bool mCalculating = false;
 
     void Awake()
@@ -57,11 +62,82 @@ public class GameLogic : MonoBehaviour {
 	    }
 	}
 
+    void OnSwipe(SwipeGesture gesture)
+    {
+        switch (gesture.Direction)
+        {
+            case FingerGestures.SwipeDirection.Up:
+                if (!mBigButtonOpen && gesture.StartPosition.y <= Screen.height * 0.11f)
+                {
+                    OpenBigButton();
+                }
+                else
+                {
+                    ClickUp();
+                }
+                break;
+            case FingerGestures.SwipeDirection.Down:
+                if (mBigButtonOpen && gesture.StartPosition.y <= Screen.height * 0.33f)
+                {
+                    HideBigButton();
+                }
+                else
+                {
+                    ClickDown();
+                }
+                break;
+            case FingerGestures.SwipeDirection.Left:
+                ClickLeft();
+                break;
+            case FingerGestures.SwipeDirection.Right:
+                ClickRight();
+                break;
+            case FingerGestures.SwipeDirection.UpperLeftDiagonal:
+                ClickUpLeft();
+                break;
+            case FingerGestures.SwipeDirection.UpperRightDiagonal:
+                ClickUpRight();
+                break;
+            case FingerGestures.SwipeDirection.LowerLeftDiagonal:
+                ClickDownLeft();
+                break;
+            case FingerGestures.SwipeDirection.LowerRightDiagonal:
+                ClickDownRight();
+                break;
+        }
+    }
+    
     float mClickBuff = 0;
+    bool mBigButtonOpen = false;
+
+    void OpenBigButton()
+    {
+        if (mBigButtonOpen)
+        {
+            return;
+        }
+
+        mBigButtonOpen = true;
+        TweenPosition.Begin(BigButtonPanel, 0.25f, new Vector3(0, 0, 0));
+    }
+
+    void HideBigButton()
+    {
+        if (!mBigButtonOpen)
+        {
+            return;
+        }
+
+        mBigButtonOpen = false;
+        TweenPosition.Begin(BigButtonPanel, 0.25f, new Vector3(0, -207, 0));
+    }
 
     void BattleStart()
     {
         Round = 1;
+        Apple = 1000;
+        Coin = 0;
+        Card = 0;
         SelectAll();
     }
 
@@ -74,7 +150,45 @@ public class GameLogic : MonoBehaviour {
         set 
         {
             mRound = value;
-            RoundLabel.text = "Round:" + mRound.ToString();
+        }
+    }
+
+    int Coin
+    {
+        get
+        {
+            return mGetCoin;
+        }
+        set
+        {
+            mGetCoin = value;
+            CoinLabel.text = mGetCoin.ToString();
+        }
+    }
+
+    int Card
+    {
+        get
+        {
+            return mGetCard;
+        }
+        set
+        {
+            mGetCard = value;
+            CardLabel.text = mGetCard.ToString();
+        }
+    }
+
+    int Apple
+    {
+        get
+        {
+            return mApple;
+        }
+        set
+        {
+            mApple = value;
+            AppleLabel.text = mApple.ToString();
         }
     }
 
@@ -379,19 +493,19 @@ public class GameLogic : MonoBehaviour {
                 case MapItemType.Chest1:
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
-                        mGetCoin += 100;
+                        Coin += 100;
                     }
                     break;
                 case MapItemType.Chest2:
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
-                        mGetCoin += 1000;
+                        Coin += 1000;
                     }
                     break;
                 case MapItemType.Chest3:
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
-                        mGetCoin += 10000;
+                        Coin += 10000;
                     }
                     break;
             }
@@ -557,6 +671,8 @@ public class GameLogic : MonoBehaviour {
 
     public void ShowInfomation(CardData _data)
     {
+        print("ShowInfomation");
+
         InfomationPanel.GetComponent<UIInformation>().StoreData = _data;
         InfomationPanel.SetActive(true);
 
