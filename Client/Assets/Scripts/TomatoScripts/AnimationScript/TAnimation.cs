@@ -108,6 +108,15 @@ public class TAnimation : MonoBehaviour {
                 Vector3 scale = new Vector3(cellData.Scaling/100*192,cellData.Scaling/100*192,1);
 
                 sGame.transform.localPosition = position;
+                if (scale.x == 0)
+                {
+                    scale.x = 0.001f;
+                }
+                if (scale.y == 0)
+                {
+                    scale.y = 0.001f;
+                }
+
                 sGame.transform.localScale = scale;
                 Color color = sprites[cellIndex].color;
                 color.a = (float)cellData.Opacity/255;
