@@ -8,6 +8,7 @@ public class AnimationManager : MonoBehaviour {
 
     public static List<UIAtlas> atlasList;
 
+
 	// Use this for initialization
 	void Start () {
         atlasList = new List<UIAtlas>();
@@ -52,7 +53,9 @@ public class AnimationManager : MonoBehaviour {
 
     static TAnimation CreateAnimationObject(SDataAnimation data, GameObject target)
     {
+        int animationLayer =  target.layer;
         GameObject newGame = new GameObject();
+        newGame.layer = animationLayer;
         GameObject father = (GameObject)Instantiate(newGame);
         father.transform.parent = target.transform;
         father.transform.localPosition = Vector3.zero;
@@ -91,6 +94,7 @@ public class AnimationManager : MonoBehaviour {
         for (int i = 0; i < data.MaxCellCount; i++)
         {
             GameObject child = (GameObject)Instantiate(newGame);
+            child.layer = animationLayer;
             child.name = "animation" + (i + 1).ToString();
             child.transform.parent = father.transform;
             UISprite sprite =  child.AddComponent<UISprite>();
