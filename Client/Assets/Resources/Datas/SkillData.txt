@@ -1,8 +1,8 @@
-ID,NAME,DESCRIPTION,MULTIPLY_DAMAGE,FIXED_DAMAGE,RANGE,COUNT,ADD_BUFF,MANA_COST,MANA_COST_GROW,HATRED,MAX_LEVEL,TARGET_PHASE,ANIMATION,REMARK
-1,Attack,Normal Attack,1,0,1,1,0,0,0,50,1,2,0,ÆÕÍ¨½ü¾àÀëÎïÀí¹¥»÷
-2,Arrow,Normal Attack,1,0,1,1,0,0,0,50,1,2,1,ÆÕÍ¨½ü¾àÀëÉä¼ý
-3,Fire Ball,Magic Fire Ball,1,0,1,1,0,0,0,50,1,2,2,ÆÕÍ¨½ü¾àÀëÄ§·¨¹¥»÷
-4,Health,Add 20 HP,0.1,150,1,1,0,32,-2,0,5,1,9,ÖÎÁÆÄ§·¨
-5,Crit,Normal Attack,1.5,0,1,1,0,30,-2,50,5,2,0,ÎïÀí¹¥»÷
-6,Eagle Arrow,Normal Attack,0.74,0,2,1,0,35,-2,50,5,2,1,Ô¶¾àÀëÉä¼ý
-7,Dark Ball,Magic Light Ball,1.4,0,1,2,0,30,-2,50,5,2,7,°µÈº¹¥Ä§·¨
+ï»¿ID,NAME,DESCRIPTION,MULTIPLY_DAMAGE,FIXED_DAMAGE,RANGE,COUNT,ADD_BUFF,MANA_COST,MANA_COST_GROW,HATRED,MAX_LEVEL,TARGET_PHASE,ANIMATION,REMARK
+1,Attack,Normal Attack,1,0,1,1,0,0,0,50,1,2,0,æ™®é€šè¿‘è·ç¦»ç‰©ç†æ”»å‡»
+2,Arrow,Normal Attack,1,0,1,1,0,0,0,50,1,2,1,æ™®é€šè¿‘è·ç¦»å°„ç®­
+3,Fire Ball,Magic Fire Ball,1,0,1,1,0,0,0,50,1,2,2,æ™®é€šè¿‘è·ç¦»é­”æ³•æ”»å‡»
+4,Health,Add 20 HP,0.1,150,1,1,0,32,-2,0,5,1,9,æ²»ç–—é­”æ³•
+5,Crit,Normal Attack,1.5,0,1,1,0,30,-2,50,5,2,0,ç‰©ç†æ”»å‡»
+6,Eagle Arrow,Normal Attack,0.74,0,2,1,0,35,-2,50,5,2,1,è¿œè·ç¦»å°„ç®­
+7,Dark Ball,Magic Light Ball,1.4,0,1,2,0,30,-2,50,5,2,7,æš—ç¾¤æ”»é­”æ³•
