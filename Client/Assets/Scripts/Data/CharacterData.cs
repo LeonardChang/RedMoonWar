@@ -5,20 +5,21 @@ using System.Collections.Generic;
 /// <summary>
 /// 角色数据
 /// </summary>
+[System.Serializable]
 public class CharacterData 
 {
-    private System.Int64 mID = 0;
+    protected System.Int64 mID = 0;
 
-    private int mMaxHP = 100;
-    private int mMaxMP = 100;
-    private int mAtk = 100;
-    private int mDef = 100;
-    private int mSpd = 100;
-    private int mCardID = 0;
-    private int mLevel = 1;
-    private int mSkillLevel = 1;
-    private int mExp = 0;
-    private System.DateTime mGetDate = System.DateTime.Now;
+    protected int mMaxHP = 100;
+    protected int mMaxMP = 100;
+    protected int mAtk = 100;
+    protected int mDef = 100;
+    protected int mSpd = 100;
+    protected int mCardID = 0;
+    protected int mLevel = 1;
+    protected int mSkillLevel = 1;
+    protected int mExp = 0;
+    protected System.DateTime mGetDate = System.DateTime.Now;
 
     /// <summary>
     /// 卡片ID
@@ -150,7 +151,7 @@ public class CharacterManager
 
     public CharacterManager()
     {
-        for (int i = 0; i < 5; i++ )
+        for (int i = 0; i < 6; i++)
         {
             CharacterData data = CreateRandomCharactor(i);
             mCharacterDatas[data.ID] = data;

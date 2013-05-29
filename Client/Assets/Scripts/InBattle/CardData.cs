@@ -416,6 +416,55 @@ public class CardData : MonoBehaviour {
         }
     }
 
+    protected int mBuyPrice = 0;
+    protected int mDropCard = 0;
+    protected int mDropCoin = 0;
+
+    /// <summary>
+    /// 收买价格，0为不可收买
+    /// </summary>
+    public int BuyPrice
+    {
+        get
+        {
+            return mBuyPrice;
+        }
+        set
+        {
+            mBuyPrice = value;
+        }
+    }
+
+    /// <summary>
+    /// 掉落卡牌数量
+    /// </summary>
+    public int DropCard
+    {
+        get
+        {
+            return mDropCard;
+        }
+        set
+        {
+            mDropCard = value;
+        }
+    }
+
+    /// <summary>
+    /// 掉落金币数量
+    /// </summary>
+    public int DropCoin
+    {
+        get
+        {
+            return mDropCoin;
+        }
+        set
+        {
+            mDropCoin = value;
+        }
+    }
+
     void Awake()
     {
 

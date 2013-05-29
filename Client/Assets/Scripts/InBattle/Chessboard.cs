@@ -24,63 +24,6 @@ public class Chessboard : MonoBehaviour {
 
     void Awake()
     {
-        Initlize(6, 50);
-
-        mChessList.Clear();
-        Object perfab = Resources.Load("Cards/Perfabs/Card");
-
-        for (int i = 0; i < 5; i++)
-        {
-            CharacterData data = CharacterManager.Instance.GetCharacter(i);
-
-            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "Char" + data.ID.ToString();
-
-            card.transform.parent = CardRoot;
-            card.transform.localScale = Vector3.one;
-            int id = mChessList.Keys.Count;
-            CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(PhaseType.Charactor, data);
-
-            mChessList.Add(id, logic);
-            InitlizeChess(0 + i, 1, id);
-        }
-
-        {
-            CharacterData data = CharacterManager.Instance.CreateRandomCharactor(10000);
-
-            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "Char" + data.ID.ToString();
-
-            card.transform.parent = CardRoot;
-            card.transform.localScale = Vector3.one;
-            int id = mChessList.Keys.Count;
-            CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(PhaseType.Charactor, data);
-
-            mChessList.Add(id, logic);
-            InitlizeChess(5, 1, id);
-        }
-
-        for (int i = 0; i < 13; i++)
-        {
-            CharacterData data = CharacterManager.Instance.CreateRandomCharactor(10001 + i);
-
-            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-            card.name = "Char" + data.ID.ToString();
-
-            card.transform.parent = CardRoot;
-            card.transform.localScale = Vector3.one;
-            int id = mChessList.Keys.Count;
-            CardLogic logic = card.GetComponent<CardLogic>();
-            logic.Data.ResetAllData(PhaseType.Enemy, data);
-
-            mChessList.Add(id, logic);
-            InitlizeChess(Random.Range(0, 6), 10 + i * 3, id);
-        }
-
-        mBottomLine = 0;
-        Refresh(true);
     }
 
 	// Use this for initialization
@@ -103,15 +46,15 @@ public class Chessboard : MonoBehaviour {
         }
     }
 
-    void Initlize(int _width, int _height)
+    public void Initlize(Stage _stage)
     {
-        mWidth = _width;
-        mHeight = _height;
-        mChessboardData = new int[_width, _height];
-        mItemData = new Food[_width, _height];
-        for (int i = 0; i < _width; i++)
+        mWidth = _stage.Width;
+        mHeight = _stage.Height;
+        mChessboardData = new int[mWidth, mHeight];
+        mItemData = new Food[mWidth, mHeight];
+        for (int i = 0; i < mWidth; i++)
         {
-            for (int j = 0; j < _height; j++)
+            for (int j = 0; j < mHeight; j++)
             {
                 mChessboardData[i, j] = -1;
                 mItemData[i, j] = null;
@@ -121,6 +64,51 @@ public class Chessboard : MonoBehaviour {
         TopRoad.localPosition = new Vector3(0, (mHeight - 1) * RectSize, 0);
         Road.localPosition = TopRoad.localPosition;
         Road.localScale = new Vector3(640, (mHeight + 10) * RectSize, 1);
+
+
+        mChessList.Clear();
+        Object perfab = Resources.Load("Cards/Perfabs/Card");
+
+        foreach (BattleCharacterData data in _stage.Players)
+        {
+            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "Char" + data.ID.ToString();
+
+            card.transform.parent = CardRoot;
+            card.transform.localScale = Vector3.one;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(PhaseType.Charactor, data);
+
+            logic.Data.BuyPrice = 0;
+            logic.Data.DropCard = 0;
+            logic.Data.DropCoin = 0;
+
+            int id = mChessList.Keys.Count;
+            mChessList.Add(id, logic);
+            InitlizeChess(data.InitX, data.InitY, id);
+        }
+
+        foreach (BattleEnemyData data in _stage.Enemys)
+        {
+            GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+            card.name = "Enemy" + data.ID.ToString();
+
+            card.transform.parent = CardRoot;
+            card.transform.localScale = Vector3.one;
+            CardLogic logic = card.GetComponent<CardLogic>();
+            logic.Data.ResetAllData(PhaseType.Enemy, data);
+
+            logic.Data.BuyPrice = data.BuyPrice;
+            logic.Data.DropCard = data.DropCard;
+            logic.Data.DropCoin = data.DropCoin;
+
+            int id = mChessList.Keys.Count;
+            mChessList.Add(id, logic);
+            InitlizeChess(data.InitX, data.InitY, id);
+        }
+
+        mBottomLine = 0;
+        Refresh(true);
     }
 
     bool InitlizeChess(int _x, int _y, int _id)

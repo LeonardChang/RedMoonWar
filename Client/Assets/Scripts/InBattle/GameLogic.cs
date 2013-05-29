@@ -138,6 +138,10 @@ public class GameLogic : MonoBehaviour {
         Apple = 1000;
         Coin = 0;
         Card = 0;
+
+        // 置入关卡数据 
+        GameChessboard.Initlize(Stage.Instance);
+
         SelectAll();
     }
 
