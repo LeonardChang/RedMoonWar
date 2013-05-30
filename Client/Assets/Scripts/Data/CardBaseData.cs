@@ -167,7 +167,7 @@ public class CardBaseData
 
     void Initialize(string _str)
     {       
-        string[] list = _str.Split(',');
+        string[] list = _str.Split('\t');
         if (list.Length != 14)
         {
             Debug.LogError("Error Card base data: " + _str);

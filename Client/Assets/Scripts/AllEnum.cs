@@ -63,8 +63,8 @@ public enum PhaseType : int
 /// </summary>
 public enum ElementType : int
 {
-    Fire = 0,   // 火
-    Water = 1,  // 水
+    Water = 0,  // 水
+    Fire = 1,   // 火
     Wind = 2,   // 风
     Earth = 3,  // 地
     Light = 4,  // 光

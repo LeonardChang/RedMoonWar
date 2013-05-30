@@ -172,7 +172,7 @@ public class SkillData
 
     void Initialize(string _str)
     {
-        string[] list = _str.Split(',');
+        string[] list = _str.Split('\t');
         if (list.Length < 14)
         {
             Debug.LogError("Error Skill data: " + _str);

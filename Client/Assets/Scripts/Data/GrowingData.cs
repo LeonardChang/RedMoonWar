@@ -92,7 +92,7 @@ public class GrowingData
 
     void Initialize(string _str)
     {
-        string[] list = _str.Split(',');
+        string[] list = _str.Split('\t');
         if (list.Length != 12)
         {
             Debug.LogError("Error Card base data: " + _str);
