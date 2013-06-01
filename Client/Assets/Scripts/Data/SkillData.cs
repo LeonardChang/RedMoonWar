@@ -24,6 +24,7 @@ public class SkillData
 
     private AttackTargetType mTargetPhase = AttackTargetType.Ememy;
     private AttackAnimType mAttackAnim = AttackAnimType.NormalAttack;
+    private FindTargetConditionType mSearchType = FindTargetConditionType.Random;
 
     public SkillData(string _init)
     {
@@ -160,6 +161,17 @@ public class SkillData
     }
 
     /// <summary>
+    /// 搜索目标的方式
+    /// </summary>
+    public FindTargetConditionType SearchType
+    {
+        get
+        {
+            return mSearchType;
+        }
+    }
+
+    /// <summary>
     /// 最大等级
     /// </summary>
     public int MaxLevel
@@ -173,7 +185,7 @@ public class SkillData
     void Initialize(string _str)
     {
         string[] list = _str.Split('\t');
-        if (list.Length < 14)
+        if (list.Length < 15)
         {
             Debug.LogError("Error Skill data: " + _str);
             return;
@@ -195,6 +207,7 @@ public class SkillData
             mMaxLevel = int.Parse(list[11]);
             mTargetPhase = (AttackTargetType)int.Parse(list[12]);
             mAttackAnim = (AttackAnimType)int.Parse(list[13]);
+            mSearchType = (FindTargetConditionType)int.Parse(list[14]);
         }
         catch (System.FormatException ex)
         {

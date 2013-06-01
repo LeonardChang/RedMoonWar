@@ -17,17 +17,51 @@ public enum GrowType : int
 public enum AttackAnimType : int
 {
     NormalAttack = 0,   // 普通攻击
-    Arrow = 1,          // 射箭
-    FireBall = 2,       // 火球
-    IceBall = 3,        // 冰球
-    WindBall = 4,       // 风攻击
-    StoneBall = 5,      // 地攻击
-    LightBall = 6,      // 光攻击
-    DarkBall = 7,       // 暗攻击
-    CannonBall = 8,     // 炮击
+    Arrow = 1,          // 普通射箭
+    Magic = 2,          // 普通魔法
 
-    HPHealth = 9,       // 回血
-    MPHealth = 10,      // 回魔
+    FireBall = 3,       // 火魔法
+    IceBall = 4,        // 冰魔法
+    WindBall = 5,       // 风魔法
+    EarthBall = 6,      // 地魔法
+    LightBall = 7,      // 光魔法
+    DarkBall = 8,       // 暗魔法
+
+    FireArrow = 9,      // 火箭
+    IceArrow = 10,      // 冰箭
+    WindArrow = 11,     // 风箭
+    EarthArrow = 12,    // 地箭
+    LightArrow = 13,    // 光箭
+    DarkArrow = 14,     // 暗箭
+
+    FireAttak = 15,     // 火攻击
+    IceAttak = 16,      // 冰攻击
+    WindAttak = 17,     // 风攻击
+    EarthAttak = 18,    // 地攻击
+    LightAttak = 19,    // 光攻击
+    DarkAttak = 20,     // 暗攻击
+    
+    DefDown = 21,       // 破甲
+    SkillDown = 22,     // 沉默
+    HitRateDown = 23,   // 致盲
+    Sleep = 24,         // 睡眠
+    Dizziness = 25,     // 眩晕
+    Injuries = 26,      // 重伤
+    Poisoning = 27,     // 中毒
+   
+    AtkUp = 28,         // 斗志
+    DefUp = 29,         // 守护
+    SpdUp = 30,         // 迅捷
+    HPUp = 31,          // 治疗
+    MPUp = 32,          // 冥想
+    GodHeal = 33,       // 圣佑
+
+    Death = 34,         // 即死
+    AllEnemy = 35,      // 全屏攻击
+
+    HPHealth = 36,      // 回血
+    MPHealth = 37,      // 回魔
+    BuffClear = 38,     // 清Buff
 
     None,               // 空
     Max,
@@ -39,9 +73,10 @@ public enum AttackAnimType : int
 public enum AttackTargetType : int
 {
     Self = 0,   // 自己
-    Team,       // 自己团队
-    Ememy,      // 敌人
-    All,        // 所有人
+    Team = 1,   // 自己团队
+    Ememy = 2,  // 敌人
+    All = 3,    // 所有人
+    None = 4,   // 不需要目标
 
     Max,
 }
@@ -96,11 +131,15 @@ public enum AIType : int
 /// </summary>
 public enum FindTargetConditionType : int
 {
-    Random = 0, // 随机
-    BeingHurt,  // 只搜索伤过血的人
-    LowHP,      // 低血量优先
-    HighHP,     // 高血量优先
-    DiElement,  // 属性克制优先
+    Random = 0,     // 随机
+    BeingHurt = 1,  // 只搜索伤过血的人
+    LowHP = 2,      // 低血量优先
+    HighHP = 3,     // 高血量优先
+    DiElement = 4,  // 属性克制优先
+    
+    HasDebuff = 5,  // 只搜索有异常状态的人
+    NoBuff = 6,     // 没有Buff的优先
+    LowMP = 7,      // MP不满的优先
 
     Max,
 }
@@ -150,5 +189,16 @@ public enum MapItemType : int
     Chest2,
     Chest3,
 
+    Max,
+}
+
+/// <summary>
+/// Buff类型
+/// </summary>
+public enum BuffType : int
+{
+    Bad = 0,
+    Good = 1,
+    
     Max,
 }

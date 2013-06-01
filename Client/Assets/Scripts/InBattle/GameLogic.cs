@@ -451,7 +451,7 @@ public class GameLogic : MonoBehaviour {
                         int value = 100;
                         obj.Data.HP += value;
                         obj.CreateTAnimation("HealthHP");
-                        obj.CreateHealEffect(value);
+                        obj.CreateHealthNumber(value);
                     }
                     break;
                 case MapItemType.HPFood2:
@@ -459,7 +459,7 @@ public class GameLogic : MonoBehaviour {
                         int value = (int)(obj.Data.HPMax * 0.5f);
                         obj.Data.HP += value;
                         obj.CreateTAnimation("HealthHP");
-                        obj.CreateHealEffect(value);
+                        obj.CreateHealthNumber(value);
                     }
                     break;
                 case MapItemType.HPFood3:
@@ -467,7 +467,7 @@ public class GameLogic : MonoBehaviour {
                         int value = obj.Data.HPMax;
                         obj.Data.HP += value;
                         obj.CreateTAnimation("HealthHP");
-                        obj.CreateHealEffect(value);
+                        obj.CreateHealthNumber(value);
                     }
                     break;
                 case MapItemType.MPFood1:
@@ -475,7 +475,7 @@ public class GameLogic : MonoBehaviour {
                         int value = 10;
                         obj.Data.MP += value;
                         obj.CreateTAnimation("HealthMP");
-                        obj.CreateHealManaEffect(value);
+                        obj.CreateHealManaNumber(value);
                     }
                     break;
                 case MapItemType.MPFood2:
@@ -483,7 +483,7 @@ public class GameLogic : MonoBehaviour {
                         int value = (int)(obj.Data.MPMax * 0.5f);
                         obj.Data.MP += value;
                         obj.CreateTAnimation("HealthMP");
-                        obj.CreateHealManaEffect(value);
+                        obj.CreateHealManaNumber(value);
                     }
                     break;
                 case MapItemType.MPFood3:
@@ -491,7 +491,7 @@ public class GameLogic : MonoBehaviour {
                         int value = obj.Data.MPMax;
                         obj.Data.MP += value;
                         obj.CreateTAnimation("HealthMP");
-                        obj.CreateHealManaEffect(value);
+                        obj.CreateHealManaNumber(value);
                     }
                     break;
                 case MapItemType.Chest1:

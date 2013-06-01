@@ -120,7 +120,7 @@ public class AnimationManager : MonoBehaviour {
         }
         else
         {
-            Debug.Log("data is null");
+            Debug.Log("data is null:" + name);
             return null;
         }
     }

@@ -153,17 +153,17 @@ public class CharacterManager
     {
         for (int i = 0; i < 6; i++)
         {
-            CharacterData data = CreateRandomCharactor(i);
+            CharacterData data = CreateRandomCharactor(i, 10);
             mCharacterDatas[data.ID] = data;
         }
     }
 
-    public CharacterData CreateRandomCharactor(System.Int64 _id)
+    public CharacterData CreateRandomCharactor(System.Int64 _id, int _level)
     {
         CharacterData data = new CharacterData();
         data.ID = _id;
         data.CardID = Random.Range(1, 184);
-        data.Level = 10;
+        data.Level = _level;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
 

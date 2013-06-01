@@ -232,7 +232,7 @@ public class CardLogic : MonoBehaviour {
     {
         if (_event == "StartAttack")
         {
-            CreateStartAttackEffect();
+            CreateTAnimation("Attacking");
         }
         else if (_event == "Attacking")
         {
@@ -259,84 +259,21 @@ public class CardLogic : MonoBehaviour {
 
     void ActionStart()
     {
-        switch (mActionState)
+        if (mTargetObj.Count > 0)
         {
-            case AttackAnimType.NormalAttack:
-                if (mTargetObj.Count > 0)
-                {
-                    DoDamage();
-                    NeedEndCalculate = true;
-                }
-                break;
-            case AttackAnimType.HPHealth:
-                if (mTargetObj.Count > 0)
-                {
-                    CreateTAnimation("Skilling");
+            AttackAnimationData data = AttackAnimationManager.Instance.GetAttackAnimation(mActionState);
+            CreateTAnimation(data.TAnimationName);
 
-                    SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
-                    int heal = skilldata.FixedDamage + (int)(Data.Atk * skilldata.MultiplyDamage);
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        logic.Data.HP += heal;
-                        logic.CreateHealEffect(heal);
-                    }
-                    NeedEndCalculate = true;
-                }
-                break;
-            case AttackAnimType.Arrow:
-                if (mTargetObj.Count > 0)
+            mWaitingDamage = true;
+            if (!string.IsNullOrEmpty(data.FlyPerfab))
+            {
+                foreach (CardLogic logic in mTargetObj)
                 {
-                    mWaitingDamage = true;
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        CreateArrowEffect(logic.gameObject.transform, 0.5f);
-                    }
-                    Invoke("DoDamage", 0.5f);
-                    NeedEndCalculate = true;
+                    CreateFlyEffect(logic.gameObject.transform, data);
                 }
-                break;
-            case AttackAnimType.FireBall:
-                if (mTargetObj.Count > 0)
-                {
-                    CreateTAnimation("Skilling");
-
-                    mWaitingDamage = true;
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        CreateFireBallEffect(logic.gameObject.transform, 0.85f);
-                    }
-                    Invoke("DoDamage", 0.85f);
-                    NeedEndCalculate = true;
-                }
-                break;
-            case AttackAnimType.LightBall:
-                if (mTargetObj.Count > 0)
-                {
-                    CreateTAnimation("Skilling");
-
-                    mWaitingDamage = true;
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        CreateLightBallEffect(logic.gameObject.transform, 0.85f);
-                    }
-                    Invoke("DoDamage", 0.85f);
-                    NeedEndCalculate = true;
-                }
-                break;
-            case AttackAnimType.DarkBall:
-                if (mTargetObj.Count > 0)
-                {
-                    CreateTAnimation("Skilling");
-
-                    mWaitingDamage = true;
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        CreateDarkBallEffect(logic.gameObject.transform, 0.85f);
-                    }
-                    Invoke("DoDamage", 0.85f);
-                    NeedEndCalculate = true;
-                }
-                break;
+            }
+            Invoke("DoActionRusult", data.Delay);
+            NeedEndCalculate = true;
         }
     }
 
@@ -346,6 +283,11 @@ public class CardLogic : MonoBehaviour {
     /// <param name="_animation"></param>
     public void CreateTAnimation(string _animation)
     {
+        if (string.IsNullOrEmpty(_animation))
+        {
+            return;
+        }
+
         GameObject perfab = Resources.Load("Cards/Perfabs/TAnimation", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
@@ -356,20 +298,13 @@ public class CardLogic : MonoBehaviour {
     }
     
     /// <summary>
-    /// 创建攻击动画
-    /// </summary>
-    public void CreateStartAttackEffect()
-    {
-        CreateTAnimation("Attacking");
-    }
-
-    /// <summary>
     /// 创建被击动画
     /// </summary>
     /// <param name="_Damage"></param>
-    public void CreateHitEffect(int _Damage, bool _double)
+    public void CreateHitNumber(int _Damage, bool _double)
     {
         CreateTAnimation("Attack");
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
 
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -394,7 +329,7 @@ public class CardLogic : MonoBehaviour {
     /// 创建被治疗动画
     /// </summary>
     /// <param name="_Health"></param>
-    public void CreateHealEffect(int _Health)
+    public void CreateHealthNumber(int _Health)
     {
         CreateTAnimation("HealthHP");
 
@@ -414,7 +349,7 @@ public class CardLogic : MonoBehaviour {
     /// 创建被加魔动画
     /// </summary>
     /// <param name="_Health"></param>
-    public void CreateHealManaEffect(int _Health)
+    public void CreateHealManaNumber(int _Health)
     {
         CreateTAnimation("HealthHP");
 
@@ -431,31 +366,6 @@ public class CardLogic : MonoBehaviour {
     }
 
     /// <summary>
-    /// 创建射箭动画
-    /// </summary>
-    /// <param name="_target"></param>
-    /// <param name="_flyTime"></param>
-    public void CreateArrowEffect(Transform _target, float _flyTime)
-    {
-        GameObject perfab = Resources.Load("Cards/Perfabs/Arrow", typeof(GameObject)) as GameObject;
-        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 50, -1);
-        obj.transform.localScale = new Vector3(9, 50, 1);
-
-        Vector3 from = transform.localPosition + new Vector3(0, 50, 0);
-        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
-        Vector3 dir = to - from;
-        dir.Normalize();
-        obj.transform.up = dir;
-
-        TweenPosition.Begin(obj, _flyTime, to + new Vector3(0, 0, -1)).from = from;
-        Destroy(obj, _flyTime);
-
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Bow1", typeof(AudioClip)) as AudioClip, Vector3.zero);
-    }
-
-    /// <summary>
     /// 创建死亡动画
     /// </summary>
     public void CreateDeathEffect()
@@ -463,91 +373,51 @@ public class CardLogic : MonoBehaviour {
         PlayAnimation(CharAnimationState.Death);
     }
 
-    /// <summary>
-    /// 创建火球动画
-    /// </summary>
-    /// <param name="_target"></param>
-    /// <param name="_flyTime"></param>
-    public void CreateFireBallEffect(Transform _target, float _flyTime)
+    public void CreateFlyEffect(Transform _target, AttackAnimationData _data)
     {
-        GameObject perfab = Resources.Load("Cards/Perfabs/FireBall", typeof(GameObject)) as GameObject;
-        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        obj.transform.localScale = new Vector3(58, 70, 1);
+        switch (_data.ID)
+        {
+            case AttackAnimType.Arrow:
+            case AttackAnimType.FireArrow:
+            case AttackAnimType.IceArrow:
+            case AttackAnimType.WindArrow:
+            case AttackAnimType.EarthArrow:
+            case AttackAnimType.LightArrow:
+            case AttackAnimType.DarkArrow:
+                {
+                    GameObject perfab = Resources.Load("Cards/Perfabs/" + _data.FlyPerfab, typeof(GameObject)) as GameObject;
+                    GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+                    obj.transform.parent = gameObject.transform.parent;
+                    obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 50, -1);
+                    obj.transform.localScale = new Vector3(9, 50, 1);
 
-        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
+                    Vector3 from = transform.localPosition + new Vector3(0, 50, 0);
+                    Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
+                    Vector3 dir = to - from;
+                    dir.Normalize();
+                    obj.transform.up = dir;
 
-        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
-        Destroy(obj, _flyTime);
+                    TweenPosition.Begin(obj, _data.Delay, to + new Vector3(0, 0, -1)).from = from;
+                    Destroy(obj, _data.Delay);
+                }
+                break;
+            default:
+                {
+                    GameObject perfab = Resources.Load("Cards/Perfabs/" + _data.FlyPerfab, typeof(GameObject)) as GameObject;
+                    GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+                    obj.transform.parent = gameObject.transform.parent;
+                    obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
+                    obj.transform.localScale = new Vector3(58, 70, 1);
 
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Fire1", typeof(AudioClip)) as AudioClip, Vector3.zero);
-    }
+                    Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
 
-    /// <summary>
-    /// 创建火球爆炸动画
-    /// </summary>
-    public void CreateFireBallEndEffect()
-    {
-        CreateTAnimation("Fireball");
-    }
+                    TweenPositionEx.Begin(obj, _data.Delay, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
+                    Destroy(obj, _data.Delay);
+                }
+                break;
+        }
 
-    /// <summary>
-    /// 创建光球动画
-    /// </summary>
-    /// <param name="_target"></param>
-    /// <param name="_flyTime"></param>
-    public void CreateLightBallEffect(Transform _target, float _flyTime)
-    {
-        GameObject perfab = Resources.Load("Cards/Perfabs/LightBall", typeof(GameObject)) as GameObject;
-        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        obj.transform.localScale = new Vector3(58, 70, 1);
-
-        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
-
-        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
-        Destroy(obj, _flyTime);
-
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Saint5", typeof(AudioClip)) as AudioClip, Vector3.zero);
-    }
-
-    /// <summary>
-    /// 创建光球爆炸动画
-    /// </summary>
-    public void CreateLightBallEndEffect()
-    {
-        CreateTAnimation("Lightball");
-    }
-
-    /// <summary>
-    /// 创建暗球动画
-    /// </summary>
-    /// <param name="_target"></param>
-    /// <param name="_flyTime"></param>
-    public void CreateDarkBallEffect(Transform _target, float _flyTime)
-    {
-        GameObject perfab = Resources.Load("Cards/Perfabs/DarkBall", typeof(GameObject)) as GameObject;
-        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
-        obj.transform.parent = gameObject.transform.parent;
-        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 0, -1);
-        obj.transform.localScale = new Vector3(58, 70, 1);
-
-        Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
-
-        TweenPositionEx.Begin(obj, _flyTime, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
-        Destroy(obj, _flyTime);
-
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Saint5", typeof(AudioClip)) as AudioClip, Vector3.zero);
-    }
-
-    /// <summary>
-    /// 创建暗球爆炸动画
-    /// </summary>
-    public void CreateDarkBallEndEffect()
-    {
-        CreateTAnimation("Darkball");
+        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/" + _data.FlySound, typeof(AudioClip)) as AudioClip, Vector3.zero);
     }
 
     public System.Action<CardLogic> ActionFinishEvent;
@@ -628,7 +498,7 @@ public class CardLogic : MonoBehaviour {
         if (Data.Skill != null && Data.AutoSkill && Data.Skill.GetManaCost(Data.SkillLevel) <= Data.MP)
         {
             // 释放技能
-            if (DoSkill(Data.Skill))
+            if (DoSkill(Data.Skill, false))
             {
                 Data.MP -= Data.Skill.GetManaCost(Data.SkillLevel);
                 UI.ShowTalk(Data.Skill.Name);
@@ -637,7 +507,7 @@ public class CardLogic : MonoBehaviour {
         else
         {
             // 普通攻击
-            DoSkill(Data.NormalAttack);
+            DoSkill(Data.NormalAttack, true);
         }
     }
 
@@ -648,182 +518,34 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     /// <param name="_skill"></param>
     /// <returns></returns>
-    bool DoSkill(SkillData _skill)
+    bool DoSkill(SkillData _skill, bool _isNormalAttack)
     {
         bool result = false;
 
         mCurrentSkillID = _skill.ID;
         mTargetObj.Clear();
 
-        switch (_skill.AttackAnim)
+        CardData[] list = GetTargets(_skill.SearchType, _skill);
+        if (list.Length > 0)
         {
-            case AttackAnimType.NormalAttack:
-                {
-                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
-                    if (list.Length > 0)
-                    {
-                        int count = 0;
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            mActionState = AttackAnimType.NormalAttack;
-                            mTargetObj.Add(list[i].Logic);
-                            PlayAnimation(CharAnimationState.Attack);
-                            count += 1;
+            int count = 0;
+            for (int i = 0; i < list.Length; i++)
+            {
+                mActionState = _skill.AttackAnim;
+                mTargetObj.Add(list[i].Logic);
+                PlayAnimation(_isNormalAttack ? CharAnimationState.Attack : CharAnimationState.Skill);
+                count += 1;
 
-                            if (count >= _skill.Count)
-                            {
-                                break;
-                            }
-                        }
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
-                }
-                break;
-            case AttackAnimType.Arrow:
+                if (count >= _skill.Count)
                 {
-                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
-                    if (list.Length > 0)
-                    {
-                        int count = 0;
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            mActionState = AttackAnimType.Arrow;
-                            mTargetObj.Add(list[i].Logic);
-                            PlayAnimation(CharAnimationState.Skill);
-                            count += 1;
-
-                            if (count >= _skill.Count)
-                            {
-                                break;
-                            }
-                        }
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
+                    break;
                 }
-                break;
-            case AttackAnimType.FireBall:
-                {
-                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
-                    if (list.Length > 0)
-                    {
-                        int count = 0;
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            mActionState = AttackAnimType.FireBall;
-                            mTargetObj.Add(list[i].Logic);
-                            PlayAnimation(CharAnimationState.Skill);
-                            count += 1;
-
-                            if (count >= _skill.Count)
-                            {
-                                break;
-                            }
-                        }
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
-                }
-                break;
-            case AttackAnimType.IceBall:
-            case AttackAnimType.WindBall:
-            case AttackAnimType.StoneBall:
-                NeedEndCalculate = true;
-                break;
-            case AttackAnimType.LightBall:
-                {
-                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
-                    if (list.Length > 0)
-                    {
-                        int count = 0;
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            mActionState = AttackAnimType.LightBall;
-                            mTargetObj.Add(list[i].Logic);
-                            PlayAnimation(CharAnimationState.Skill);
-                            count += 1;
-
-                            if (count >= _skill.Count)
-                            {
-                                break;
-                            }
-                        }
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
-                }
-                break;
-            case AttackAnimType.DarkBall:
-                {
-                    CardData[] list = GetTargets(FindTargetConditionType.LowHP, _skill);
-                    if (list.Length > 0)
-                    {
-                        int count = 0;
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            mActionState = AttackAnimType.DarkBall;
-                            mTargetObj.Add(list[i].Logic);
-                            PlayAnimation(CharAnimationState.Skill);
-                            count += 1;
-
-                            if (count >= _skill.Count)
-                            {
-                                break;
-                            }
-                        }
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
-                }
-                break;
-            case AttackAnimType.CannonBall:
-                NeedEndCalculate = true;
-                break;
-            case AttackAnimType.HPHealth:
-                {
-                    CardData[] list = GetTargets(FindTargetConditionType.BeingHurt, _skill);
-                    if (list.Length > 0)
-                    {
-                        int count = 0;
-                        for (int i = 0; i < list.Length; i++)
-                        {
-                            mActionState = AttackAnimType.HPHealth;
-                            mTargetObj.Add(list[i].Logic);
-                            PlayAnimation(CharAnimationState.Skill);
-                            count += 1;
-
-                            if (count >= _skill.Count)
-                            {
-                                break;
-                            }
-                        }
-                        result = true;
-                    }
-                    else
-                    {
-                        NeedEndCalculate = true;
-                    }
-                }
-                break;
-            case AttackAnimType.MPHealth:
-                NeedEndCalculate = true;
-                break;
+            }
+            result = true;
+        }
+        else
+        {
+            NeedEndCalculate = true;
         }
 
         return result;
@@ -831,16 +553,83 @@ public class CardLogic : MonoBehaviour {
 
     bool mWaitingDamage = false;
 
-    /// <summary>
-    /// 产生伤害
-    /// </summary>
-    void DoDamage()
+    void DoActionRusult()
     {
+        mWaitingDamage = false;
+
         if (mTargetObj.Count == 0 || mCurrentSkillID == -1)
         {
             return;
         }
 
+        AttackAnimationData data = AttackAnimationManager.Instance.GetAttackAnimation(mActionState);
+        switch (mActionState)
+        {
+            case AttackAnimType.AtkUp:
+            case AttackAnimType.DefUp:
+            case AttackAnimType.SpdUp:
+            case AttackAnimType.HPUp:
+            case AttackAnimType.MPUp:
+            case AttackAnimType.BuffClear:
+                break;
+            case AttackAnimType.HPHealth:
+                {
+                    SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
+                    int heal = skilldata.FixedDamage + (int)(Data.Atk * skilldata.MultiplyDamage);
+                    foreach (CardLogic logic in mTargetObj)
+                    {
+                        logic.Data.HP += heal;
+                        logic.CreateHealthNumber(heal);
+                    }
+                }
+                break;
+            case AttackAnimType.MPHealth:
+                {
+                    SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
+                    int heal = 30;
+                    foreach (CardLogic logic in mTargetObj)
+                    {
+                        logic.Data.MP += heal;
+                        logic.CreateHealManaNumber(heal);
+                    }
+                }
+                break;
+            case AttackAnimType.GodHeal:
+                {
+                    foreach (CardLogic logic in mTargetObj)
+                    {
+                        int heal = Data.HPMax;
+                        logic.Data.HP += heal;
+                        logic.CreateHealthNumber(heal);
+                    }
+
+                    foreach (CardLogic logic in mTargetObj)
+                    {
+                        int heal = Data.MPMax;
+                        logic.Data.MP += heal;
+                        logic.CreateHealManaNumber(heal);
+                    }
+                }
+                break;
+            default:
+                DoDamage();
+                break;
+        }
+        
+        if (!string.IsNullOrEmpty(data.HitTAnimation))
+        {
+            foreach (CardLogic logic in mTargetObj)
+            {
+                logic.CreateTAnimation(data.HitTAnimation);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 产生伤害
+    /// </summary>
+    void DoDamage()
+    {
         SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
 
         // 计算伤害
@@ -852,7 +641,7 @@ public class CardLogic : MonoBehaviour {
             {
                 doubledamage = true;
             }
-            logic.CreateHitEffect(damage, doubledamage);
+            logic.CreateHitNumber(damage, doubledamage);
             logic.Data.HP -= damage * (doubledamage ? 2 : 1);
 
             // 记录仇恨
@@ -890,24 +679,21 @@ public class CardLogic : MonoBehaviour {
                 logic.Data.LastAttackerID = Data.ID;
             }
 
-            AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
-            switch (mActionState)
-            {
-                case AttackAnimType.FireBall:
-                    logic.CreateFireBallEndEffect();
-                    break;
-                case AttackAnimType.LightBall:
-                    logic.CreateLightBallEndEffect();
-                    break;
-                case AttackAnimType.DarkBall:
-                    logic.CreateDarkBallEndEffect();
-                    break;
-                default:
-                    break;
-            }
+            //switch (mActionState)
+            //{
+            //    case AttackAnimType.FireBall:
+            //        logic.CreateFireBallEndEffect();
+            //        break;
+            //    case AttackAnimType.LightBall:
+            //        logic.CreateLightBallEndEffect();
+            //        break;
+            //    case AttackAnimType.DarkBall:
+            //        logic.CreateDarkBallEndEffect();
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
-
-        mWaitingDamage = false;
     }
 
     /// <summary>
@@ -930,6 +716,16 @@ public class CardLogic : MonoBehaviour {
     static int CompareCardElement(CardData a, CardData b)
     {
         return (a.Element.CompareTo(b.Element));
+    }
+
+    static int CompareCardBuffCount(CardData a, CardData b)
+    {
+        return (a.CurrentBuff.Length.CompareTo(b.CurrentBuff.Length));
+    }
+
+    static int CompareCardMP(CardData a, CardData b)
+    {
+        return (a.MP.CompareTo(b.MP));
     }
 
     /// <summary>
@@ -968,6 +764,18 @@ public class CardLogic : MonoBehaviour {
                     tempCardList.Add(getChar);
                     break;
                 case FindTargetConditionType.DiElement:
+                    tempCardList.Add(getChar);
+                    break;
+                case FindTargetConditionType.HasDebuff:
+                    if (getChar.CurrentBuff.Length > 0)
+                    {
+                        tempCardList.Add(getChar);
+                    }
+                    break;
+                case FindTargetConditionType.NoBuff:
+                    tempCardList.Add(getChar);
+                    break;
+                case FindTargetConditionType.LowMP:
                     tempCardList.Add(getChar);
                     break;
                 default:
@@ -1011,6 +819,14 @@ public class CardLogic : MonoBehaviour {
                     temp.Clear();
                     temp = null;
                 }
+                break;
+            case FindTargetConditionType.HasDebuff:
+                break;
+            case FindTargetConditionType.NoBuff:
+                tempCardList.Sort(CompareCardBuffCount);
+                break;
+            case FindTargetConditionType.LowMP:
+                tempCardList.Sort(CompareCardMP);
                 break;
             default:
                 break;

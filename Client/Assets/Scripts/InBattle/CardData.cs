@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CardData : MonoBehaviour {
     private int mHP = 100;
@@ -17,6 +18,8 @@ public class CardData : MonoBehaviour {
     private int mAttackerHatred = 0;
 
     private bool mAutoSkill = true;
+
+    private List<int> mBuffList = new List<int>();
 
     /// <summary>
     /// 棋子在棋盘中的ID
@@ -344,6 +347,17 @@ public class CardData : MonoBehaviour {
         set
         {
             mAttackerHatred = value;
+        }
+    }
+
+    /// <summary>
+    /// buff列表
+    /// </summary>
+    public int[] CurrentBuff
+    {
+        get
+        {
+            return mBuffList.ToArray();
         }
     }
 
