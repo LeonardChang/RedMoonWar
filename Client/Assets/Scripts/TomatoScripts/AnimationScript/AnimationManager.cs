@@ -160,8 +160,8 @@ public class AnimationManager : MonoBehaviour {
         atlasMaterial.mainTexture = texture;
         atlas.spriteMaterial = atlasMaterial;
 
-        int col = texture.width / 192;
-        int raw = texture.height / 192;
+        int col = texture.width / 96;
+        int raw = texture.height / 96;
 
         for (int rawIndex = 0; rawIndex < raw; rawIndex++)
         {
@@ -174,7 +174,7 @@ public class AnimationManager : MonoBehaviour {
                     Idx += 100;
                 }
                 aSprite.name = Idx.ToString();
-                Rect outer = new Rect(colIndex * 192, rawIndex*192, 192, 192);
+                Rect outer = new Rect(colIndex * 96, rawIndex * 96, 96, 96);
                 aSprite.outer = outer;
                 atlas.spriteList.Add(aSprite);
             }

@@ -398,7 +398,17 @@ public class CardLogic : MonoBehaviour {
                     obj.transform.up = dir;
 
                     TweenPosition.Begin(obj, _data.Delay, to + new Vector3(0, 0, -1)).from = from;
-                    Destroy(obj, _data.Delay);
+
+                    ParticleKiller pk = obj.transform.FindChild("Star").gameObject.GetComponent<ParticleKiller>();
+                    if (pk != null)
+                    {
+                        pk.KillTime = _data.Delay;
+                        Destroy(obj, pk.DeathTime);
+                    }
+                    else
+                    {
+                        Destroy(obj, _data.Delay);
+                    }
                 }
                 break;
             default:
@@ -412,7 +422,18 @@ public class CardLogic : MonoBehaviour {
                     Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
 
                     TweenPositionEx.Begin(obj, _data.Delay, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
-                    Destroy(obj, _data.Delay);
+                    //Destroy(obj, _data.Delay);
+
+                    ParticleKiller pk = obj.GetComponent<ParticleKiller>();
+                    if (pk != null)
+                    {
+                        pk.KillTime = _data.Delay;
+                    }
+                    TrailKiller tk = obj.GetComponent<TrailKiller>();
+                    if (tk != null)
+                    {
+                        tk.KillTime = _data.Delay;
+                    }
                 }
                 break;
         }
@@ -507,7 +528,7 @@ public class CardLogic : MonoBehaviour {
         else
         {
             // ÆÕÍ¨¹¥»÷
-            DoSkill(Data.NormalAttack, true);
+            DoSkill(Data.NormalAttack, Data.NormalAttack.AttackAnim == AttackAnimType.NormalAttack);
         }
     }
 

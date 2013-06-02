@@ -105,7 +105,7 @@ public class TAnimation : MonoBehaviour {
                 sGame.transform.rotation = Quaternion.identity;
                 sGame.transform.RotateAround(sGame.transform.forward, cellData.Rotate);
 
-                Vector3 scale = new Vector3(cellData.Scaling/100*192,cellData.Scaling/100*192,1);
+                Vector3 scale = new Vector3(cellData.Scaling / 100 * 192, cellData.Scaling / 100 * 192, 1);
 
                 sGame.transform.localPosition = position;
                 if (scale.x == 0)
@@ -119,7 +119,7 @@ public class TAnimation : MonoBehaviour {
 
                 sGame.transform.localScale = scale;
                 Color color = sprites[cellIndex].color;
-                color.a = (float)cellData.Opacity/255;
+                color.a = (float)cellData.Opacity / 255;
                 sprites[cellIndex].color = color;
             }
             else

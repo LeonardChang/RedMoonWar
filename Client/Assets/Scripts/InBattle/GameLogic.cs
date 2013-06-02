@@ -498,18 +498,21 @@ public class GameLogic : MonoBehaviour {
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
                         Coin += 100;
+                        obj.CreateTAnimation("GetCoin");
                     }
                     break;
                 case MapItemType.Chest2:
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
                         Coin += 1000;
+                        obj.CreateTAnimation("GetCoin");
                     }
                     break;
                 case MapItemType.Chest3:
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
                         Coin += 10000;
+                        obj.CreateTAnimation("GetCoin");
                     }
                     break;
             }
