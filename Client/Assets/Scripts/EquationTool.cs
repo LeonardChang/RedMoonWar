@@ -40,19 +40,19 @@ public class EquationTool
     /// <param name="_targetLevel"></param>
     /// <param name="_type"></param>
     /// <returns></returns>
-    public static int CalculateCardNextEXP(int _targetLevel, GrowType _type)
+    public static int CalculateCardNextEXP(int _currentLevel, GrowType _type)
     {
         switch (_type)
         {
             case GrowType.TypeA:
-                return Mathf.FloorToInt(_targetLevel * _targetLevel * 4) + 400;
+                return Experience.Instance.GetATypeEXP(_currentLevel);
             case GrowType.TypeB:
-                return Mathf.FloorToInt(_targetLevel * _targetLevel * 4.4f) + 560;
+                return Experience.Instance.GetBTypeEXP(_currentLevel);
             case GrowType.TypeC:
-                return Mathf.FloorToInt(_targetLevel * _targetLevel * 12) + 610;
+                return Experience.Instance.GetCTypeEXP(_currentLevel);
         }
 
-        return int.MaxValue;
+        return 0;
     }
 
     /// <summary>
