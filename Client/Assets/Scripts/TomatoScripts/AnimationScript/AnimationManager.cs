@@ -149,12 +149,12 @@ public class AnimationManager : MonoBehaviour {
         if (index == 1)
         {
             texture = (Texture)Resources.Load("TempAnimation/" + data.AniImg01);
-            Debug.Log("TempAnimation/" + data.AniImg01);
+            //Debug.Log("TempAnimation/" + data.AniImg01);
         }
         else
         {
             texture = (Texture)Resources.Load("TempAnimation/" + data.AniImg02);
-            Debug.Log("TempAnimation/" + data.AniImg02);
+            //Debug.Log("TempAnimation/" + data.AniImg02);
         }
 
         atlasMaterial.mainTexture = texture;

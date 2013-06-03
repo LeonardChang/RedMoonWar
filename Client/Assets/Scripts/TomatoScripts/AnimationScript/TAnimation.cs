@@ -35,10 +35,6 @@ public class TAnimation : MonoBehaviour {
         atlases = new List<UIAtlas>();
     }
 
-
-    
-
-
     void Update()
     {
         if (nowFrameIndex == data.FrameNumber)

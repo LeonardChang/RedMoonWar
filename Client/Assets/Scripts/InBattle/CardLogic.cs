@@ -304,7 +304,7 @@ public class CardLogic : MonoBehaviour {
     public void CreateHitNumber(int _Damage, bool _double)
     {
         CreateTAnimation("Attack");
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Slash10", typeof(AudioClip)) as AudioClip, Vector3.zero);
+        AudioCenter.Instance.PlaySound("Slash10");
 
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -342,7 +342,7 @@ public class CardLogic : MonoBehaviour {
         label.text = "+" + _Health;
         label.color = new Color(0.2f, 1, 0.2f);
 
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Heal3", typeof(AudioClip)) as AudioClip, Vector3.zero);
+        AudioCenter.Instance.PlaySound("Heal3");
     }
 
     /// <summary>
@@ -362,7 +362,7 @@ public class CardLogic : MonoBehaviour {
         label.text = "+" + _Health;
         label.color = new Color(0.2f, 0.2f, 1);
 
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/Heal3", typeof(AudioClip)) as AudioClip, Vector3.zero);
+        AudioCenter.Instance.PlaySound("Heal3");
     }
 
     /// <summary>
@@ -438,7 +438,7 @@ public class CardLogic : MonoBehaviour {
                 break;
         }
 
-        AudioSource.PlayClipAtPoint(Resources.Load("Sounds/" + _data.FlySound, typeof(AudioClip)) as AudioClip, Vector3.zero);
+        AudioCenter.Instance.PlaySound(_data.FlySound);
     }
 
     public System.Action<CardLogic> ActionFinishEvent;

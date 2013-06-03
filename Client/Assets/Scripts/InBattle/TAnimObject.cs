@@ -9,6 +9,8 @@ public class TAnimObject : MonoBehaviour {
         TAnimation anim = AnimationManager.MakeAnimation(Name, gameObject);
         anim.endTarget = gameObject;
         anim.endMessage = "TAnimationEnd";
+        anim.timeTarget = gameObject;
+        anim.timeMessage = "TimePoint";
 	}
 	
 	// Update is called once per frame
@@ -19,5 +21,14 @@ public class TAnimObject : MonoBehaviour {
     void TAnimationEnd()
     {
         Destroy(gameObject);
+    }
+
+    void TimePoint(SDataAniTiming _data)
+    {
+        if (!string.IsNullOrEmpty(_data.SeName))
+        {
+            AudioSource source = AudioCenter.Instance.PlaySound(_data.SeName, (float)_data.SeVolume / 100);
+            source.pitch = (float)_data.SePitch / 100;
+        }
     }
 }
