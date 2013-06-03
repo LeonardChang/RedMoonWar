@@ -10,6 +10,9 @@ public class BuffData
     private int mID = 0; // 索引ID
     private string mName = ""; // 名称
     private BuffType mBuffType = BuffType.Bad;
+    private int mRoundMin = 3; // buff持续最小回合数
+    private int mRoundMax = 3; // buff持续最大回合数
+    private string mSpriteName = ""; // 图标名称
 
     public BuffData(string _init)
     {
@@ -46,10 +49,34 @@ public class BuffData
         }
     }
 
+    public int RoundMin
+    {
+        get
+        {
+            return mRoundMin;
+        }
+    }
+
+    public int RoundMax
+    {
+        get
+        {
+            return mRoundMax;
+        }
+    }
+
+    public string SpriteName
+    {
+        get
+        {
+            return mSpriteName;
+        }
+    }
+
     void Initialize(string _str)
     {
         string[] list = _str.Split('\t');
-        if (list.Length < 3)
+        if (list.Length < 6)
         {
             Debug.LogError("Error Buff data: " + _str);
             return;
@@ -57,9 +84,14 @@ public class BuffData
 
         try
         {
+            string trimstr = " \t\r\n\f";
+
             mID = int.Parse(list[0]);
             mName = list[1];
             mBuffType = (BuffType)(int.Parse(list[2]));
+            mRoundMin = int.Parse(list[3]);
+            mRoundMax = int.Parse(list[4]);
+            mSpriteName = list[5].Trim(trimstr.ToCharArray()); ;
         }
         catch (System.FormatException ex)
         {

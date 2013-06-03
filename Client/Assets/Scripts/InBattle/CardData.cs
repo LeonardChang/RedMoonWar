@@ -19,7 +19,7 @@ public class CardData : MonoBehaviour {
 
     private bool mAutoSkill = true;
 
-    private List<int> mBuffList = new List<int>();
+    private Dictionary<int, RealBuffData> mBuffList = new Dictionary<int, RealBuffData>();
 
     /// <summary>
     /// 棋子在棋盘中的ID
@@ -54,6 +54,12 @@ public class CardData : MonoBehaviour {
         }
         set
         {
+            if (value < mHP)
+            {
+                // HP伤害，如果睡着了就醒来
+                RemoveBuff((int)BuffEnum.Sleep);
+            }
+
             mHP = value;
             if (mHP < 0)
             {
@@ -246,7 +252,12 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mCharacterData.Atk;
+            int addAtk = 0;
+            foreach (RealBuffData buff in CurrentBuff)
+            {
+                addAtk += buff.mAddAtk;
+            }
+            return mCharacterData.Atk + addAtk;
         }
     }
 
@@ -257,7 +268,12 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mCharacterData.Def;
+            int addDef = 0;
+            foreach (RealBuffData buff in CurrentBuff)
+            {
+                addDef += buff.mAddDef;
+            }
+            return mCharacterData.Def + addDef;
         }
     }
 
@@ -268,7 +284,12 @@ public class CardData : MonoBehaviour {
     {
         get
         {
-            return mCharacterData.Spd;
+            int addSpd = 0;
+            foreach (RealBuffData buff in CurrentBuff)
+            {
+                addSpd += buff.mAddSpd;
+            }
+            return mCharacterData.Spd + addSpd;
         }
     }
 
@@ -351,13 +372,168 @@ public class CardData : MonoBehaviour {
     }
 
     /// <summary>
-    /// buff列表
+    /// buff总数
     /// </summary>
-    public int[] CurrentBuff
+    public int CurrentBuffCount
     {
         get
         {
-            return mBuffList.ToArray();
+            return mBuffList.Keys.Count;
+        }
+    }
+
+    /// <summary>
+    /// Debuff总数
+    /// </summary>
+    public int CurrentBadBuffCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (int buffID in mBuffList.Keys)
+            {
+                RealBuffData buff = mBuffList[buffID];
+                BuffData data = BuffManager.Instance.GetBuff(buff.mBuffID);
+                if (data.BuffType == BuffType.Bad)
+                {
+                    count += 1;
+                }
+            }
+            return count;
+        }
+    }
+
+    /// <summary>
+    /// 清除所有不良状态
+    /// </summary>
+    public void ClearAllDebuff()
+    {
+        List<int> temp = new List<int>();
+        foreach (int buffID in mBuffList.Keys)
+        {
+            RealBuffData buff = mBuffList[buffID];
+            BuffData data = BuffManager.Instance.GetBuff(buff.mBuffID);
+            if (data.BuffType == BuffType.Bad)
+            {
+                temp.Add(buffID);
+                //mBuffList.Remove(buffID);
+            }
+        }
+
+        foreach (int id in temp)
+        {
+            mBuffList.Remove(id);
+        }
+        temp.Clear();
+
+        RefreshBuffIcon();
+    }
+
+    /// <summary>
+    /// 经过一回合，去掉时间已到的buff
+    /// </summary>
+    public void BuffPastOntRound()
+    {
+        List<int> temp = new List<int>();
+        foreach (int buffID in mBuffList.Keys)
+        {
+            RealBuffData buff = mBuffList[buffID];
+            buff.mLeftRound -= 1;
+
+            if (buff.mLeftRound <= 0)
+            {
+                temp.Add(buffID);
+                //mBuffList.Remove(buffID);
+            }
+        }
+
+        foreach (int id in temp)
+        {
+            mBuffList.Remove(id);
+        }
+        temp.Clear();
+
+        RefreshBuffIcon();
+    }
+
+    /// <summary>
+    /// 增加某种buff
+    /// </summary>
+    /// <param name="_buffID"></param>
+    /// <param name="_attacker"></param>
+    public void AddNewBuff(int _buffID, CardData _attacker)
+    {
+        RealBuffData buff = new RealBuffData(_buffID, _attacker);
+        mBuffList[_buffID] = buff;
+
+        RefreshBuffIcon();
+    }
+
+    /// <summary>
+    /// 去掉某种buff
+    /// </summary>
+    /// <param name="_buffID"></param>
+    public void RemoveBuff(int _buffID)
+    {
+        foreach (int buffID in mBuffList.Keys)
+        {
+            RealBuffData buff = mBuffList[buffID];
+            if (buff.mBuffID == _buffID)
+            {
+                mBuffList.Remove(buffID);
+                break;
+            }
+        }
+
+        RefreshBuffIcon();
+    }
+
+    /// <summary>
+    /// 尝试检测是否存在特定buff
+    /// </summary>
+    /// <param name="_buffID"></param>
+    public RealBuffData GetBuff(int _buffID)
+    {
+        foreach (int buffID in mBuffList.Keys)
+        {
+            RealBuffData buff = mBuffList[buffID];
+            if (buff.mBuffID == _buffID)
+            {
+                return buff;
+            }
+        }
+
+        return null;
+    }
+
+    void RefreshBuffIcon()
+    {
+        if (mBuffList.Keys.Count <= 0)
+        {
+            UI.Buff = "";
+            return;
+        }
+
+        int show = Random.Range(0, mBuffList.Keys.Count);
+        foreach (int buffID in mBuffList.Keys)
+        {
+            show -= 1;
+            if (show <= 0)
+            {
+                UI.Buff = BuffManager.Instance.GetBuff(mBuffList[buffID].mBuffID).SpriteName;
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 当前所有buff列表
+    /// </summary>
+    public Dictionary<int, RealBuffData>.ValueCollection CurrentBuff
+    {
+        get
+        {
+            return mBuffList.Values;
         }
     }
 
@@ -523,5 +699,90 @@ public class CardData : MonoBehaviour {
     {
         mX = _x;
         mY = _y;
+    }
+}
+
+/// <summary>
+/// Buff的实体数据
+/// </summary>
+public class RealBuffData
+{
+    public int mBuffID = 0;
+    public int mLeftRound = 1;
+
+    public int mAddHP = 0;
+    public int mAddMP = 0;
+
+    public int mAddAtk = 0;
+    public int mAddDef = 0;
+    public int mAddSpd = 0;
+
+    public bool mDisableSkill = false;
+    public bool mCanMiss = false;
+    public bool mSleep = false;
+    public bool mDizziness = false;
+    public bool mGreatDamage = false;
+
+    public RealBuffData(int _id, CardData _attacker)
+    {
+        BuffData data = BuffManager.Instance.GetBuff(_id);
+
+        mBuffID = data.ID;
+        mLeftRound = Random.Range(0, data.RoundMax - data.RoundMin + 1) + data.RoundMin;
+
+        mAddHP = 0;
+        mAddMP = 0;
+        mAddAtk = 0;
+        mAddDef = 0;
+        mAddSpd = 0;
+        mDisableSkill = false;
+        mCanMiss = false;
+        mSleep = false;
+        mDizziness = false;
+        mGreatDamage = false;
+
+        switch ((BuffEnum)mBuffID)
+        {
+            case BuffEnum.BrokeDef:
+                mAddDef = -Mathf.FloorToInt(_attacker.Def * 0.5f);
+                break;
+            case BuffEnum.DisableSkill:
+                mDisableSkill = true;
+                break;
+            case BuffEnum.CanMiss:
+                mCanMiss = true;
+                break;
+            case BuffEnum.Sleep:
+                mSleep = true;
+                break;
+            case BuffEnum.Dizziness:
+                mDizziness = true;
+                break;
+            case BuffEnum.GreatDamage:
+                mGreatDamage = true;
+                break;
+            case BuffEnum.Poison:
+                mAddHP = -_attacker.Atk;
+                break;
+            case BuffEnum.AddAtk:
+                mAddAtk = Mathf.FloorToInt(_attacker.Atk * 0.5f);
+                break;
+            case BuffEnum.AddDef:
+                mAddDef = Mathf.FloorToInt(_attacker.Def * 0.5f);
+                break;
+            case BuffEnum.AddSpd:
+                mAddSpd = Mathf.FloorToInt(_attacker.Spd * 0.5f);
+                break;
+            case BuffEnum.AddHPPerround:
+                mAddHP = _attacker.Atk;
+                break;
+            case BuffEnum.AddMPPerround:
+                mAddMP = Mathf.FloorToInt(_attacker.MPMax * 0.15f);
+                break;
+            case BuffEnum.AddAllPerround:
+                mAddHP = Mathf.FloorToInt(_attacker.HPMax * 0.2f);
+                mAddMP = Mathf.FloorToInt(_attacker.MPMax * 0.2f);
+                break;
+        }
     }
 }

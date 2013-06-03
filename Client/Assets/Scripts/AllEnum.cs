@@ -202,3 +202,20 @@ public enum BuffType : int
     
     Max,
 }
+
+public enum BuffEnum : int 
+{
+    BrokeDef = 1,
+    DisableSkill,
+    CanMiss,
+    Sleep,
+    Dizziness,
+    GreatDamage,
+    Poison,
+    AddAtk,
+    AddDef,
+    AddSpd,
+    AddHPPerround,
+    AddMPPerround,
+    AddAllPerround,
+}

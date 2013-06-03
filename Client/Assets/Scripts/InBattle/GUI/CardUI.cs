@@ -14,6 +14,8 @@ public class CardUI : MonoBehaviour {
     public UILabel TalkLabel;
     public UISprite TalkBackground;
 
+    public UISprite BuffSprite;
+
     float mBloodTargetValue = 0;
     float mManaTargetValue = 0;
 
@@ -21,6 +23,7 @@ public class CardUI : MonoBehaviour {
 	void Start () {
         BloodBar.sliderValue = mBloodTargetValue;
         ManaBar.sliderValue = mManaTargetValue;
+        Buff = "";
         RealHideTalk();
 	}
 	
@@ -176,5 +179,15 @@ public class CardUI : MonoBehaviour {
     void RealHideTalk()
     {
         TalkRoot.SetActive(false);
+    }
+
+    public string Buff
+    {
+        set
+        {
+            string val = value;
+            BuffSprite.alpha = string.IsNullOrEmpty(val) ? 0 : 1;
+            BuffSprite.spriteName = val;
+        }
     }
 }

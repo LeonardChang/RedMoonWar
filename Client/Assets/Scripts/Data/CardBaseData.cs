@@ -176,11 +176,13 @@ public class CardBaseData
 
         try
         {
+            string trimstr = " \t\r\n\f";
+
             mID = int.Parse(list[0]);
-            mName = list[1];
+            mName = list[1].Trim(trimstr.ToCharArray());
             mElementType = (ElementType)int.Parse(list[2]);
             mGrowingType = int.Parse(list[3]);
-            mCardSprite = list[4];
+            mCardSprite = list[4].Trim(trimstr.ToCharArray());
             mStarCount = int.Parse(list[5]);
             mEquipCost = int.Parse(list[6]);
             mSkillID = int.Parse(list[7]);

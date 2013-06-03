@@ -193,9 +193,11 @@ public class SkillData
 
         try
         {
+            string trimstr = " \t\r\n\f";
+
             mID = int.Parse(list[0]);
-            mName = list[1];
-            mDescription = list[2];
+            mName = list[1].Trim(trimstr.ToCharArray());
+            mDescription = list[2].Trim(trimstr.ToCharArray());
             mMultiplyDamage = float.Parse(list[3]);
             mFixedDamage = int.Parse(list[4]);
             mRange = int.Parse(list[5]);

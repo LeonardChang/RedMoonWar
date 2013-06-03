@@ -184,7 +184,7 @@ public class CardLogic : MonoBehaviour {
         if (NeedEndCalculate && !mAnimationNotFinish && !mWaitingDamage)
         {
             mNeedEndCalculate = false;
-            EndCalculate();
+            EndCalculate(mNeedWaitAtEnd);
         }
     }
 
@@ -461,6 +461,7 @@ public class CardLogic : MonoBehaviour {
             }
         }
     }
+    bool mNeedWaitAtEnd = false;
 
     /// <summary>
     /// 开始计算AI
@@ -469,11 +470,22 @@ public class CardLogic : MonoBehaviour {
     {
         if (Data.Death)
         {
-            EndCalculate();
+            EndCalculate(false);
             return;
         }
-        
+
+        // 睡眠或眩晕中
+        foreach (RealBuffData buff in Data.CurrentBuff)
+        {
+            if (buff.mSleep || buff.mDizziness)
+            {
+                EndCalculate(false);
+                return;
+            }
+        }
+
         mCalculatorAI = true;
+        mNeedWaitAtEnd = false;
         if (Data.Phase == PhaseType.Charactor)
         {
             DoAction();
@@ -500,11 +512,34 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
-    void EndCalculate()
+    void EndCalculate(bool _wait)
     {
         mActionState = AttackAnimType.None;
         mTargetObj.Clear();
         mCalculatorAI = false;
+
+        foreach (RealBuffData buff in Data.CurrentBuff)
+        {
+            Data.HP += buff.mAddHP;
+            Data.MP += buff.mAddMP;
+        }
+
+        // 清一次buff
+        Data.BuffPastOntRound();
+
+        if (_wait)
+        {
+            // 如行动过则稍微等一会儿再结束
+            Invoke("CallActionFinishEvent", 0.5f);
+        }
+        else
+        {
+            CallActionFinishEvent();
+        }
+    }
+
+    void CallActionFinishEvent()
+    {
         if (ActionFinishEvent != null)
         {
             ActionFinishEvent(this);
@@ -516,19 +551,33 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     void DoAction()
     {
-        if (Data.Skill != null && Data.AutoSkill && Data.Skill.GetManaCost(Data.SkillLevel) <= Data.MP)
+        bool disableSkill = false;
+        foreach (RealBuffData buff in Data.CurrentBuff)
+        {
+            if (buff.mDisableSkill)
+            {
+                disableSkill = true;
+                break;
+            }
+        }
+
+        if (!disableSkill && Data.Skill != null && Data.AutoSkill && Data.Skill.GetManaCost(Data.SkillLevel) <= Data.MP)
         {
             // 释放技能
             if (DoSkill(Data.Skill, false))
             {
                 Data.MP -= Data.Skill.GetManaCost(Data.SkillLevel);
                 UI.ShowTalk(Data.Skill.Name);
+                mNeedWaitAtEnd = true;
             }
         }
         else
         {
             // 普通攻击
-            DoSkill(Data.NormalAttack, Data.NormalAttack.AttackAnim == AttackAnimType.NormalAttack);
+            if (DoSkill(Data.NormalAttack, Data.NormalAttack.AttackAnim == AttackAnimType.NormalAttack))
+            {
+                mNeedWaitAtEnd = true;
+            }
         }
     }
 
@@ -636,6 +685,16 @@ public class CardLogic : MonoBehaviour {
                 DoDamage();
                 break;
         }
+
+        // 技能会附加的buff
+        foreach (CardLogic logic in mTargetObj)
+        {
+            SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
+            if (skilldata.AddBuff != 0)
+            {
+                logic.Data.AddNewBuff(skilldata.AddBuff, Data);
+            }
+        }
         
         if (!string.IsNullOrEmpty(data.HitTAnimation))
         {
@@ -656,14 +715,34 @@ public class CardLogic : MonoBehaviour {
         // 计算伤害
         foreach (CardLogic logic in mTargetObj)
         {
-            int damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata);
             bool doubledamage = false;
-            if (Data.FoElement == logic.Data.Element)
+            int damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata, ref doubledamage);
+
+            // 重伤状态，1.5倍伤害
+            foreach (RealBuffData buff in Data.CurrentBuff)
             {
-                doubledamage = true;
+                if (buff.mGreatDamage)
+                {
+                    damage = Mathf.FloorToInt(damage * 1.5f);
+                    break;
+                }
             }
+
+            // 致盲状态，伤害50%几率归1
+            foreach (RealBuffData buff in Data.CurrentBuff)
+            {
+                if (buff.mCanMiss)
+                {
+                    if (Random.Range(0, 2) == 0)
+                    {
+                        damage = doubledamage ? 2 : 1;
+                    }
+                    break;
+                }
+            }
+
             logic.CreateHitNumber(damage, doubledamage);
-            logic.Data.HP -= damage * (doubledamage ? 2 : 1);
+            logic.Data.HP -= damage;
 
             // 记录仇恨
             if (logic.Data.LastAttackerID == Data.ID)
@@ -699,21 +778,6 @@ public class CardLogic : MonoBehaviour {
                 logic.Data.AttackerHatred = skilldata.Hatred;
                 logic.Data.LastAttackerID = Data.ID;
             }
-
-            //switch (mActionState)
-            //{
-            //    case AttackAnimType.FireBall:
-            //        logic.CreateFireBallEndEffect();
-            //        break;
-            //    case AttackAnimType.LightBall:
-            //        logic.CreateLightBallEndEffect();
-            //        break;
-            //    case AttackAnimType.DarkBall:
-            //        logic.CreateDarkBallEndEffect();
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
     }
 
@@ -741,7 +805,7 @@ public class CardLogic : MonoBehaviour {
 
     static int CompareCardBuffCount(CardData a, CardData b)
     {
-        return (a.CurrentBuff.Length.CompareTo(b.CurrentBuff.Length));
+        return (a.CurrentBuffCount.CompareTo(b.CurrentBuffCount));
     }
 
     static int CompareCardMP(CardData a, CardData b)
@@ -788,7 +852,7 @@ public class CardLogic : MonoBehaviour {
                     tempCardList.Add(getChar);
                     break;
                 case FindTargetConditionType.HasDebuff:
-                    if (getChar.CurrentBuff.Length > 0)
+                    if (getChar.CurrentBadBuffCount > 0)
                     {
                         tempCardList.Add(getChar);
                     }

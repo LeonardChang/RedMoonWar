@@ -9,7 +9,7 @@ public class EquationTool
     /// <param name="_from"></param>
     /// <param name="_target"></param>
     /// <returns></returns>
-    public static int CalculateDamage(CardData _from, CardData _target, SkillData _skill)
+    public static int CalculateDamage(CardData _from, CardData _target, SkillData _skill, ref bool _double)
     {
         // 基础伤害
         int damage = Mathf.CeilToInt((_from.Atk * 4 - _target.Def * 2) * _skill.MultiplyDamage) + _skill.FixedDamage;
@@ -17,10 +17,15 @@ public class EquationTool
         //UnityEngine.Debug.Log(string.Format("(Atk[{0:D}] * 4 - Def[{1:D}] * 2) * Skill[{2:S}] = {3:D}", _from.Atk, _target.Def, _skill.MultiplyDamage.ToString("f2"), damage));
 
         // 属性克制, 2倍伤害
-        //if (_from.FoElement == _target.Element)
-        //{
-        //    damage = damage * 2;
-        //}
+        if (_from.FoElement == _target.Element)
+        {
+            damage = damage * 2;
+            _double = true;
+        }
+        else
+        {
+            _double = false;
+        }
 
         // +-5%的离散值
         damage = Mathf.CeilToInt(damage * Random.Range(1.05f, 0.95f));

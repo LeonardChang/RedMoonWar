@@ -112,20 +112,16 @@ public class AttackAnimationData
 
         try
         {
-            mID = (AttackAnimType)int.Parse(list[0]);
-            mName = list[1];
-            mDescription = list[2];
-            mTAnimationName = list[3];
-            mDelay = float.Parse(list[4]);
-            mFlyPerfab = list[5];
-            mFlySound = list[6];
-            mHitTAnimation = list[7];
-
             string trimstr = " \t\r\n\f";
-            mTAnimationName = mTAnimationName.Trim(trimstr.ToCharArray());
-            mFlyPerfab = mFlyPerfab.Trim(trimstr.ToCharArray());
-            mFlySound = mFlySound.Trim(trimstr.ToCharArray());
-            mHitTAnimation = mHitTAnimation.Trim(trimstr.ToCharArray());
+
+            mID = (AttackAnimType)int.Parse(list[0]);
+            mName = list[1].Trim(trimstr.ToCharArray());
+            mDescription = list[2].Trim(trimstr.ToCharArray());
+            mTAnimationName = list[3].Trim(trimstr.ToCharArray());
+            mDelay = float.Parse(list[4]);
+            mFlyPerfab = list[5].Trim(trimstr.ToCharArray());
+            mFlySound = list[6].Trim(trimstr.ToCharArray());
+            mHitTAnimation = list[7].Trim(trimstr.ToCharArray());
         }
         catch (System.FormatException ex)
         {

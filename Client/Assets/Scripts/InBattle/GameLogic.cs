@@ -561,7 +561,7 @@ public class GameLogic : MonoBehaviour {
         foreach (int id in list.Keys)
         {
             list[id].Data.HP += 10;
-            list[id].Data.MP += 5;
+            list[id].Data.MP += 2;
         }
 
         mCalculating = false;
