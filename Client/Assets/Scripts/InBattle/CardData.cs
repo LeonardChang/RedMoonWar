@@ -77,6 +77,7 @@ public class CardData : MonoBehaviour {
             {
                 mDeath = true;
                 Logic.CreateDeathEffect();
+                ClearAllDebuff();
             }
         }
     }

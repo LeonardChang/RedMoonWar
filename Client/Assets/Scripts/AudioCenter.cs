@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class AudioCenter : MonoBehaviour {
@@ -29,7 +29,7 @@ public class AudioCenter : MonoBehaviour {
     private float[] mSaveSEVolume = new float[10] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         
     /// <summary>
-    /// ´ò¿ª / ¹Ø±ÕÒôÀÖ
+    /// æ‰“å¼€ / å…³é—­éŸ³ä¹
     /// </summary>
     public bool OpenMusicEffect
     {
@@ -46,7 +46,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// ´ò¿ª / ¹Ø±ÕÒôĞ§
+    /// æ‰“å¼€ / å…³é—­éŸ³æ•ˆ
     /// </summary>
     public bool OpenSoundEffect
     {
@@ -66,7 +66,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// È«¾ÖÒôÀÖÒôÁ¿
+    /// å…¨å±€éŸ³ä¹éŸ³é‡
     /// </summary>
     public float GlobalMusicVolume
     {
@@ -83,7 +83,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// È«¾ÖÒôĞ§ÒôÁ¿
+    /// å…¨å±€éŸ³æ•ˆéŸ³é‡
     /// </summary>
     public float GlobalSoundVolume
     {
@@ -121,13 +121,13 @@ public class AudioCenter : MonoBehaviour {
             GlobalSoundVolume = 0.7f;
         }
 
-        if (mInstance == null)
+        if (mInstance != null && mInstance != this)
         {
-            mInstance = this;
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            mInstance = this;
         }
     }
 
@@ -142,7 +142,7 @@ public class AudioCenter : MonoBehaviour {
 	}
 
     /// <summary>
-    /// ²¥·ÅÒ»¸öÒôÀÖ
+    /// æ’­æ”¾ä¸€ä¸ªéŸ³ä¹
     /// </summary>
     /// <param name="_clipName"></param>
     /// <returns></returns>
@@ -152,7 +152,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// ²¥·ÅÒ»¸öÒôÀÖ
+    /// æ’­æ”¾ä¸€ä¸ªéŸ³ä¹
     /// </summary>
     /// <param name="_clipName"></param>
     /// <param name="_volume"></param>
@@ -178,7 +178,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// ²¥·ÅÒ»¸öÒôĞ§
+    /// æ’­æ”¾ä¸€ä¸ªéŸ³æ•ˆ
     /// </summary>
     /// <param name="_clipName"></param>
     /// <returns></returns>
@@ -188,7 +188,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// ²¥·ÅÒ»¸öÒôĞ§
+    /// æ’­æ”¾ä¸€ä¸ªéŸ³æ•ˆ
     /// </summary>
     /// <param name="_clipName"></param>
     /// <param name="_volume"></param>
@@ -200,7 +200,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// ²¥·ÅÒ»¸öÒôĞ§
+    /// æ’­æ”¾ä¸€ä¸ªéŸ³æ•ˆ
     /// </summary>
     /// <param name="_clip"></param>
     /// <param name="_volume"></param>
@@ -226,7 +226,7 @@ public class AudioCenter : MonoBehaviour {
     }
 
     /// <summary>
-    /// Í£Ö¹ËùÓĞÒôĞ§
+    /// åœæ­¢æ‰€æœ‰éŸ³æ•ˆ
     /// </summary>
     public void StopAllSound()
     {
