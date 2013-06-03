@@ -22,8 +22,8 @@ public class AudioCenter : MonoBehaviour {
 
     private bool mOpenMusic = true;
     private bool mOpenSound = true;
-    private float mMusicVolume = 1;
-    private float mSoundVolume = 1;
+    private float mMusicVolume = 0.7f;
+    private float mSoundVolume = 0.7f;
 
     private float mSaveBGMVolume = 1;
     private float[] mSaveSEVolume = new float[10] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
@@ -37,6 +37,9 @@ public class AudioCenter : MonoBehaviour {
         {
             mOpenMusic = value;
             BGMPlayer.volume = mOpenMusic ? mMusicVolume * mSaveBGMVolume : 0;
+
+            PlayerPrefs.SetInt("mOpenMusic", mOpenMusic ? 1 : 0);
+            PlayerPrefs.Save();
         }
 
         get { return mOpenMusic; }
@@ -54,6 +57,9 @@ public class AudioCenter : MonoBehaviour {
             {
                 SEPlayers[i].volume = mOpenSound ? mSoundVolume * mSaveSEVolume[i] : 0;
             }
+
+            PlayerPrefs.SetInt("mOpenSound", mOpenSound ? 1 : 0);
+            PlayerPrefs.Save();
         }
 
         get { return mOpenSound; }
@@ -68,6 +74,9 @@ public class AudioCenter : MonoBehaviour {
         { 
             mMusicVolume = value;
             BGMPlayer.volume = mOpenMusic ? mMusicVolume * mSaveBGMVolume : 0;
+
+            PlayerPrefs.SetFloat("mMusicVolume", mMusicVolume);
+            PlayerPrefs.Save();
         }
 
         get { return mMusicVolume; }
@@ -85,6 +94,9 @@ public class AudioCenter : MonoBehaviour {
             {
                 SEPlayers[i].volume = mOpenSound ? mSoundVolume * mSaveSEVolume[i] : 0;
             }
+
+            PlayerPrefs.SetFloat("mSoundVolume", mSoundVolume);
+            PlayerPrefs.Save();
         }
 
         get { return mSoundVolume; }
@@ -93,6 +105,21 @@ public class AudioCenter : MonoBehaviour {
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        if (PlayerPrefs.HasKey("mOpenMusic"))
+        {
+            mOpenMusic = PlayerPrefs.GetInt("mOpenMusic") == 1;
+            mOpenSound = PlayerPrefs.GetInt("mOpenSound") == 1;
+            mMusicVolume = PlayerPrefs.GetFloat("mMusicVolume");
+            mSoundVolume = PlayerPrefs.GetFloat("mSoundVolume");
+        }
+        else
+        {
+            OpenMusicEffect = true;
+            OpenSoundEffect = true;
+            GlobalMusicVolume = 0.7f;
+            GlobalSoundVolume = 0.7f;
+        }
 
         if (mInstance == null)
         {

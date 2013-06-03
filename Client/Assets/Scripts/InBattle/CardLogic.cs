@@ -301,9 +301,8 @@ public class CardLogic : MonoBehaviour {
     /// 创建被击动画
     /// </summary>
     /// <param name="_Damage"></param>
-    public void CreateHitNumber(int _Damage, bool _double)
+    public GameObject CreateHitNumber(int _Damage, bool _double)
     {
-        CreateTAnimation("Attack");
         AudioCenter.Instance.PlaySound("Slash10");
 
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
@@ -323,16 +322,16 @@ public class CardLogic : MonoBehaviour {
         label.color = new Color(1, 0, 0);
 
         iTween.ShakePosition(gameObject, new Vector3(0.1f, 0.1f, 0), 0.25f);
+
+        return obj;
     }
 
     /// <summary>
     /// 创建被治疗动画
     /// </summary>
     /// <param name="_Health"></param>
-    public void CreateHealthNumber(int _Health)
+    public GameObject CreateHealthNumber(int _Health)
     {
-        CreateTAnimation("HealthHP");
-
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
@@ -343,16 +342,16 @@ public class CardLogic : MonoBehaviour {
         label.color = new Color(0.2f, 1, 0.2f);
 
         AudioCenter.Instance.PlaySound("Heal3");
+
+        return obj;
     }
 
     /// <summary>
     /// 创建被加魔动画
     /// </summary>
     /// <param name="_Health"></param>
-    public void CreateHealManaNumber(int _Health)
+    public GameObject CreateHealManaNumber(int _Health)
     {
-        CreateTAnimation("HealthHP");
-
         GameObject perfab = Resources.Load("Cards/Perfabs/BloodLabel", typeof(GameObject)) as GameObject;
         GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform.parent;
@@ -363,6 +362,8 @@ public class CardLogic : MonoBehaviour {
         label.color = new Color(0.2f, 0.2f, 1);
 
         AudioCenter.Instance.PlaySound("Heal3");
+
+        return obj;
     }
 
     /// <summary>
@@ -477,9 +478,17 @@ public class CardLogic : MonoBehaviour {
         // 睡眠或眩晕中
         foreach (RealBuffData buff in Data.CurrentBuff)
         {
-            if (buff.mSleep || buff.mDizziness)
+            if (buff.mSleep)
             {
                 EndCalculate(false);
+                CreateTAnimation("Sleep");
+                return;
+            }
+
+            if (buff.mDizziness)
+            {
+                EndCalculate(false);
+                CreateTAnimation("Yun");
                 return;
             }
         }
@@ -522,6 +531,28 @@ public class CardLogic : MonoBehaviour {
         {
             Data.HP += buff.mAddHP;
             Data.MP += buff.mAddMP;
+
+            switch ((BuffEnum)buff.mBuffID)
+            {
+                case BuffEnum.Poison:
+                    CreateTAnimation("Poisoning");
+                    CreateHitNumber(-buff.mAddHP, false);
+                    break;
+                case BuffEnum.AddHPPerround:
+                    CreateTAnimation("HealthHP");
+                    CreateHealthNumber(buff.mAddHP);
+                    break;
+                case BuffEnum.AddMPPerround:
+                    {
+                        CreateTAnimation("HealthMP");
+                        GameObject obj = CreateHealManaNumber(buff.mAddMP);
+                        if (buff.mAddHP != 0)
+                        {
+                            obj.GetComponent<Blood>().YOffset = 30;
+                        }
+                    }
+                    break;
+            }
         }
 
         // 清一次buff
