@@ -700,4 +700,9 @@ public class GameLogic : MonoBehaviour {
     {
         InfomationPanel.SetActive(false);
     }
+
+    public void ShakeMap(int _level)
+    {
+        GameChessboard.ShakeMap(_level);
+    }
 }

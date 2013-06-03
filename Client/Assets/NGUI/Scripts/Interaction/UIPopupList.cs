@@ -303,7 +303,8 @@ public class UIPopupList : MonoBehaviour
 
 			if (snd.trigger == UIButtonSound.Trigger.OnClick)
 			{
-				NGUITools.PlaySound(snd.audioClip, snd.volume, 1f);
+                AudioCenter.Instance.PlaySound(snd.audioClip, snd.volume, 1f);
+				//NGUITools.PlaySound(snd.audioClip, snd.volume, 1f);
 			}
 		}
 	}

@@ -196,6 +196,19 @@ public class AudioCenter : MonoBehaviour {
     public AudioSource PlaySound(string _clipName, float _volume)
     {
         AudioClip clip = GetClip(_clipName);
+        return PlaySound(clip, _volume, 1);
+    }
+
+    /// <summary>
+    /// 播放一个音效
+    /// </summary>
+    /// <param name="_clip"></param>
+    /// <param name="_volume"></param>
+    /// <param name="_pitch"></param>
+    /// <returns></returns>
+    public AudioSource PlaySound(AudioClip _clip, float _volume, float _pitch)
+    {
+        AudioClip clip = _clip;
         int sePlayerID = FreeSEPlayer;
         if (clip != null && sePlayerID != -1)
         {
@@ -203,7 +216,7 @@ public class AudioCenter : MonoBehaviour {
 
             SEPlayers[sePlayerID].clip = clip;
             SEPlayers[sePlayerID].volume = OpenSoundEffect ? GlobalSoundVolume * mSaveSEVolume[sePlayerID] : 0;
-            SEPlayers[sePlayerID].pitch = 1;
+            SEPlayers[sePlayerID].pitch = _pitch;
             SEPlayers[sePlayerID].Play();
 
             return BGMPlayer;

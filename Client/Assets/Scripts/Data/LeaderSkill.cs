@@ -116,4 +116,14 @@ public class LeaderSkillManager
             mLeaderSkillDatas[data.ID] = data;
         }
     }
+
+    public LeaderSkillData GetSkill(int _id)
+    {
+        if (!mLeaderSkillDatas.ContainsKey(_id))
+        {
+            return null;
+        }
+
+        return mLeaderSkillDatas[_id];
+    }
 }

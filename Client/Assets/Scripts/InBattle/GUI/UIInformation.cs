@@ -53,7 +53,7 @@ public class UIInformation : MonoBehaviour {
         DefLabel.text = StoreData.Def.ToString();
         SpdLabel.text = StoreData.Spd.ToString();
         SkillLabel.text = "Skill. " + (StoreData.BaseData.SkillID == 0 ? "Empty" : SkillManager.Instance.GetSkill(StoreData.BaseData.SkillID).Name);
-        LeaderSkillLabel.text = "Leader skill. Empty";
+        LeaderSkillLabel.text = "Leader skill. " + (StoreData.BaseData.LeaderSkillID == 0 ? "Empty" : LeaderSkillManager.Instance.GetSkill(StoreData.BaseData.LeaderSkillID).Name);
         LevelLabel.text = "Lv." + StoreData.Level.ToString();
 
         BloodBar.sliderValue = (float)StoreData.HP / StoreData.HPMax;

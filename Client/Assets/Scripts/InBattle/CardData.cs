@@ -18,6 +18,7 @@ public class CardData : MonoBehaviour {
     private int mAttackerHatred = 0;
 
     private bool mAutoSkill = true;
+    private bool mIsLeader = false;
 
     private Dictionary<int, RealBuffData> mBuffList = new Dictionary<int, RealBuffData>();
 
@@ -603,6 +604,19 @@ public class CardData : MonoBehaviour {
         set
         {
             mAutoSkill = value;
+        }
+    }
+
+    public bool IsLeader
+    {
+        get
+        {
+            return mIsLeader;
+        }
+        set
+        {
+            mIsLeader = value;
+            UI.IsLeader = mIsLeader;            
         }
     }
 

@@ -15,16 +15,21 @@ public class CardUI : MonoBehaviour {
     public UISprite TalkBackground;
 
     public UISprite BuffSprite;
+    public UISprite LeaderSprite;
 
     float mBloodTargetValue = 0;
     float mManaTargetValue = 0;
 
-	// Use this for initialization
-	void Start () {
+    void Awake()
+    {
         BloodBar.sliderValue = mBloodTargetValue;
         ManaBar.sliderValue = mManaTargetValue;
         Buff = "";
         RealHideTalk();
+    }
+
+	// Use this for initialization
+	void Start () {
 	}
 	
 	// Update is called once per frame
@@ -188,6 +193,15 @@ public class CardUI : MonoBehaviour {
             string val = value;
             BuffSprite.alpha = string.IsNullOrEmpty(val) ? 0 : 1;
             BuffSprite.spriteName = val;
+            BuffSprite.MakePixelPerfect();
+        }
+    }
+
+    public bool IsLeader
+    {
+        set
+        {
+            LeaderSprite.gameObject.SetActive(value);
         }
     }
 }

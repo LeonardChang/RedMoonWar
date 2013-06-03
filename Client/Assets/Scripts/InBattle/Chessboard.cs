@@ -99,8 +99,10 @@ public class Chessboard : MonoBehaviour {
         mChessList.Clear();
         Object perfab = Resources.Load("Cards/Perfabs/Card");
 
-        foreach (BattleCharacterData data in _stage.Players)
+        for (int i = 0; i < _stage.Players.Length; i++ )
         {
+            BattleCharacterData data = _stage.Players[i];
+
             GameObject card = Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
             card.name = "Char" + data.ID.ToString();
 
@@ -112,6 +114,7 @@ public class Chessboard : MonoBehaviour {
             logic.Data.BuyPrice = 0;
             logic.Data.DropCard = 0;
             logic.Data.DropCoin = 0;
+            logic.Data.IsLeader = i <= 1;
 
             int id = mChessList.Keys.Count;
             mChessList.Add(id, logic);
@@ -131,6 +134,7 @@ public class Chessboard : MonoBehaviour {
             logic.Data.BuyPrice = data.BuyPrice;
             logic.Data.DropCard = data.DropCard;
             logic.Data.DropCoin = data.DropCoin;
+            logic.Data.IsLeader = false;
 
             int id = mChessList.Keys.Count;
             mChessList.Add(id, logic);
@@ -551,6 +555,6 @@ public class Chessboard : MonoBehaviour {
         {
             level = 1;
         }
-        iTween.ShakePosition(GameMap.gameObject, new Vector3(0.05f, 0.05f, 0) * level, 0.5f * level);
+        iTween.ShakePosition(Road.parent.gameObject, new Vector3(0.05f, 0.05f, 0) * level, 0.5f * level);
     }
 }

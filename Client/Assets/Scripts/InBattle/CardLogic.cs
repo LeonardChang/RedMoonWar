@@ -523,6 +523,8 @@ public class CardLogic : MonoBehaviour {
 
     void EndCalculate(bool _wait)
     {
+        bool wait = _wait;
+
         mActionState = AttackAnimType.None;
         mTargetObj.Clear();
         mCalculatorAI = false;
@@ -553,12 +555,14 @@ public class CardLogic : MonoBehaviour {
                     }
                     break;
             }
+
+            wait = true;
         }
 
         // 清一次buff
         Data.BuffPastOntRound();
 
-        if (_wait)
+        if (wait)
         {
             // 如行动过则稍微等一会儿再结束
             Invoke("CallActionFinishEvent", 0.5f);
@@ -774,6 +778,11 @@ public class CardLogic : MonoBehaviour {
 
             logic.CreateHitNumber(damage, doubledamage);
             logic.Data.HP -= damage;
+
+            if (doubledamage)
+            {
+                GameLogic.Instance.ShakeMap(1);
+            }
 
             // 记录仇恨
             if (logic.Data.LastAttackerID == Data.ID)
