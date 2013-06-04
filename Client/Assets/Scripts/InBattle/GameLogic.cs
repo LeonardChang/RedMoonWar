@@ -27,6 +27,26 @@ public class GameLogic : MonoBehaviour {
     int mApple = 10000;
     bool mCalculating = false;
 
+    private int mLeaderSkill1 = 0; // 主将技能1
+    private int mLeaderSkill2 = 0; // 主将技能2
+    private int mLeaderSkillAddHP_SP = 0;
+
+    public int LeaderSkill1
+    {
+        get
+        {
+            return mLeaderSkill1;
+        }
+    }
+
+    public int LeaderSkill2
+    {
+        get
+        {
+            return mLeaderSkill2;
+        }
+    }
+
     void Awake()
     {
         mInstance = this;
@@ -139,8 +159,22 @@ public class GameLogic : MonoBehaviour {
         Coin = 0;
         Card = 0;
 
+        Stage stage = Stage.Instance;
+        mLeaderSkill1 = CardManager.Instance.GetCard(stage.Players[0].CardID).LeaderSkillID;
+        mLeaderSkill2 = CardManager.Instance.GetCard(stage.Players[1].CardID).LeaderSkillID;
+
+        mLeaderSkillAddHP_SP = 0;
+        if (mLeaderSkill1 == (int)SpecialLeaderSkillID.GodHP)
+        {
+            mLeaderSkillAddHP_SP += Mathf.FloorToInt(stage.Players[0].Atk * LeaderSkillManager.Instance.GetSkill(mLeaderSkill1).Special);
+        }
+        if (mLeaderSkill2 == (int)SpecialLeaderSkillID.GodHP)
+        {
+            mLeaderSkillAddHP_SP += Mathf.FloorToInt(stage.Players[1].Atk * LeaderSkillManager.Instance.GetSkill(mLeaderSkill2).Special);
+        }
+
         // 置入关卡数据 
-        GameChessboard.Initlize(Stage.Instance);
+        GameChessboard.Initlize(stage);
 
         SelectAll();
     }
@@ -220,6 +254,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoUp();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -236,6 +272,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoDown();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -252,6 +290,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoLeft();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -268,6 +308,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoRight();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -284,6 +326,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoUpLeft();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -300,6 +344,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoDownLeft();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -316,6 +362,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoUpRight();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -332,6 +380,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.GoDownRight();
         GameChessboard.AllEmemyMove();
+
+        EnableBigButtonPanel = false;
     }
 
     /// <summary>
@@ -416,6 +466,8 @@ public class GameLogic : MonoBehaviour {
         mCalculating = true;
         GameChessboard.AllEmemyMove();
         //CalculateAI();
+
+        EnableBigButtonPanel = false;
     }
 
     private bool mIsMultiple = false;
@@ -556,16 +608,61 @@ public class GameLogic : MonoBehaviour {
 
     void EndCalculateAI()
     {
-        // 所有人每回合回5点Mana
         Dictionary<int, CardLogic> list = GameChessboard.mChessList;
         foreach (int id in list.Keys)
         {
-            list[id].Data.HP += 10;
+            // 自然回复
             list[id].Data.MP += 2;
+
+            // 队长技能回复
+            if (list[id].Data.Phase == PhaseType.Charactor)
+            {
+                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(LeaderSkill1);
+                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(LeaderSkill2);
+                if (skill1 != null 
+                    && (skill1.Element == ElementType.None || skill1.Element == list[id].Data.Element))
+                {
+                    list[id].Data.HP += skill1.AddHP;
+                    list[id].Data.MP += skill1.AddMP;
+                }
+                if (skill2 != null
+                    && (skill2.Element == ElementType.None || skill2.Element == list[id].Data.Element))
+                {
+                    list[id].Data.HP += skill2.AddHP;
+                    list[id].Data.MP += skill2.AddMP;
+                }
+
+                list[id].Data.HP += mLeaderSkillAddHP_SP;
+            }
         }
 
         mCalculating = false;
         Round += 1;
+
+        EnableBigButtonPanel = true;
+    }
+
+    bool EnableBigButtonPanel
+    {
+        set 
+        {
+            if (value)
+            {
+                TweenAlpha.Begin(BigButtonPanel.gameObject, 0.1f, 1);
+                foreach (Collider col in BigButtonPanel.GetComponentsInChildren<Collider>())
+                {
+                    col.enabled = true;
+                }
+            }
+            else
+            {
+                TweenAlpha.Begin(BigButtonPanel.gameObject, 0.1f, 0);
+                foreach (Collider col in BigButtonPanel.GetComponentsInChildren<Collider>())
+                {
+                    col.enabled = false;
+                }
+            }
+        }
     }
 
     void AIActionFinishCallback(CardLogic _logic)
@@ -704,5 +801,10 @@ public class GameLogic : MonoBehaviour {
     public void ShakeMap(int _level)
     {
         GameChessboard.ShakeMap(_level);
+    }
+   
+    public int BottomLine
+    {
+        get { return GameChessboard.BottomLine; }
     }
 }

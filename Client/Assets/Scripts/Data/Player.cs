@@ -35,8 +35,8 @@ public class Player
     private System.Int64 mPlayerID; // 玩家ID
     private int mCoin; // 金币数量
     private int mGem; // 宝石币数量
-    private int mPower; // 体力
-    private int mPowerMax; // 体力上限
+    private int mEnergy; // 体力
+    private int mEnergyMax; // 体力上限
     private float mPowerAddSpeed; // 体力恢复速度（秒）
     private int mLevel; // 等级
     private int mEXP; // 经验值
@@ -101,19 +101,19 @@ public class Player
     /// <summary>
     /// 体力
     /// </summary>
-    public int Power
+    public int Energy
     {
-        get { return mPower; }
-        set { mPower = value; }
+        get { return mEnergy; }
+        set { mEnergy = value; }
     }
 
     /// <summary>
     /// 体力上限
     /// </summary>
-    public int PowerMax
+    public int EnergyMax
     {
-        get { return mPowerMax; }
-        set { mPowerMax = value; }
+        get { return mEnergyMax; }
+        set { mEnergyMax = value; }
     }
 
     /// <summary>

@@ -17,7 +17,7 @@ public class EquationTool
         //UnityEngine.Debug.Log(string.Format("(Atk[{0:D}] * 4 - Def[{1:D}] * 2) * Skill[{2:S}] = {3:D}", _from.Atk, _target.Def, _skill.MultiplyDamage.ToString("f2"), damage));
 
         //  Ù–‘øÀ÷∆, 2±∂…À∫¶
-        if (_from.FoElement == _target.Element)
+        if (_from.Element == _target.BeElement)
         {
             damage = damage * 2;
             _double = true;

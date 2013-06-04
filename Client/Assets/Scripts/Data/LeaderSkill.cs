@@ -10,7 +10,16 @@ public class LeaderSkillData
     private int mID = 0; // 技能的索引ID
     private string mName = ""; // 技能的名称
     private string mDescription = ""; // 技能的描述
-
+    
+    private ElementType mElement = ElementType.None; // 有效对象的属性
+    private int mAddHP = 0; // 每回合额外增加HP
+    private int mAddMP = 0; // 每回合额外增加MP
+    private float mDamageDown = 1; // 伤害下降
+    private float mAtkUp = 1; // 攻击上升
+    private float mDefUp = 1; // 防御上升
+    private float mSpdUp = 1; // 速度上升
+    private float mSpecial = 0; // 特殊值
+        
     public LeaderSkillData(string _init)
     {
         Initialize(_init);
@@ -49,10 +58,74 @@ public class LeaderSkillData
         }
     }
 
+    public ElementType Element
+    {
+        get
+        {
+            return mElement;
+        }
+    }
+
+    public int AddHP
+    {
+        get
+        {
+            return mAddHP;
+        }
+    }
+
+    public int AddMP
+    {
+        get
+        {
+            return mAddMP;
+        }
+    }
+
+    public float DamageDown
+    {
+        get
+        {
+            return mDamageDown;
+        }
+    }
+
+    public float AtkUp
+    {
+        get
+        {
+            return mAtkUp;
+        }
+    }
+
+    public float DefUp
+    {
+        get
+        {
+            return mDefUp;
+        }
+    }
+
+    public float SpdUp
+    {
+        get
+        {
+            return mSpdUp;
+        }
+    }
+
+    public float Special
+    {
+        get
+        {
+            return mSpecial;
+        }
+    }
+
     void Initialize(string _str)
     {
         string[] list = _str.Split('\t');
-        if (list.Length < 3)
+        if (list.Length < 11)
         {
             Debug.LogError("Error LeaderSkill data: " + _str);
             return;
@@ -63,6 +136,15 @@ public class LeaderSkillData
             mID = int.Parse(list[0]);
             mName = list[1];
             mDescription = list[2];
+
+            mElement = (ElementType)int.Parse(list[3]);
+            mAddHP = int.Parse(list[4]);
+            mAddMP = int.Parse(list[5]);
+            mDamageDown = float.Parse(list[6]);
+            mAtkUp = float.Parse(list[7]);
+            mDefUp = float.Parse(list[8]);
+            mSpdUp = float.Parse(list[9]);
+            mSpecial = float.Parse(list[10]);
         }
         catch (System.FormatException ex)
         {

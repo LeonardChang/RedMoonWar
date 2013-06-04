@@ -27,6 +27,9 @@ public class CardBaseData
 
     private GrowType mEXPGrowingType = GrowType.TypeA; // 经验曲线类型
     private ElementType mElementType = ElementType.Fire; // 属性
+    
+    private int mEvolution = 0; // 可进化目标
+    private List<int> mEvolutionMaterial = new List<int>(); // 进化所需材料
 
     public CardBaseData(string _init)
     {
@@ -165,10 +168,32 @@ public class CardBaseData
         get { return mElementType; }
     }
 
+    /// <summary>
+    /// 进化目标，0为无法进化
+    /// </summary>
+    public int Evolution
+    {
+        get
+        {
+            return mEvolution;
+        }
+    }
+
+    /// <summary>
+    /// 进化需要的材料，无法进化时为空
+    /// </summary>
+    public int[] EvolutionMaterials
+    {
+        get
+        {
+            return mEvolutionMaterial.ToArray();
+        }
+    }
+
     void Initialize(string _str)
     {       
         string[] list = _str.Split('\t');
-        if (list.Length != 14)
+        if (list.Length != 16)
         {
             Debug.LogError("Error Card base data: " + _str);
             return;
@@ -176,7 +201,7 @@ public class CardBaseData
 
         try
         {
-            string trimstr = " \t\r\n\f";
+            string trimstr = " \t\r\n\f\",";
 
             mID = int.Parse(list[0]);
             mName = list[1].Trim(trimstr.ToCharArray());
@@ -192,6 +217,17 @@ public class CardBaseData
             mEXPGrowingType = (GrowType)int.Parse(list[11]);
             mBaseEatExp = int.Parse(list[12]);
             mSellPrice = int.Parse(list[13]);
+            mEvolution = int.Parse(list[14]);
+
+            mEvolutionMaterial.Clear();
+            if (!string.IsNullOrEmpty(list[15].Trim(trimstr.ToCharArray())))
+            {
+                string[] materials = list[15].Split(',');
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    mEvolutionMaterial.Add( int.Parse( materials[i].Trim( trimstr.ToCharArray() ) ) );
+                }
+            }
         }
         catch (System.FormatException ex)
         {

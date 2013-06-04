@@ -141,9 +141,6 @@ public class Stage
     private int mHeight = 50; // 地图的高
     private int mScene = 0; // 地图的场景ID
 
-    private int mLeaderSkill1 = 0; // 主将技能1
-    private int mLeaderSkill2 = 0; // 主将技能2
-
     private List<BattleCharacterData> mPlayerTeam = new List<BattleCharacterData>(); //玩家队伍列表
     private List<BattleEnemyData> mEnemyTeam = new List<BattleEnemyData>(); // 敌人队伍列表
 
@@ -195,30 +192,6 @@ public class Stage
         }
     }
 
-    public int LeaderSkill1
-    {
-        get
-        {
-            return mLeaderSkill1;
-        }
-        set
-        {
-            mLeaderSkill1 = value;
-        }
-    }
-
-    public int LeaderSkill2
-    {
-        get
-        {
-            return mLeaderSkill2;
-        }
-        set
-        {
-            mLeaderSkill2 = value;
-        }
-    }
-
     public BattleCharacterData[] Players
     {
         get
@@ -240,9 +213,6 @@ public class Stage
         mWidth = 6;
         mHeight = 50;
         mScene = 0;
-
-        mLeaderSkill1 = 0;
-        mLeaderSkill2 = 0;
 
         mPlayerTeam.Clear();
         for (int i = 0; i < 6; i++)

@@ -104,6 +104,8 @@ public enum ElementType : int
     Earth = 3,  // 地
     Light = 4,  // 光
     Dark = 5,   // 暗
+    
+    None = 6,
 
     Max,
 }
@@ -218,4 +220,30 @@ public enum BuffEnum : int
     AddHPPerround,
     AddMPPerround,
     AddAllPerround,
+}
+
+public enum StageSpecialActivity : int 
+{
+    None = 0,
+    DoubleDrop,
+    DoubleCoin,
+    HalfEnergy,
+
+    Max,
+}
+
+public enum SpecialLeaderSkillID : int
+{
+    BuyPrice1 = 34,
+    BuyPrice2 = 35,
+    BuyPrice3 = 36,
+
+    NoDebuff = 63,
+
+    CantDie1 = 65,
+    CantDie2 = 66,
+
+    GodHP = 67,
+
+    CancelRestraint = 68,
 }

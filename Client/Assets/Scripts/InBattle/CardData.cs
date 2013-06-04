@@ -61,11 +61,52 @@ public class CardData : MonoBehaviour {
                 RemoveBuff((int)BuffEnum.Sleep);
             }
 
+            int oldHP = mHP;
+
             mHP = value;
-            if (mHP < 0)
+            if (mHP <= 0)
             {
-                mHP = 0;
+                // 主将技能造成不死
+                if (Phase == PhaseType.Charactor)
+                {
+                    LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                    LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+
+                    if (skill1 != null
+                        && skill1.ID == (int)SpecialLeaderSkillID.CantDie1
+                        && oldHP >= Mathf.FloorToInt(HPMax * skill1.Special))
+                    {
+                        mHP = 1;
+                    }
+                    else if (skill2 != null
+                        && skill2.ID == (int)SpecialLeaderSkillID.CantDie1
+                        && oldHP >= Mathf.FloorToInt(HPMax * skill2.Special))
+                    {
+                        mHP = 1;
+                    }
+                    else if (skill1 != null
+                        && skill1.ID == (int)SpecialLeaderSkillID.CantDie2
+                        && oldHP >= Mathf.FloorToInt(HPMax * skill1.Special))
+                    {
+                        mHP = 1;
+                    }
+                    else if (skill2 != null
+                        && skill2.ID == (int)SpecialLeaderSkillID.CantDie2
+                        && oldHP >= Mathf.FloorToInt(HPMax * skill2.Special))
+                    {
+                        mHP = 1;
+                    }
+                    else
+                    {
+                        mHP = 0;
+                    }
+                }
+                else
+                {
+                    mHP = 0;
+                }
             }
+
             if (mHP > HPMax)
             {
                 mHP = HPMax;
@@ -200,6 +241,22 @@ public class CardData : MonoBehaviour {
     {
         get
         {
+            // 主将技，取消属性克制
+            if (Phase == PhaseType.Charactor)
+            {
+                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                if (skill1 != null && skill1.ID == (int)SpecialLeaderSkillID.CancelRestraint)
+                {
+                    return ElementType.None;
+                }
+
+                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+                if (skill2 != null && skill2.ID == (int)SpecialLeaderSkillID.CancelRestraint)
+                {
+                    return ElementType.None;
+                }
+            }
+
             switch (Element)
             {
                 case ElementType.Fire:
@@ -259,7 +316,27 @@ public class CardData : MonoBehaviour {
             {
                 addAtk += buff.mAddAtk;
             }
-            return mCharacterData.Atk + addAtk;
+
+            // 主将技能影响
+            float multi = 1;
+            if (Phase == PhaseType.Charactor)
+            {
+                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+
+                if (skill1 != null
+                    && (skill1.Element == ElementType.None || skill1.Element == Element))
+                {
+                    multi *= skill1.AtkUp;
+                }
+                if (skill2 != null
+                    && (skill2.Element == ElementType.None || skill2.Element == Element))
+                {
+                    multi *= skill2.AtkUp;
+                }
+            }
+
+            return Mathf.RoundToInt(((float)mCharacterData.Atk + addAtk) * multi);
         }
     }
 
@@ -275,7 +352,27 @@ public class CardData : MonoBehaviour {
             {
                 addDef += buff.mAddDef;
             }
-            return mCharacterData.Def + addDef;
+
+            // 主将技能影响
+            float multi = 1;
+            if (Phase == PhaseType.Charactor)
+            {
+                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+
+                if (skill1 != null
+                    && (skill1.Element == ElementType.None || skill1.Element == Element))
+                {
+                    multi *= skill1.DefUp;
+                }
+                if (skill2 != null
+                    && (skill2.Element == ElementType.None || skill2.Element == Element))
+                {
+                    multi *= skill2.DefUp;
+                }
+            }
+
+            return Mathf.RoundToInt(((float)mCharacterData.Def + addDef) * multi);
         }
     }
 
@@ -291,7 +388,27 @@ public class CardData : MonoBehaviour {
             {
                 addSpd += buff.mAddSpd;
             }
-            return mCharacterData.Spd + addSpd;
+
+            // 主将技能影响
+            float multi = 1;
+            if (Phase == PhaseType.Charactor)
+            {
+                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+
+                if (skill1 != null &&
+                    (skill1.Element == ElementType.None || skill1.Element == Element))
+                {
+                    multi *= skill1.SpdUp;
+                }
+                if (skill2 != null &&
+                    (skill2.Element == ElementType.None || skill2.Element == Element))
+                {
+                    multi *= skill2.SpdUp;
+                }
+            }
+
+            return Mathf.RoundToInt(((float)mCharacterData.Spd + addSpd) * multi);
         }
     }
 
@@ -465,6 +582,21 @@ public class CardData : MonoBehaviour {
     /// <param name="_attacker"></param>
     public void AddNewBuff(int _buffID, CardData _attacker)
     {
+        // 主将技影响，不中debuff的情况
+        if (Phase == PhaseType.Charactor && BuffManager.Instance.GetBuff(_buffID).BuffType == BuffType.Bad)
+        {
+            LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+            LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+            if (skill1 != null && skill1.ID == (int)SpecialLeaderSkillID.NoDebuff)
+            {
+                return;
+            }
+            else if (skill2 != null && skill2.ID == (int)SpecialLeaderSkillID.NoDebuff)
+            {
+                return;
+            }
+        }
+
         RealBuffData buff = new RealBuffData(_buffID, _attacker);
         mBuffList[_buffID] = buff;
 

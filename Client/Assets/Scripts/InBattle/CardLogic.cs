@@ -469,6 +469,12 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     public void CalculateAI()
     {
+        if (Data.Phase == PhaseType.Enemy && (Data.Y > GameLogic.Instance.BottomLine + 10 || Data.Y < GameLogic.Instance.BottomLine - 5))
+        {
+            EndCalculate(false);
+            return;
+        }
+
         if (Data.Death)
         {
             EndCalculate(false);
@@ -776,6 +782,23 @@ public class CardLogic : MonoBehaviour {
                 }
             }
 
+            // 主将技能减伤影响
+            if (logic.Data.Phase == PhaseType.Charactor)
+            {
+                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+                if (skill1 != null
+                    && (skill1.Element == ElementType.None || skill1.Element == Data.Element))
+                {
+                    damage = Mathf.RoundToInt((float)damage * skill1.DamageDown);
+                }
+                if (skill2 != null
+                    && (skill2.Element == ElementType.None || skill2.Element == Data.Element))
+                {
+                    damage = Mathf.RoundToInt((float)damage * skill2.DamageDown);
+                }
+            }
+
             logic.CreateHitNumber(damage, doubledamage);
             logic.Data.HP -= damage;
 
@@ -927,7 +950,7 @@ public class CardLogic : MonoBehaviour {
                     List<CardData> temp = new List<CardData>();
                     for (int i = 0; i < tempCardList.Count; i++ )
                     {
-                        if (tempCardList[i].Element != Data.FoElement)
+                        if (tempCardList[i].BeElement != Data.Element)
                         {
                             temp.Add(tempCardList[i]);
                         }

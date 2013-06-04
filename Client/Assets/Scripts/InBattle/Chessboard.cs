@@ -288,6 +288,11 @@ public class Chessboard : MonoBehaviour {
         }
 
         CardData data = _logic.Data;
+        if (data.Y > mBottomLine + 10 || data.Y < mBottomLine - 5)
+        {
+            return;
+        }
+        
         int x = data.X + _xOffset;
         int y = data.Y + _yOffset;
 
@@ -556,5 +561,10 @@ public class Chessboard : MonoBehaviour {
             level = 1;
         }
         iTween.ShakePosition(Road.parent.gameObject, new Vector3(0.05f, 0.05f, 0) * level, 0.5f * level);
+    }
+
+    public int BottomLine
+    {
+        get { return mBottomLine; }
     }
 }
