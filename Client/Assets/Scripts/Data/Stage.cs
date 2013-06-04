@@ -212,7 +212,7 @@ public class Stage
     {
         mWidth = 6;
         mHeight = 50;
-        mScene = 0;
+        mScene = Random.Range(0, 5);
 
         mPlayerTeam.Clear();
         for (int i = 0; i < 6; i++)

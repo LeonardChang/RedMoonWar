@@ -85,6 +85,7 @@ public class Chessboard : MonoBehaviour {
                     {
                         gt = 1;
                     }
+                    gt += _stage.Scene * 5;
                     UISprite sprite = ground.GetComponent<UISprite>();
                     sprite.spriteName = "Ground" + gt.ToString("00");
                     sprite.MakePixelPerfect();
