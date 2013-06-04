@@ -29,7 +29,7 @@ public class AnimationManager : MonoBehaviour {
 	void Update () {
 	    if(Input.GetKeyDown(KeyCode.C))
         {
-            MakeAnimation("Sleep", GameObject.Find("CardsPanel"));
+            MakeAnimation("ATKUp", GameObject.Find("CardsPanel"));
             
         }
 	}
@@ -102,6 +102,7 @@ public class AnimationManager : MonoBehaviour {
             ani.sprites.Add(sprite);
         }
         Destroy(newGame);
+        ani.FrameUpdate();
         return ani;
         
 

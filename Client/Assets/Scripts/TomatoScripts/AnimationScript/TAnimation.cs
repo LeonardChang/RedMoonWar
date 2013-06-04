@@ -37,6 +37,12 @@ public class TAnimation : MonoBehaviour {
 
     void Update()
     {
+        FrameUpdate();
+
+    }
+
+    public void FrameUpdate()
+    {
         if (nowFrameIndex == data.FrameNumber)
         {
             return;
@@ -60,7 +66,7 @@ public class TAnimation : MonoBehaviour {
                 {
                     if (timeMessage != "")
                     {
-                        timeTarget.SendMessage(timeMessage,data.TimingList[timeIndex],SendMessageOptions.DontRequireReceiver);
+                        timeTarget.SendMessage(timeMessage, data.TimingList[timeIndex], SendMessageOptions.DontRequireReceiver);
                     }
                 }
             }
@@ -76,7 +82,7 @@ public class TAnimation : MonoBehaviour {
 
         for (int cellIndex = 0; cellIndex < frameData.CellNumber; cellIndex++)
         {
-            
+
             SDataAniFrameCell cellData = frameData.CellList[cellIndex];
             //Debug.Log(cellData.Pattern);
             if (cellData.Pattern != -1)
@@ -101,7 +107,7 @@ public class TAnimation : MonoBehaviour {
                 sGame.transform.rotation = Quaternion.identity;
                 Debug.Log("cellData.Rotate++++++" + cellData.Rotate);
                 Debug.Log(sGame.transform.forward);
-                sGame.transform.RotateAround(Vector3.zero,Vector3.forward, cellData.Rotate);
+                sGame.transform.RotateAround(Vector3.zero, Vector3.forward, cellData.Rotate);
 
                 Vector3 scale = new Vector3((float)cellData.Scaling / 100.0f * 192.0f, (float)cellData.Scaling / 100.0f * 192.0f, 1);
 
@@ -143,9 +149,8 @@ public class TAnimation : MonoBehaviour {
                     }
                 }
             }
-            
-        }
 
+        }
     }
 
 }
