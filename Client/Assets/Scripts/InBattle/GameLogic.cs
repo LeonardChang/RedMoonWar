@@ -502,7 +502,7 @@ public class GameLogic : MonoBehaviour {
                     {
                         int value = 100;
                         obj.Data.HP += value;
-                        obj.CreateTAnimation("HealthHP");
+                        obj.CreateTAnimation("HealthHP").transform.localScale *= 0.5f;
                         obj.CreateHealthNumber(value);
                     }
                     break;
@@ -510,7 +510,7 @@ public class GameLogic : MonoBehaviour {
                     {
                         int value = (int)(obj.Data.HPMax * 0.5f);
                         obj.Data.HP += value;
-                        obj.CreateTAnimation("HealthHP");
+                        obj.CreateTAnimation("HealthHP").transform.localScale *= 0.5f;
                         obj.CreateHealthNumber(value);
                     }
                     break;
@@ -518,7 +518,7 @@ public class GameLogic : MonoBehaviour {
                     {
                         int value = obj.Data.HPMax;
                         obj.Data.HP += value;
-                        obj.CreateTAnimation("HealthHP");
+                        obj.CreateTAnimation("HealthHP").transform.localScale *= 0.5f;
                         obj.CreateHealthNumber(value);
                     }
                     break;
@@ -526,7 +526,7 @@ public class GameLogic : MonoBehaviour {
                     {
                         int value = 10;
                         obj.Data.MP += value;
-                        obj.CreateTAnimation("HealthMP");
+                        obj.CreateTAnimation("HealthMP").transform.localScale *= 0.5f;
                         obj.CreateHealManaNumber(value);
                     }
                     break;
@@ -534,7 +534,7 @@ public class GameLogic : MonoBehaviour {
                     {
                         int value = (int)(obj.Data.MPMax * 0.5f);
                         obj.Data.MP += value;
-                        obj.CreateTAnimation("HealthMP");
+                        obj.CreateTAnimation("HealthMP").transform.localScale *= 0.5f;
                         obj.CreateHealManaNumber(value);
                     }
                     break;
@@ -542,7 +542,7 @@ public class GameLogic : MonoBehaviour {
                     {
                         int value = obj.Data.MPMax;
                         obj.Data.MP += value;
-                        obj.CreateTAnimation("HealthMP");
+                        obj.CreateTAnimation("HealthMP").transform.localScale *= 0.5f;
                         obj.CreateHealManaNumber(value);
                     }
                     break;

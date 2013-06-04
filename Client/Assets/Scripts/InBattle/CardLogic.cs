@@ -281,11 +281,11 @@ public class CardLogic : MonoBehaviour {
     /// ´´½¨RM¶¯»­
     /// </summary>
     /// <param name="_animation"></param>
-    public void CreateTAnimation(string _animation)
+    public GameObject CreateTAnimation(string _animation)
     {
         if (string.IsNullOrEmpty(_animation))
         {
-            return;
+            return null;
         }
 
         GameObject perfab = Resources.Load("Cards/Perfabs/TAnimation", typeof(GameObject)) as GameObject;
@@ -295,6 +295,8 @@ public class CardLogic : MonoBehaviour {
         obj.transform.localScale = Vector3.one;
 
         obj.GetComponent<TAnimObject>().Name = _animation;
+
+        return obj;
     }
     
     /// <summary>
@@ -741,7 +743,11 @@ public class CardLogic : MonoBehaviour {
         {
             foreach (CardLogic logic in mTargetObj)
             {
-                logic.CreateTAnimation(data.HitTAnimation);
+                GameObject obj = logic.CreateTAnimation(data.HitTAnimation);
+                if (obj != null)
+                {
+                    obj.transform.localScale *= data.HitTAnimationScale;
+                }
             }
         }
     }

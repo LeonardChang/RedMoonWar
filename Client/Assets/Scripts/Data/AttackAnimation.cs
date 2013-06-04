@@ -16,6 +16,7 @@ public class AttackAnimationData
     private string mFlyPerfab = ""; // 飞行特效
     private string mFlySound = ""; // 飞行声音
     private string mHitTAnimation = ""; // 击中T动画
+    private float mHitTAnimScale = 1; // 击中动画缩放
 
     public AttackAnimationData(string _init)
     {
@@ -101,10 +102,18 @@ public class AttackAnimationData
         }
     }
 
+    public float HitTAnimationScale
+    {
+        get
+        {
+            return mHitTAnimScale;
+        }
+    }
+
     void Initialize(string _str)
     {
         string[] list = _str.Split('\t');
-        if (list.Length < 8)
+        if (list.Length < 9)
         {
             Debug.LogError("Error AttackAnimation data: " + _str);
             return;
@@ -122,6 +131,7 @@ public class AttackAnimationData
             mFlyPerfab = list[5].Trim(trimstr.ToCharArray());
             mFlySound = list[6].Trim(trimstr.ToCharArray());
             mHitTAnimation = list[7].Trim(trimstr.ToCharArray());
+            mHitTAnimScale = float.Parse(list[8]);
         }
         catch (System.FormatException ex)
         {
