@@ -118,7 +118,7 @@ public class CardData : MonoBehaviour {
             {
                 mDeath = true;
                 Logic.CreateDeathEffect();
-                ClearAllDebuff();
+                ClearAllBuff();
             }
         }
     }
@@ -545,6 +545,15 @@ public class CardData : MonoBehaviour {
         }
         temp.Clear();
 
+        RefreshBuffIcon();
+    }
+
+    /// <summary>
+    /// Çå³þËùÓÐbuff
+    /// </summary>
+    public void ClearAllBuff()
+    {
+        mBuffList.Clear();
         RefreshBuffIcon();
     }
 

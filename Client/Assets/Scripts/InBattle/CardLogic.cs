@@ -536,36 +536,39 @@ public class CardLogic : MonoBehaviour {
         mActionState = AttackAnimType.None;
         mTargetObj.Clear();
         mCalculatorAI = false;
-
-        foreach (RealBuffData buff in Data.CurrentBuff)
-        {
-            Data.HP += buff.mAddHP;
-            Data.MP += buff.mAddMP;
-
-            switch ((BuffEnum)buff.mBuffID)
-            {
-                case BuffEnum.Poison:
-                    CreateTAnimation("Poisoning");
-                    CreateHitNumber(-buff.mAddHP, false);
-                    break;
-                case BuffEnum.AddHPPerround:
-                    CreateTAnimation("HealthHP");
-                    CreateHealthNumber(buff.mAddHP);
-                    break;
-                case BuffEnum.AddMPPerround:
-                    {
-                        CreateTAnimation("HealthMP");
-                        GameObject obj = CreateHealManaNumber(buff.mAddMP);
-                        if (buff.mAddHP != 0)
-                        {
-                            obj.GetComponent<Blood>().YOffset = 30;
-                        }
-                    }
-                    break;
-            }
-
-            wait = true;
-        }
+		
+		if (!Data.Death)
+		{
+	        foreach (RealBuffData buff in Data.CurrentBuff)
+	        {
+	            Data.HP += buff.mAddHP;
+	            Data.MP += buff.mAddMP;
+	
+	            switch ((BuffEnum)buff.mBuffID)
+	            {
+	                case BuffEnum.Poison:
+	                    CreateTAnimation("Poisoning");
+	                    CreateHitNumber(-buff.mAddHP, false);
+	                    break;
+	                case BuffEnum.AddHPPerround:
+	                    CreateTAnimation("HealthHP");
+	                    CreateHealthNumber(buff.mAddHP);
+	                    break;
+	                case BuffEnum.AddMPPerround:
+	                    {
+	                        CreateTAnimation("HealthMP");
+	                        GameObject obj = CreateHealManaNumber(buff.mAddMP);
+	                        if (buff.mAddHP != 0)
+	                        {
+	                            obj.GetComponent<Blood>().YOffset = 30;
+	                        }
+	                    }
+	                    break;
+	            }
+	
+	            wait = true;
+	        }
+		}
 
         // «Â“ª¥Œbuff
         Data.BuffPastOntRound();

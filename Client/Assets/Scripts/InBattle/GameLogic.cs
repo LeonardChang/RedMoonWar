@@ -21,6 +21,10 @@ public class GameLogic : MonoBehaviour {
     public UILabel CardLabel;
     public UILabel AppleLabel;
 
+    public UIImageButton StayBtn;
+    public UIImageButton MultiBtn;
+    public UISprite BigBtn;
+
     int mRound = -1;
     int mGetCoin = 0;
     int mGetCard = 0;
@@ -648,19 +652,15 @@ public class GameLogic : MonoBehaviour {
         {
             if (value)
             {
-                TweenAlpha.Begin(BigButtonPanel.gameObject, 0.1f, 1);
-                foreach (Collider col in BigButtonPanel.GetComponentsInChildren<Collider>())
-                {
-                    col.enabled = true;
-                }
+                StayBtn.isEnabled = true;
+                MultiBtn.isEnabled = true;
+                BigBtn.spriteName = "ControlBtn";
             }
             else
             {
-                TweenAlpha.Begin(BigButtonPanel.gameObject, 0.1f, 0);
-                foreach (Collider col in BigButtonPanel.GetComponentsInChildren<Collider>())
-                {
-                    col.enabled = false;
-                }
+                StayBtn.isEnabled = false;
+                MultiBtn.isEnabled = false;
+                BigBtn.spriteName = "ControlBtn_disable";
             }
         }
     }

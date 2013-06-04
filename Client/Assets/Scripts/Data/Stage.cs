@@ -141,7 +141,7 @@ public class Stage
     private int mHeight = 50; // 地图的高
     private int mScene = 0; // 地图的场景ID
 
-    private List<BattleCharacterData> mPlayerTeam = new List<BattleCharacterData>(); //玩家队伍列表
+    private List<BattleCharacterData> mPlayerTeam = new List<BattleCharacterData>(); //玩家队伍列表，1位置为玩家队长，2位置为好友队长
     private List<BattleEnemyData> mEnemyTeam = new List<BattleEnemyData>(); // 敌人队伍列表
 
     public System.Int64 StageID
