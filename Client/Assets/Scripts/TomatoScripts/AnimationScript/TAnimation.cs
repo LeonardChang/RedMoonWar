@@ -99,9 +99,11 @@ public class TAnimation : MonoBehaviour {
                 GameObject sGame = sprites[cellIndex].gameObject;
 
                 sGame.transform.rotation = Quaternion.identity;
-                sGame.transform.RotateAround(sGame.transform.forward, cellData.Rotate);
+                Debug.Log("cellData.Rotate++++++" + cellData.Rotate);
+                Debug.Log(sGame.transform.forward);
+                sGame.transform.RotateAround(Vector3.zero,Vector3.forward, cellData.Rotate);
 
-                Vector3 scale = new Vector3(cellData.Scaling / 100 * 192, cellData.Scaling / 100 * 192, 1);
+                Vector3 scale = new Vector3(cellData.Scaling / 100 * 96, cellData.Scaling / 100 * 96, 1);
 
                 sGame.transform.localPosition = position;
                 if (scale.x == 0)
