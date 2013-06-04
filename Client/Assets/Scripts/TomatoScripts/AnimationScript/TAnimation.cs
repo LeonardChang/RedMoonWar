@@ -103,7 +103,7 @@ public class TAnimation : MonoBehaviour {
                 Debug.Log(sGame.transform.forward);
                 sGame.transform.RotateAround(Vector3.zero,Vector3.forward, cellData.Rotate);
 
-                Vector3 scale = new Vector3(cellData.Scaling / 100 * 192, cellData.Scaling / 100 * 192, 1);
+                Vector3 scale = new Vector3((float)cellData.Scaling / 100.0f * 192.0f, (float)cellData.Scaling / 100.0f * 192.0f, 1);
 
                 sGame.transform.localPosition = position;
                 if (scale.x == 0)

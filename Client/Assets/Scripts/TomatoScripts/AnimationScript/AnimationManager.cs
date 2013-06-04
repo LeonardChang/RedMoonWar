@@ -29,7 +29,7 @@ public class AnimationManager : MonoBehaviour {
 	void Update () {
 	    if(Input.GetKeyDown(KeyCode.C))
         {
-            MakeAnimation("MissUp", GameObject.Find("CardsPanel"));
+            MakeAnimation("Sleep", GameObject.Find("CardsPanel"));
             
         }
 	}
