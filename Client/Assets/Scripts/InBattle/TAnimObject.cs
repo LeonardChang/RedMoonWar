@@ -28,7 +28,10 @@ public class TAnimObject : MonoBehaviour {
         if (!string.IsNullOrEmpty(_data.SeName))
         {
             AudioSource source = AudioCenter.Instance.PlaySound(_data.SeName, (float)_data.SeVolume / 100);
-            source.pitch = (float)_data.SePitch / 100;
+			if (source != null)
+			{
+            	source.pitch = (float)_data.SePitch / 100;
+			}
         }
     }
 }

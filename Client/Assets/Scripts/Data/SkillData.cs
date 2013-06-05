@@ -26,6 +26,8 @@ public class SkillData
     private AttackAnimType mAttackAnim = AttackAnimType.NormalAttack;
     private FindTargetConditionType mSearchType = FindTargetConditionType.Random;
 
+    private int mColdDownTime = 0; // 技能冷却回合
+
     public SkillData(string _init)
     {
         Initialize(_init);
@@ -182,10 +184,21 @@ public class SkillData
         }
     }
 
+    /// <summary>
+    /// 技能冷却回合
+    /// </summary>
+    public int ColdDownTime
+    {
+        get
+        {
+            return mColdDownTime;
+        }
+    }
+
     void Initialize(string _str)
     {
         string[] list = _str.Split('\t');
-        if (list.Length < 15)
+        if (list.Length < 16)
         {
             Debug.LogError("Error Skill data: " + _str);
             return;
@@ -210,6 +223,7 @@ public class SkillData
             mTargetPhase = (AttackTargetType)int.Parse(list[12]);
             mAttackAnim = (AttackAnimType)int.Parse(list[13]);
             mSearchType = (FindTargetConditionType)int.Parse(list[14]);
+            mColdDownTime = int.Parse(list[15]);
         }
         catch (System.FormatException ex)
         {

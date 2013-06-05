@@ -369,11 +369,39 @@ public class CardLogic : MonoBehaviour {
     }
 
     /// <summary>
+    /// 创建地面碎裂效果
+    /// </summary>
+    public void CreateCrack()
+    {
+        int type = Random.Range(1, 3);
+
+        GameObject perfab = Resources.Load("Cards/Perfabs/Crack" + type.ToString(), typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.parent = gameObject.transform.parent;
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 30, 0);
+        obj.transform.localScale = Vector3.one * Random.Range(1.0f, 1.5f);
+        obj.transform.localEulerAngles = new Vector3(0, 0, Random.Range(0, 360));
+    }
+
+    /// <summary>
+    /// 创建墓碑
+    /// </summary>
+    public void CreateGrave()
+    {
+        GameObject perfab = Resources.Load("Cards/Perfabs/Grave", typeof(GameObject)) as GameObject;
+        GameObject obj = GameObject.Instantiate(perfab, Vector3.zero, Quaternion.identity) as GameObject;
+        obj.transform.parent = gameObject.transform.parent;
+        obj.transform.localPosition = gameObject.transform.localPosition + new Vector3(0, 40, 0);
+        obj.transform.localScale = Vector3.one;
+    }
+
+    /// <summary>
     /// 创建死亡动画
     /// </summary>
     public void CreateDeathEffect()
     {
         PlayAnimation(CharAnimationState.Death);
+        CreateGrave();
     }
 
     public void CreateFlyEffect(Transform _target, AttackAnimationData _data)
@@ -570,8 +598,8 @@ public class CardLogic : MonoBehaviour {
 	        }
 		}
 
-        // 清一次buff
-        Data.BuffPastOntRound();
+        // data数据经过一回合
+        Data.PastOneRound();
 
         if (wait)
         {
@@ -607,7 +635,7 @@ public class CardLogic : MonoBehaviour {
             }
         }
 
-        if (!disableSkill && Data.Skill != null && Data.AutoSkill && Data.Skill.GetManaCost(Data.SkillLevel) <= Data.MP)
+        if (!disableSkill && Data.Skill != null && Data.IsSkillReady && Data.AutoSkill && Data.Skill.GetManaCost(Data.SkillLevel) <= Data.MP)
         {
             // 释放技能
             if (DoSkill(Data.Skill, false))
@@ -615,6 +643,7 @@ public class CardLogic : MonoBehaviour {
                 Data.MP -= Data.Skill.GetManaCost(Data.SkillLevel);
                 UI.ShowTalk(Data.Skill.Name);
                 mNeedWaitAtEnd = true;
+                Data.StartSkillColdDown();
             }
         }
         else
@@ -810,6 +839,11 @@ public class CardLogic : MonoBehaviour {
 
             logic.CreateHitNumber(damage, doubledamage);
             logic.Data.HP -= damage;
+
+            if ((doubledamage && damage >= 100) || (!doubledamage && damage >= 500))
+            {
+                logic.CreateCrack();
+            }
 
             if (doubledamage)
             {

@@ -16,7 +16,7 @@ public class CardUI : MonoBehaviour {
 
     public UISprite BuffSprite;
     public UISprite LeaderSprite;
-
+    
     float mBloodTargetValue = 0;
     float mManaTargetValue = 0;
 

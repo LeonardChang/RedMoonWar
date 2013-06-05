@@ -63,6 +63,7 @@ public class Chessboard : MonoBehaviour {
 
         GameObject groundPerfab = Resources.Load("Backgrounds/Ground", typeof(GameObject)) as GameObject;
         GameObject magmaPerfab = Resources.Load("Backgrounds/Magma", typeof(GameObject)) as GameObject;
+        GameObject magmaDownPerfab = Resources.Load("Backgrounds/GroundDown", typeof(GameObject)) as GameObject;
         for (int i = 0; i < mWidth; i++)
         {
             for (int j = -5; j < mHeight; j++)
@@ -90,12 +91,51 @@ public class Chessboard : MonoBehaviour {
                     sprite.spriteName = "Ground" + gt.ToString("00");
                     sprite.MakePixelPerfect();
                 }
+
+                if (j == 0)
+                {
+                    GameObject ground = Instantiate(magmaDownPerfab) as GameObject;
+                    ground.transform.parent = Road.transform.parent;
+                    ground.transform.localPosition = new Vector3((float)(i - 2) * RectSize - RectSize * 0.5f + 3, j * RectSize, -1);
+                    ground.transform.localScale = new Vector3(82, 32, 1);
+                }
             }
         }
 
         TopRoad.localPosition = new Vector3(0, (mHeight - 1) * RectSize, 0);
         Road.localPosition = TopRoad.localPosition;
         Road.localScale = new Vector3(640, (mHeight + 10) * RectSize, 1);
+
+        GameObject shadowPerfab = null;
+        switch (_stage.Scene)
+        {
+            case 0:
+                shadowPerfab = Resources.Load("Backgrounds/LineShadow") as GameObject;
+                break;
+            case 1:
+                shadowPerfab = Resources.Load("Backgrounds/CloudShadow") as GameObject;
+                break;
+            case 2:
+                shadowPerfab = Resources.Load("Backgrounds/LeafShadow") as GameObject;
+                break;
+            case 3:
+                shadowPerfab = Resources.Load("Backgrounds/DeadwoodShadow") as GameObject;
+                break;
+            case 4:
+                shadowPerfab = Resources.Load("Backgrounds/IceShadow") as GameObject;
+                break;
+            default:
+                break;
+        }
+        if (shadowPerfab != null)
+        {
+            GameObject shadow = Instantiate(shadowPerfab) as GameObject;
+            shadow.transform.parent = Road.transform.parent;
+            shadow.transform.localPosition = Road.localPosition + new Vector3(0, 0, -1);
+            Vector3 scale = Road.localScale + new Vector3(0, 200, 0);
+            shadow.transform.localScale = scale;
+            shadow.GetComponent<UITexture>().material.mainTextureScale = new Vector2(1, scale.y / scale.x);
+        }
 
         mChessList.Clear();
         Object perfab = Resources.Load("Cards/Perfabs/Card");

@@ -114,7 +114,7 @@ public class CardData : MonoBehaviour {
 
             UI.Blood = (float)mHP / HPMax;
 
-            if (mHP == 0)
+            if (oldHP != 0 && HP == 0)
             {
                 mDeath = true;
                 Logic.CreateDeathEffect();
@@ -560,7 +560,7 @@ public class CardData : MonoBehaviour {
     /// <summary>
     /// 经过一回合，去掉时间已到的buff
     /// </summary>
-    public void BuffPastOntRound()
+    void BuffPastOneRound()
     {
         List<int> temp = new List<int>();
         foreach (int buffID in mBuffList.Keys)
@@ -855,6 +855,34 @@ public class CardData : MonoBehaviour {
     {
         mX = _x;
         mY = _y;
+    }
+
+    private int mColdDown = 0;
+    public void StartSkillColdDown()
+    {
+        mColdDown = SkillManager.Instance.GetSkill(CardManager.Instance.GetCard(mCharacterData.CardID).SkillID).ColdDownTime;
+    }
+
+    void ColdDownPassOneRound()
+    {
+        if (mColdDown > 0)
+        {
+            mColdDown -= 1;
+        }
+    }
+
+    public bool IsSkillReady
+    {
+        get
+        {
+            return mColdDown <= 0;
+        }
+    }
+
+    public void PastOneRound()
+    {
+        BuffPastOneRound();
+        ColdDownPassOneRound();
     }
 }
 
