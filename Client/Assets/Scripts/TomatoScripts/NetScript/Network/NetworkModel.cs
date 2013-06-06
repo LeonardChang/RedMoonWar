@@ -26,9 +26,9 @@ public class PackageModel
 
             Response result = new Response();
             result.head = resp.head;
-            if (resp.value != null)
+            if (resp.ret != null)
             {
-                result.value = resp.value;
+                result.value = resp.ret;
             }
             return result;
         }
