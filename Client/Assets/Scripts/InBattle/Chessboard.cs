@@ -131,8 +131,8 @@ public class Chessboard : MonoBehaviour {
         {
             GameObject shadow = Instantiate(shadowPerfab) as GameObject;
             shadow.transform.parent = Road.transform.parent;
-            shadow.transform.localPosition = Road.localPosition + new Vector3(0, 0, -1);
-            Vector3 scale = Road.localScale + new Vector3(0, 200, 0);
+            shadow.transform.localPosition = Road.localPosition + new Vector3(0, 300, -1);
+            Vector3 scale = Road.localScale + new Vector3(0, 500, 0);
             shadow.transform.localScale = scale;
             shadow.GetComponent<UITexture>().material.mainTextureScale = new Vector2(1, scale.y / scale.x);
         }

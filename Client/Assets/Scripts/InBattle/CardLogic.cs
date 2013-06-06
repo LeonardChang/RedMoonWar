@@ -499,6 +499,9 @@ public class CardLogic : MonoBehaviour {
     /// </summary>
     public void CalculateAI()
     {
+        mNeedWaitAtEnd = false;
+        mCalculatorAI = true;
+
         if (Data.Phase == PhaseType.Enemy && (Data.Y > GameLogic.Instance.BottomLine + 10 || Data.Y < GameLogic.Instance.BottomLine - 5))
         {
             EndCalculate(false);
@@ -528,9 +531,7 @@ public class CardLogic : MonoBehaviour {
                 return;
             }
         }
-
-        mCalculatorAI = true;
-        mNeedWaitAtEnd = false;
+       
         if (Data.Phase == PhaseType.Charactor)
         {
             DoAction();
