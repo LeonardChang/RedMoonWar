@@ -84,7 +84,7 @@ public class CacheLoader  : MonoBehaviour {
     public System.Action<bool> CheckAllCacheResult = null;
 
     private Dictionary<string, int> mNeedCheckList = new Dictionary<string, int>();
-    public void CheckAllCache(string stringTableMD5, string allDictionaryMD5)
+    public void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5)
     {
         print("Start check all cache files.");
 
@@ -93,32 +93,32 @@ public class CacheLoader  : MonoBehaviour {
         string URL = IPAdress + "/?svrcmd=dbstr";
         string file = "DBStr.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, stringTableMD5, URL);
+        CheckFile(file, strTableMD5, URL);
 
         URL = IPAdress + "/?cmd=3&name=card";
         file = "DBCard.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, allDictionaryMD5, URL);
+        CheckFile(file, cardMD5, URL);
 
         URL = IPAdress + "/?cmd=3&name=story";
         file = "DBStory.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, allDictionaryMD5, URL);
+        CheckFile(file, storyMD5, URL);
 
         URL = IPAdress + "/?cmd=3&name=level";
         file = "DBLevel.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, allDictionaryMD5, URL);
+        CheckFile(file, levelMD5, URL);
 
         URL = IPAdress + "/?cmd=3&name=skill";
         file = "DBSkill.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, allDictionaryMD5, URL);
+        CheckFile(file, skillMD5, URL);
 
         URL = IPAdress + "/?cmd=3&name=gacha";
         file = "DBGacha.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, allDictionaryMD5, URL);
+        CheckFile(file, gachaMD5, URL);
     }
 
     private System.Action<string, bool, string> ChecnFinishEvent = null;
