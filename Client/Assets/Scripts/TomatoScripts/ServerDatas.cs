@@ -2,8 +2,15 @@ using UnityEngine;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System;
 
 public class ServerDatas{
+	public static string charId;
+	public static int enegydate;
+	public static float enegyinc;
+	public static DateTime TimeTick;
+	public static long unixTime;
+	
 	public static List<string> DataCheck(string data)
 	{
 		List<string> dataList = new List<string>();
@@ -105,18 +112,18 @@ public struct PlayerFeedBack
 {
 	public string id;
 	public string name;
-	public string level;
-	public string exp;
-	public string enegy;
-	public string enegyinc;
-	public string enegymax;
+	public int level;
+	public int exp;
+	public float enegy;
+	public float enegyinc;
+	public int enegymax;
 	public int enegydate;
-	public string money;
+	public int money;
 	public string country;
 	public string chapter_id;
 	public string route_id;
 	public int gachadate;
-	public string friendpt;	
+	public int friendpt;	
 	public int _msg;
 }
 
@@ -143,17 +150,17 @@ public struct CardFeedBack
 
 public struct sCard
 {
-	public string id;
-	public string char_id;
-	public string card_id;
-	public string use;
-	public string level;
-	public string exp;
-	public string hp;
-	public string mp;
-	public string spd;
-	public string atk;
-	public string def;	
+	public int id;
+	public int char_id;
+	public int card_id;
+	public int use;
+	public int level;
+	public int exp;
+	public int hp;
+	public int mp;
+	public int spd;
+	public int atk;
+	public int def;	
 }
 
 
