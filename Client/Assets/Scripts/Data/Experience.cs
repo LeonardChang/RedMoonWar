@@ -28,12 +28,14 @@ public class Experience
     private Dictionary<int, int> mAType = new Dictionary<int, int>();
     private Dictionary<int, int> mBType = new Dictionary<int, int>();
     private Dictionary<int, int> mCType = new Dictionary<int, int>();
+    private Dictionary<int, int> mPlayer = new Dictionary<int, int>();
 
     public Experience()
     {
         mAType.Clear();
         mBType.Clear();
         mCType.Clear();
+        mPlayer.Clear();
 
         TextAsset text = Resources.Load("Datas/Experience", typeof(TextAsset)) as TextAsset;
         string[] line = text.text.Split('\n');
@@ -49,10 +51,12 @@ public class Experience
             int a = int.Parse(strlist[1]);
             int b = int.Parse(strlist[2]);
             int c = int.Parse(strlist[3]);
+            int p = int.Parse(strlist[4]);
 
             mAType[level] = a;
             mBType[level] = b;
             mCType[level] = c;
+            mPlayer[level] = p;
         }
     }
 
@@ -84,5 +88,15 @@ public class Experience
         }
 
         return mCType[_currentLevel];
+    }
+
+    public int GetPlayerEXP(int _currentLevel)
+    {
+        if (!mPlayer.ContainsKey(_currentLevel))
+        {
+            return 0;
+        }
+
+        return mPlayer[_currentLevel];
     }
 }

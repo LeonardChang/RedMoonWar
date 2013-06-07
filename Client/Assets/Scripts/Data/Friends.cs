@@ -100,6 +100,16 @@ public class Friends
     private Dictionary<System.Int64, FriendData> mFriends = new Dictionary<System.Int64, FriendData>(); // 好友列表
     private Dictionary<System.Int64, FriendData> mStrangers = new Dictionary<System.Int64, FriendData>(); // 请求加好友的陌生人
 
+    public Dictionary<System.Int64, FriendData> MyFriends
+    {
+        get { return mFriends; }
+    }
+
+    public Dictionary<System.Int64, FriendData> Strangers
+    {
+        get { return mStrangers; }
+    }
+
     /// <summary>
     /// 获取所有好友
     /// </summary>

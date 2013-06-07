@@ -65,8 +65,8 @@ public class EquationTool
     /// </summary>
     /// <param name="_targetLevel"></param>
     /// <returns></returns>
-    public static int CalculatePlayerNextEXP(int _targetLevel)
+    public static int CalculatePlayerNextEXP(int _currentLevel)
     {
-        return Mathf.FloorToInt(_targetLevel * _targetLevel * 14.6f) + 2100;
+        return Experience.Instance.GetPlayerEXP(_currentLevel);
     }
 }

@@ -9,8 +9,7 @@ using System.Collections.Generic;
 public class FormationData
 {
     private System.Int64 mCharacterID;
-    private int mX;
-    private int mY;
+    private int mPosition;
 
     /// <summary>
     /// 角色的ID
@@ -28,32 +27,17 @@ public class FormationData
     }
 
     /// <summary>
-    /// 处于编队中的x位置
+    /// 处于编队中的位置
     /// </summary>
-    public int X
+    public int Position
     {
         get
         {
-            return mX;
+            return mPosition;
         }
         set
         {
-            mX = value;
-        }
-    }
-
-    /// <summary>
-    /// 处于编队中的y位置
-    /// </summary>
-    public int Y
-    {
-        get
-        {
-            return mY;
-        }
-        set
-        {
-            mY = value;
+            mPosition = value;
         }
     }
 }
@@ -102,6 +86,22 @@ public class Formation
         set
         {
             mFriendPosition = value;
+        }
+    }
+
+    public Dictionary<System.Int64, CharacterData> Team
+    {
+        get
+        {
+            return mTeam;
+        }
+    }
+
+    public List<FormationData> PlayerFormation
+    {
+        get
+        {
+            return mFormation;
         }
     }
 

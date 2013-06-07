@@ -34,10 +34,10 @@ public class Player
     private string mNickName; // 玩家名字
     private System.Int64 mPlayerID; // 玩家ID
     private int mCoin; // 金币数量
-    private int mGem; // 宝石币数量
+    private int mGem; // 充值币数量
     private int mEnergy; // 体力
     private int mEnergyMax; // 体力上限
-    private float mPowerAddSpeed; // 体力恢复速度（秒）
+    private float mEnergyAddTime; // 下一次回复体力的剩余时间（秒）
     private int mLevel; // 等级
     private int mEXP; // 经验值
     private int mEXPMax; // 升级所需经验
@@ -117,12 +117,12 @@ public class Player
     }
 
     /// <summary>
-    /// 体力恢复速度（秒）
+    /// 下一次回复体力的剩余时间（秒）
     /// </summary>
-    public float PowerAddSpeed
+    public float EnergyAddTime
     {
-        get { return mPowerAddSpeed; }
-        set { mPowerAddSpeed = value; }
+        get { return mEnergyAddTime; }
+        set { mEnergyAddTime = value; }
     }
 
     /// <summary>
