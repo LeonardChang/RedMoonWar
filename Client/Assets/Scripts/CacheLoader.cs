@@ -84,6 +84,12 @@ public class CacheLoader  : MonoBehaviour {
     public System.Action<bool> CheckAllCacheResult = null;
 
     private Dictionary<string, int> mNeedCheckList = new Dictionary<string, int>();
+
+    public void CheckAllCache()
+    {
+        CheckAllCache("", "", "", "", "", "");
+    }
+
     public void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5)
     {
         print("Start check all cache files.");
