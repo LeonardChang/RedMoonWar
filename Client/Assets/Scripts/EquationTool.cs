@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Security.Cryptography;
+using System.IO;
 
 public class EquationTool
 {
@@ -68,5 +70,115 @@ public class EquationTool
     public static int CalculatePlayerNextEXP(int _currentLevel)
     {
         return Experience.Instance.GetPlayerEXP(_currentLevel);
+    }
+
+    /// <summary>
+    /// 计算MD5
+    /// </summary>
+    /// <param name="sDataIn"></param>
+    /// <returns></returns>
+    public static string GetMD5(string sDataIn)
+    {
+        MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+        byte[] bytValue, bytHash;
+        bytValue = System.Text.Encoding.UTF8.GetBytes(sDataIn);
+        bytHash = md5.ComputeHash(bytValue);
+        md5.Clear();
+        string sTemp = "";
+        for (int i = 0; i < bytHash.Length; i++)
+        {
+            sTemp += bytHash[i].ToString("X").PadLeft(2, '0');
+        }
+        return sTemp.ToLower();
+    }
+
+    /// <summary>
+    /// 数据加密
+    /// </summary>
+    /// <param name="data">需要加密的字符串</param>
+    /// <returns></returns>
+    public static string Encode(string data)
+    {
+        byte[] byKey = System.Text.Encoding.Default.GetBytes(STATIC_KEY_64);
+        byte[] byIV = System.Text.Encoding.Default.GetBytes(STATIC_IV_64);
+
+        DESCryptoServiceProvider cryptoProvider = new DESCryptoServiceProvider();
+        MemoryStream ms = new MemoryStream();
+        CryptoStream cst = new CryptoStream(ms, cryptoProvider.CreateEncryptor(byKey, byIV), CryptoStreamMode.Write);
+
+        StreamWriter sw = new StreamWriter(cst);
+        sw.Write(data);
+        sw.Flush();
+        cst.FlushFinalBlock();
+        sw.Flush();
+        return System.Convert.ToBase64String(ms.GetBuffer(), 0, (int)ms.Length);
+    }
+
+    /// <summary>
+    /// 数据解密
+    /// </summary>
+    /// <param name="data">需要解密的字符串</param>
+    /// <returns></returns>
+    public static string Decode(string data)
+    {
+        byte[] byKey = System.Text.Encoding.Default.GetBytes(STATIC_KEY_64);
+        byte[] byIV = System.Text.Encoding.Default.GetBytes(STATIC_IV_64);
+
+        byte[] byEnc;
+        try
+        {
+            byEnc = System.Convert.FromBase64String(data);
+        }
+        catch
+        {
+            return "";
+        }
+
+        DESCryptoServiceProvider cryptoProvider = new DESCryptoServiceProvider();
+        MemoryStream ms = new MemoryStream(byEnc);
+        CryptoStream cst = new CryptoStream(ms, cryptoProvider.CreateDecryptor(byKey, byIV), CryptoStreamMode.Read);
+        StreamReader sr = new StreamReader(cst);
+        return sr.ReadToEnd();
+    }
+
+    /// <summary>
+    /// 密钥key
+    /// </summary>
+    private static string STATIC_KEY_64
+    {
+        get
+        {
+            return "su(7ff./";
+        }
+    }
+
+    /// <summary>
+    /// 密钥iv
+    /// </summary>
+    private static string STATIC_IV_64
+    {
+        get
+        {
+            return "95&#en8~";
+        }
+    }
+
+    /// <summary>
+    /// 临时文件储存位置
+    /// </summary>
+    public static string TemporaryFilePath
+    {
+        get
+        {
+            string path = "";
+#if UNITY_IPHONE
+            string fileNameBase = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/'));
+            path = fileNameBase.Substring(0, fileNameBase.LastIndexOf('/')) + "/Documents";
+#else
+            path = Application.persistentDataPath;
+#endif
+
+            return path;
+        }
     }
 }

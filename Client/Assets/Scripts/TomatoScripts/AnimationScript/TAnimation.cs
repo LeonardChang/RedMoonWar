@@ -105,8 +105,8 @@ public class TAnimation : MonoBehaviour {
                 GameObject sGame = sprites[cellIndex].gameObject;
 
                 sGame.transform.rotation = Quaternion.identity;
-                Debug.Log("cellData.Rotate++++++" + cellData.Rotate);
-                Debug.Log(sGame.transform.forward);
+                //Debug.Log("cellData.Rotate++++++" + cellData.Rotate);
+                //Debug.Log(sGame.transform.forward);
                 sGame.transform.RotateAround(Vector3.zero, Vector3.forward, cellData.Rotate);
 
                 Vector3 scale = new Vector3((float)cellData.Scaling / 100.0f * 192.0f, (float)cellData.Scaling / 100.0f * 192.0f, 1);

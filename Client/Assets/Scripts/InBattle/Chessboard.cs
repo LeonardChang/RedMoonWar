@@ -28,7 +28,7 @@ public class Chessboard : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        CacheLoader.Instance.CheckAllCache("", "");
 	}
 	
 	// Update is called once per frame
