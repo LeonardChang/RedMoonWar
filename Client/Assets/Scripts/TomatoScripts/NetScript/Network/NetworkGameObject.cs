@@ -9,12 +9,13 @@ public class NetworkGameObject : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+		NetworkCtrl.Init();
     }
 
 	void Start () 
     {
         // 初始化网络系统
-        NetworkCtrl.Init();
+        
 
         //// 尝试自动登陆，如果本地已经有账号的话返回true
         //if (!LoginCtrl.AutoLogin())

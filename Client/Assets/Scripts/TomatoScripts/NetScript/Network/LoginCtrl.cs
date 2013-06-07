@@ -31,6 +31,7 @@ public class LoginCtrl
 				Debug.Log("MSG_PLAYER--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_CARD:
+				CardFeedBack cardFeedBack = JsonUtil.DeserializeObject<CardFeedBack>(data);
 				Debug.Log("MSG_CARD--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_STATUS:
@@ -42,6 +43,7 @@ public class LoginCtrl
 				Debug.Log("MSG_COIN--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_BAG:
+				BagFeedBack bagFeedBack = JsonUtil.DeserializeObject<BagFeedBack>(data);
 				Debug.Log("MSG_BAG--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_TIME:

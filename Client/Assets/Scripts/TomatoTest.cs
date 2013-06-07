@@ -9,6 +9,9 @@ public class TomatoTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		ServerFuction.GameLogin("test","test");
+		//ServerFuction.GetSysTime();
+		
         //data = new TestData();
         //this.GetType().InvokeMember("data", BindingFlags.SetField, null, this, new object[] { 3,"33" }, null, null, null);
         //System.Reflection.FieldInfo[] fi = data.GetType().GetFields();
@@ -19,7 +22,7 @@ public class TomatoTest : MonoBehaviour {
 
         //Debug.Log(data.testInt);
         //Debug.Log(data.testSring);
-        LoginCtrl.GameLogin("test", "test");
+        
 	}
 	
 	// Update is called once per frame

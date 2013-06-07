@@ -85,7 +85,7 @@ public struct ServerData
 public struct AccountFeedBack
 {
 	public string acc;
-	public string charactor;
+	public string character;
 	public int _msg;
 }
 
@@ -110,7 +110,7 @@ public struct PlayerFeedBack
 	public string enegy;
 	public string enegyinc;
 	public string enegymax;
-	public int enegydata;
+	public int enegydate;
 	public string money;
 	public string country;
 	public string chapter_id;
@@ -124,6 +124,36 @@ public struct TimeFeedBack
 {
 	public int time;
 	public int _msg;
+}
+
+public struct BagFeedBack
+{
+	public Dictionary<string,int> book;
+	public string cardcount;
+	public int _msg;
+}
+
+public struct CardFeedBack
+{
+	public string id;
+	public List<sCard> cards;
+	public string cardcount;
+	public int _msg;
+}
+
+public struct sCard
+{
+	public string id;
+	public string char_id;
+	public string card_id;
+	public string use;
+	public string level;
+	public string exp;
+	public string hp;
+	public string mp;
+	public string spd;
+	public string atk;
+	public string def;	
 }
 
 
