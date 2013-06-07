@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class ServerFuction : MonoBehaviour {
 	
-	public static string charId;
+	public static string mName;
+	public static string mPw;
 	/// <summary>
 	/// 登陆
 	/// </summary>
@@ -21,6 +22,8 @@ public class ServerFuction : MonoBehaviour {
         pParam.AddPair("name", name);
         pParam.AddPair("password", pw);
         NetworkCtrl.Post(pParam, LoginHandler);
+		mName = name;
+		mPw = pw;
 	}
 	/// <summary>
 	/// 登陆回调
@@ -39,16 +42,43 @@ public class ServerFuction : MonoBehaviour {
 			{
 			case MsgMap.MSGENUM.MSG_ACC:		
 				AccountFeedBack acc = JsonUtil.DeserializeObject<AccountFeedBack>(data);
-				charId = acc.character;
-				ServerFuction.GetFriendList();
+				ServerDatas.charId = acc.character;
+				Player.Instance.UserName = mName;
+				Player.Instance.Password = mPw;
 				Debug.Log("MSG_ACC--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_PLAYER:
 				PlayerFeedBack playerFeedBack = JsonUtil.DeserializeObject<PlayerFeedBack>(data);
 				Debug.Log("MSG_PLAYER--->" + data);
+				Player.Instance.PlayerID = int.Parse(playerFeedBack.id); 
+				Player.Instance.NickName = playerFeedBack.name;
+				Player.Instance.Level = playerFeedBack.level;
+				Player.Instance.EXP = playerFeedBack.exp;
+				Player.Instance.EXPMax = EquationTool.CalculatePlayerNextEXP(Player.Instance.Level);
+				Player.Instance.Energy = (int)playerFeedBack.enegy;
+				Player.Instance.EnergyMax = playerFeedBack.enegymax;
+				Player.Instance.Coin = playerFeedBack.money;
+				Player.Instance.FriendshipPoint = playerFeedBack.friendpt;
 				break;
 			case MsgMap.MSGENUM.MSG_CARD:
 				CardFeedBack cardFeedBack = JsonUtil.DeserializeObject<CardFeedBack>(data);
+				foreach(sCard card in cardFeedBack.cards)
+				{
+					CharacterData chara = new CharacterData();
+					chara.ID = card.id;
+					chara.CardID = card.card_id;
+					chara.Level = card.level;
+					chara.EXP = card.exp;
+					chara.Atk = card.atk;
+					chara.Def = card.def;
+					chara.MaxHP = card.hp;
+					chara.MaxMP = card.mp;
+					chara.Spd = card.spd;
+					if(card.use <=0)
+					{
+						Formation.Instance.Team.Add(chara.ID,chara);
+					}
+				}
 				Debug.Log("MSG_CARD--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_STATUS:
@@ -57,6 +87,7 @@ public class ServerFuction : MonoBehaviour {
 				break;
 			case MsgMap.MSGENUM.MSG_COIN:
 				CoinFeedBack coinFeedBack = JsonUtil.DeserializeObject<CoinFeedBack>(data);
+				Player.Instance.Gem = coinFeedBack.coin;
 				Debug.Log("MSG_COIN--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_BAG:
@@ -111,7 +142,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 5);
-        pParam.AddPair("char", charId);
+        pParam.AddPair("char", ServerDatas.charId);
         NetworkCtrl.Post(pParam, GetCardListHandler);
 	}
 	
@@ -142,7 +173,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 6);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
         pParam.AddPair("pos1", 1);
 		pParam.AddPair("pos1", 2);
 		pParam.AddPair("pos1", 3);
@@ -168,7 +199,7 @@ public class ServerFuction : MonoBehaviour {
 		cards.Substring(0,cards.Length-1);
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 7);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
         pParam.AddPair("cards", cards);
         NetworkCtrl.Post(pParam, SellCardsHandler);	
 	}
@@ -182,7 +213,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 9);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, GetFriendListHandler);	
 	}
 	
@@ -195,7 +226,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 10);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, GetFriendRequestListHandler);	
 	}
 	
@@ -208,7 +239,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 11);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("friend", id);
 		pParam.AddPair("content", "fuck you");
 		NetworkCtrl.Post(pParam, RequestFriendHandler);	
@@ -223,7 +254,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 12);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("req", reqId);
 		NetworkCtrl.Post(pParam, AgreeFriendHandler);	
 	}
@@ -237,7 +268,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 13);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("req", reqId);
 		NetworkCtrl.Post(pParam, RefuseFriendHandler);	
 	}
@@ -251,7 +282,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 14);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("friend", friendId);
 		NetworkCtrl.Post(pParam, DeleteFriendHandler);	
 	}
@@ -265,7 +296,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 15);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("story", storyId);
 		NetworkCtrl.Post(pParam, StoryStartHandler);	
 	}
@@ -279,7 +310,7 @@ public class ServerFuction : MonoBehaviour {
 	{
 		PostParam pParam = new PostParam();
         pParam.AddPair("cmd", 16);
-		pParam.AddPair("char", charId);
+		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, StoryFinishHandler);	
 	}
 	
