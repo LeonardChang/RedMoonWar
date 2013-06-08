@@ -235,6 +235,7 @@ public class Stage
             data.BuyPrice = 0;
             data.DropCard = 0;
             data.DropCoin = 0;
+            data.AI = AIType.Guard;
 
             mEnemyTeam.Add(data);
         }

@@ -176,6 +176,7 @@ public class Chessboard : MonoBehaviour {
             logic.Data.DropCard = data.DropCard;
             logic.Data.DropCoin = data.DropCoin;
             logic.Data.IsLeader = false;
+            logic.Data.EnemyAI = data.AI;
 
             int id = mChessList.Keys.Count;
             mChessList.Add(id, logic);
@@ -363,14 +364,77 @@ public class Chessboard : MonoBehaviour {
                 switch (obj.Data.EnemyAI)
                 {
                     case AIType.NPC:
-                    case AIType.Retarded:
-                    case AIType.Slime:
+                        if (Random.Range(0, 10000) > 6666)
                         {
-                            CardData target = GameLogic.Instance.GetActionTarget(obj.Data, obj.Data.NormalAttack);
-                            if (target == null && Random.Range(0, 100) < 33)
+                            TryRandomMove(obj);
+                        }
+                        break;
+                    case AIType.Retarded:
+                        if (Random.Range(0, 10) > 7)
+                        {
+                            TryMoveToPrey(obj);
+                        }
+                        else if (Random.Range(0, 10) > 5)
+                        {
+                            TryRandomMove(obj);
+                        }
+                        break;
+                    case AIType.Slime:
+                        if (!TryMoveToPrey(obj))
+                        {
+                            if (Random.Range(0, 10) > 5)
                             {
-                                EnemyTryMove(obj, Random.Range(-1, 2), Random.Range(-1, 2));
+                                TryRandomMove(obj);
                             }
+                        }
+                        break;
+                    case AIType.Goblin:
+                        if (obj.Data.LastAttackerID != -1)
+                        {
+                            CardLogic target = GetChess(obj.Data.LastAttackerID);
+                            TryMoveTo(obj, target);
+                        }
+                        else if (!TryMoveToPrey(obj))
+                        {
+                            if (Random.Range(0, 10) > 5)
+                            {
+                                TryRandomMove(obj);
+                            }
+                        }
+                        break;
+                    case AIType.Pillar:
+                        break;
+                    case AIType.Cannon:
+                        TryMoveToPrey(obj);
+                        break;
+                    case AIType.Guard:
+                        if (obj.Data.LastAttackerID != -1)
+                        {
+                            CardLogic target = GetChess(obj.Data.LastAttackerID);
+                            TryMoveTo(obj, target);
+                        }
+                        else
+                        {
+                            TryMoveToPrey(obj);
+                        }
+                        break;
+                    case AIType.Assailant:
+                        if (!TryMoveToPrey(obj))
+                        {
+                            CardLogic target = GetClosestPlayer(obj.Data, PhaseType.Charactor);
+                            TryMoveTo(obj, target);
+                        }
+                        break;
+                    case AIType.Leader:
+                        if (obj.Data.LastAttackerID != -1)
+                        {
+                            CardLogic target = GetChess(obj.Data.LastAttackerID);
+                            TryMoveTo(obj, target);
+                        }
+                        else if (!TryMoveToPrey(obj))
+                        {
+                            CardLogic target = GetClosestPlayer(obj.Data, PhaseType.Charactor);
+                            TryMoveTo(obj, target);
                         }
                         break;
                 }
@@ -392,6 +456,46 @@ public class Chessboard : MonoBehaviour {
 
         mTempChessList.Clear();
         mNeedRefresh = true;
+    }
+
+    void TryRandomMove(CardLogic _self)
+    {
+        EnemyTryMove(_self, Random.Range(-1, 2), Random.Range(-1, 2));
+    }
+
+    void TryMoveTo(CardLogic _self, CardLogic _target)
+    {
+        int tx = 0, ty = 0;
+        if (_target.Data.X > _self.Data.X)
+        {
+            tx = 1;
+        }
+        else if (_target.Data.X < _self.Data.X)
+        {
+            tx = -1;
+        }
+
+        if (_target.Data.Y > _self.Data.Y)
+        {
+            ty = 1;
+        }
+        else if (_target.Data.Y < _self.Data.Y)
+        {
+            ty = -1;
+        }
+        EnemyTryMove(_self, tx, ty);
+    }
+
+    bool TryMoveToPrey(CardLogic _self)
+    {
+        CardData data = GameLogic.Instance.GetActionTarget(_self.Data, _self.Data.NormalAttack, 1);
+        if (data != null)
+        {
+            TryMoveTo(_self, data.Logic);
+            return true;
+        }
+
+        return false;
     }
 
     const float RectSize = 82.0f;
@@ -479,54 +583,53 @@ public class Chessboard : MonoBehaviour {
             {
                 for (int j = 0; j < mHeight; j++)
                 {
-                    if (mItemData[i, j] == null)
+                    if (mItemData[i, j] == null && Random.Range(0, 100) > 95)
                     {
                         GameObject obj = null;
-
-                        int type = Random.Range(0, 500);
-                        if (type < 2)
+                        int type = Random.Range(0, 51);
+                        if (type < 15)
                         {
                             GameObject perfab = Resources.Load("Perfabs/HPFood1") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 3)
+                        else if (type < 20)
                         {
                             GameObject perfab = Resources.Load("Perfabs/HPFood2") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 4)
+                        else if (type < 21)
                         {
                             GameObject perfab = Resources.Load("Perfabs/HPFood3") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 6)
+                        else if (type < 36)
                         {
                             GameObject perfab = Resources.Load("Perfabs/MPFood1") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 7)
+                        else if (type < 41)
                         {
                             GameObject perfab = Resources.Load("Perfabs/MPFood2") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 8)
+                        else if (type < 42)
                         {
                             GameObject perfab = Resources.Load("Perfabs/MPFood3") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 9)
+                        else if (type < 47)
                         {
                             GameObject perfab = Resources.Load("Perfabs/Chest1") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
-                        else if (type < 10)
+                        else if (type < 50)
+                        {
+                            GameObject perfab = Resources.Load("Perfabs/Chest2") as GameObject;
+                            obj = Instantiate(perfab) as GameObject;
+                        }
+                        else
                         {
                             GameObject perfab = Resources.Load("Perfabs/Chest3") as GameObject;
-                            obj = Instantiate(perfab) as GameObject;
-                        }
-                        else if (type < 11)
-                        {
-                            GameObject perfab = Resources.Load("Perfabs/Chest1") as GameObject;
                             obj = Instantiate(perfab) as GameObject;
                         }
 
@@ -544,19 +647,6 @@ public class Chessboard : MonoBehaviour {
                 }
             }
         }
-
-        //for (int i = 0; i < mWidth; i++)
-        //{
-        //    for (int j = 0; j < mHeight; j++)
-        //    {
-        //        if (mItemData[i, j] != null && Random.Range(0, 10) == 0)
-        //        {
-        //            TweenScale.Begin(mItemData[i, j].gameObject, 0.25f, new Vector3(0.1f, 0.1f, 1)).from = new Vector3(2, 2, 1);
-        //            Destroy(mItemData[i, j].gameObject, 0.25f);
-        //            mItemData[i, j] = null;
-        //        }
-        //    }
-        //}
     }
 
     public MapItemType TryEatItem(int _x, int _y)
@@ -607,5 +697,41 @@ public class Chessboard : MonoBehaviour {
     public int BottomLine
     {
         get { return mBottomLine; }
+    }
+
+    public CardLogic GetChess(System.Int64 _id)
+    {
+        foreach (CardLogic logic in mChessList.Values)
+        {
+            if (logic.Data.ID == _id)
+            {
+                return logic;
+            }
+        }
+
+        return null;
+    }
+
+    public CardLogic GetClosestPlayer(CardData _self, PhaseType _phase)
+    {
+        float xDis = 99999;
+        float yDis = 99999;
+        CardLogic result = null;
+        foreach (CardLogic logic in mChessList.Values)
+        {
+            if (logic.Data.Phase != _phase)
+            {
+                continue;
+            }
+
+            float cxdis = Mathf.Abs((float)logic.Data.X - (float)_self.X) * 1.5f;
+            float cydis = Mathf.Abs((float)logic.Data.Y - (float)_self.Y);
+            if (cxdis + cydis < xDis + yDis)
+            {
+                result = logic;
+            }
+        }
+
+        return result;
     }
 }

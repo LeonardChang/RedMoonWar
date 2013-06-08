@@ -14,7 +14,6 @@ public class UIInformation : MonoBehaviour {
     public UILabel SpdLabel;
     public UILabel EnemyLabel;
     public UILabel SkillLabel;
-    public UILabel AutoSkillLabel;
     public UILabel LeaderSkillLabel;
     public UILabel LevelLabel;
 
@@ -25,9 +24,9 @@ public class UIInformation : MonoBehaviour {
     public UISlider BloodBar;
     public UISlider ManaBar;
 
-    public GameObject AutoSkillBtn;
-    public GameObject UseSkillBtn;
     public GameObject BuyEnemyBtn;
+
+    public GameObject BackgroundObj;
 
 	// Use this for initialization
 	void Start () {
@@ -52,8 +51,8 @@ public class UIInformation : MonoBehaviour {
         AtkLabel.text = StoreData.Atk.ToString();
         DefLabel.text = StoreData.Def.ToString();
         SpdLabel.text = StoreData.Spd.ToString();
-        SkillLabel.text = "Skill. " + (StoreData.BaseData.SkillID == 0 ? "Empty" : SkillManager.Instance.GetSkill(StoreData.BaseData.SkillID).Name);
-        LeaderSkillLabel.text = "Leader skill. " + (StoreData.BaseData.LeaderSkillID == 0 ? "Empty" : LeaderSkillManager.Instance.GetSkill(StoreData.BaseData.LeaderSkillID).Name);
+        SkillLabel.text = (StoreData.BaseData.SkillID == 0 ? "No" : SkillManager.Instance.GetSkill(StoreData.BaseData.SkillID).Name);
+        LeaderSkillLabel.text = (StoreData.BaseData.LeaderSkillID == 0 ? "No" : LeaderSkillManager.Instance.GetSkill(StoreData.BaseData.LeaderSkillID).Name);
         LevelLabel.text = "Lv." + StoreData.Level.ToString();
 
         BloodBar.sliderValue = (float)StoreData.HP / StoreData.HPMax;
@@ -85,27 +84,22 @@ public class UIInformation : MonoBehaviour {
 
         if (StoreData.Phase == PhaseType.Enemy)
         {
-            AutoSkillBtn.SetActive(false);
-            UseSkillBtn.SetActive(false);
             BuyEnemyBtn.SetActive(true);
 
             EnemyLabel.text = "[Enemy]";
             EnemyLabel.color = new Color(1, 0, 0);
             CardBackground.color = new Color(1, 1, 1);
 
-            AutoSkillLabel.text = "";
+            BackgroundObj.transform.localScale = new Vector3(554, 515, 1);
         }
         else
         {
-            AutoSkillBtn.SetActive(true);
-            UseSkillBtn.SetActive(true);
             BuyEnemyBtn.SetActive(false);
 
-            EnemyLabel.text = "[Own]";
-            EnemyLabel.color = new Color(0.1f, 0.5f, 1);
+            EnemyLabel.text = "";
             CardBackground.color = new Color(0, 0, 0);
 
-            AutoSkillLabel.text = StoreData.AutoSkill ? "[Auto]" : "[Manual]";
+            BackgroundObj.transform.localScale = new Vector3(554, 421.5f, 1);
         }
     }
 }

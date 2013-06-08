@@ -504,7 +504,7 @@ public class GameLogic : MonoBehaviour {
             {
                 case MapItemType.HPFood1:
                     {
-                        int value = 100;
+                        int value = Mathf.FloorToInt(obj.Data.HPMax * 0.1f);
                         obj.Data.HP += value;
                         obj.CreateTAnimation("HealthHP").transform.localScale *= 0.5f;
                         obj.CreateHealthNumber(value);
@@ -512,7 +512,7 @@ public class GameLogic : MonoBehaviour {
                     break;
                 case MapItemType.HPFood2:
                     {
-                        int value = (int)(obj.Data.HPMax * 0.5f);
+                        int value = Mathf.FloorToInt(obj.Data.HPMax * 0.5f);
                         obj.Data.HP += value;
                         obj.CreateTAnimation("HealthHP").transform.localScale *= 0.5f;
                         obj.CreateHealthNumber(value);
@@ -528,7 +528,7 @@ public class GameLogic : MonoBehaviour {
                     break;
                 case MapItemType.MPFood1:
                     {
-                        int value = 10;
+                        int value = 15;
                         obj.Data.MP += value;
                         obj.CreateTAnimation("HealthMP").transform.localScale *= 0.5f;
                         obj.CreateHealManaNumber(value);
@@ -536,7 +536,7 @@ public class GameLogic : MonoBehaviour {
                     break;
                 case MapItemType.MPFood2:
                     {
-                        int value = (int)(obj.Data.MPMax * 0.5f);
+                        int value = Mathf.FloorToInt(obj.Data.MPMax * 0.5f);
                         obj.Data.MP += value;
                         obj.CreateTAnimation("HealthMP").transform.localScale *= 0.5f;
                         obj.CreateHealManaNumber(value);
@@ -567,7 +567,7 @@ public class GameLogic : MonoBehaviour {
                 case MapItemType.Chest3:
                     if (obj.Data.Phase == PhaseType.Charactor)
                     {
-                        Coin += 10000;
+                        Coin += 5000;
                         obj.CreateTAnimation("GetCoin");
                     }
                     break;
@@ -697,9 +697,15 @@ public class GameLogic : MonoBehaviour {
 
     public CardData GetActionTarget(CardData _selfData, SkillData _skill)
     {
-        for (int i = _selfData.X - _skill.Range; i <= _selfData.X + _skill.Range; i++)
+        return GetActionTarget(_selfData, _skill, 0);
+    }
+
+    public CardData GetActionTarget(CardData _selfData, SkillData _skill, int addRange)
+    {
+        int range = _skill.Range + addRange;
+        for (int i = _selfData.X - range; i <= _selfData.X + range; i++)
         {
-            for (int j = _selfData.Y - _skill.Range; j <= _selfData.Y + _skill.Range; j++)
+            for (int j = _selfData.Y - range; j <= _selfData.Y + range; j++)
             {
                 CardLogic chess = GameChessboard.GetChess(i, j);
                 switch (_skill.TargetPhase)

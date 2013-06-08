@@ -531,31 +531,8 @@ public class CardLogic : MonoBehaviour {
                 return;
             }
         }
-       
-        if (Data.Phase == PhaseType.Charactor)
-        {
-            DoAction();
-        }
-        else
-        {
-            switch (Data.EnemyAI)
-            {
-                case AIType.NPC:
-                case AIType.Retarded:
-                case AIType.Slime:
-                case AIType.Goblin:
-                case AIType.Pillar:
-                case AIType.Cannon:
-                case AIType.Guard:
-                case AIType.Assailant:
-                case AIType.Leader:
-                    DoAction();
-                    break;
-                default:
-                    NeedEndCalculate = true;
-                    break;
-            }
-        }
+
+        DoAction();
     }
 
     void EndCalculate(bool _wait)
