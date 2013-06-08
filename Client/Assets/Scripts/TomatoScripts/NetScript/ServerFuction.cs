@@ -319,6 +319,20 @@ public class ServerFuction : MonoBehaviour {
 		Debug.Log("StoryFinishHandler");
 	}
 	
+	public static void SearchFriend(string name)
+	{
+		PostParam pParam = new PostParam();
+        pParam.AddPair("cmd", 17);
+		pParam.AddPair("char", ServerDatas.charId);
+		pParam.AddPair("name", name);
+		NetworkCtrl.Post(pParam, SearchFriendHandler);	
+	}
+	
+	public static void SearchFriendHandler(Response resp)
+	{
+		Debug.Log("SearchFriendHandler");
+	}
+	
 	
 	
 }
