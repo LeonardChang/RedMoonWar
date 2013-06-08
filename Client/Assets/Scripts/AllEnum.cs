@@ -326,6 +326,8 @@ public enum SpecialLeaderSkillID : int
 
 public enum SpecialSkillID : int
 {
+    HealHP1 = 65, // 回复2名同伴少量HP
+    HealHP2 = 66, // 回复1名同伴适量HP
     HealDebuff1 = 67, // 解除1名同伴所有的不良状态
     HealDebuff2 = 68, // 解除周围同伴所有的不良状态
     SexDream = 69, // 减少敌人30%的HP
@@ -334,5 +336,6 @@ public enum SpecialSkillID : int
     AttackAll2 = 78, // 全屏攻击所有敌人
     Dead1 = 79, // 小概率造成敌人即死
     Dead2 = 80, // 中概率造成敌人即死
-    Dead3 = 81, // 大概率造成敌人即死
+    Dead3 = 81, // 大概率造成敌人即死\
+    HealMP = 82, // 为1名同伴增加适量MP
 }

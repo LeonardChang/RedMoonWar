@@ -587,15 +587,22 @@ public class CardLogic : MonoBehaviour {
 	                    CreateHealthNumber(buff.mAddHP);
 	                    break;
 	                case BuffEnum.AddMPPerround:
-	                    {
-	                        CreateTAnimation("HealthMP");
-	                        GameObject obj = CreateHealManaNumber(buff.mAddMP);
-	                        if (buff.mAddHP != 0)
-	                        {
-	                            obj.GetComponent<Blood>().YOffset = 30;
-	                        }
-	                    }
+	                    CreateTAnimation("HealthMP");
+	                    CreateHealManaNumber(buff.mAddMP);
 	                    break;
+                    case BuffEnum.AddAllPerround:
+                        {
+                            CreateTAnimation("HealthHP");
+                            CreateHealthNumber(buff.mAddHP);
+
+                            CreateTAnimation("HealthMP");
+                            GameObject obj = CreateHealManaNumber(buff.mAddMP);
+                            if (buff.mAddHP != 0)
+                            {
+                                obj.GetComponent<Blood>().YOffset = 30;
+                            }
+                        }
+                        break;
 	            }
 	
 	            wait = true;
@@ -712,15 +719,10 @@ public class CardLogic : MonoBehaviour {
         }
 
         AttackAnimationData data = AttackAnimationManager.Instance.GetAttackAnimation(mActionState);
-        switch (mActionState)
+        switch ((SpecialSkillID)mActionState)
         {
-            case AttackAnimType.AtkUp:
-            case AttackAnimType.DefUp:
-            case AttackAnimType.SpdUp:
-            case AttackAnimType.HPUp:
-            case AttackAnimType.MPUp:
-                break;
-            case AttackAnimType.BuffClear:
+            case SpecialSkillID.HealDebuff1:
+            case SpecialSkillID.HealDebuff2:
                 if (mCurrentSkillID == (int)SpecialSkillID.HealDebuff1 || mCurrentSkillID == (int)SpecialSkillID.HealDebuff2)
                 {
                     foreach (CardLogic logic in mTargetObj)
@@ -729,7 +731,21 @@ public class CardLogic : MonoBehaviour {
                     }
                 }
                 break;
-            case AttackAnimType.HPHealth:
+            case SpecialSkillID.HealToMax:
+                foreach (CardLogic logic in mTargetObj)
+                {
+                    int heal = Data.HPMax;
+                    logic.Data.HP += heal;
+                    logic.CreateHealthNumber(heal);
+
+                    heal = Data.MPMax;
+                    logic.Data.MP += heal;
+                    GameObject obj = logic.CreateHealManaNumber(heal);
+                    obj.GetComponent<Blood>().YOffset = 30;
+                }
+                break;
+            case SpecialSkillID.HealHP1:
+            case SpecialSkillID.HealHP2:
                 {
                     SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
                     int heal = skilldata.FixedDamage + (int)(Data.Atk * skilldata.MultiplyDamage);
@@ -740,7 +756,7 @@ public class CardLogic : MonoBehaviour {
                     }
                 }
                 break;
-            case AttackAnimType.MPHealth:
+            case SpecialSkillID.HealMP:
                 {
                     SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
                     int heal = 30;
@@ -751,25 +767,20 @@ public class CardLogic : MonoBehaviour {
                     }
                 }
                 break;
-            case AttackAnimType.GodHeal:
-                {
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        int heal = Data.HPMax;
-                        logic.Data.HP += heal;
-                        logic.CreateHealthNumber(heal);
-                    }
-
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        int heal = Data.MPMax;
-                        logic.Data.MP += heal;
-                        logic.CreateHealManaNumber(heal);
-                    }
-                }
-                break;
             default:
-                DoDamage();
+                switch (mActionState)
+                {
+                    case AttackAnimType.AtkUp:
+                    case AttackAnimType.DefUp:
+                    case AttackAnimType.SpdUp:
+                    case AttackAnimType.HPUp:
+                    case AttackAnimType.MPUp:
+                    case AttackAnimType.GodHeal:
+                        break;
+                    default:
+                        DoDamage();
+                        break;
+                }
                 break;
         }
 
