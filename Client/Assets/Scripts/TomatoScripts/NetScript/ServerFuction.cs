@@ -54,7 +54,7 @@ public class ServerFuction : MonoBehaviour {
 				Player.Instance.NickName = playerFeedBack.name;
 				Player.Instance.Level = playerFeedBack.level;
 				Player.Instance.EXP = playerFeedBack.exp;
-				Player.Instance.EXPMax = EquationTool.CalculatePlayerNextEXP(Player.Instance.Level);
+				Player.Instance.EXPMax = Experience.Instance.GetPlayerEXP(Player.Instance.Level + 1);
 				Player.Instance.Energy = (int)playerFeedBack.enegy;
 				Player.Instance.EnergyMax = playerFeedBack.enegymax;
 				Player.Instance.Coin = playerFeedBack.money;

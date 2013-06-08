@@ -31,11 +31,6 @@ public class CardBaseData
     private int mEvolution = 0; // 可进化目标
     private List<int> mEvolutionMaterial = new List<int>(); // 进化所需材料
 
-    public CardBaseData(string _init)
-    {
-        Initialize(_init);
-    }
-
     /// <summary>
     /// 卡片ID
     /// </summary>
@@ -190,7 +185,7 @@ public class CardBaseData
         }
     }
 
-    void Initialize(string _str)
+    public void Initialize(string _str)
     {       
         string[] list = _str.Split('\t');
         if (list.Length != 16)
@@ -233,6 +228,27 @@ public class CardBaseData
         {
             Debug.LogError("Error Card base data: " + ex.Message);
         }
+    }
+
+    public void Initialize(sCardData _card)
+    {
+        mID = _card.id;
+        mName = ServerStringTable.Instance.GetString(_card.name);
+        mElementType = (ElementType)_card.kind;
+        mGrowingType = _card.growth_id;
+        mCardSprite = _card.img;
+        mStarCount = _card.rare;
+        mEquipCost = _card.cost;
+        mSkillID = _card.skill;
+        mLeaderSkillID = _card.leaderskill;
+        mNormalAttackSkillID = _card.normalskill;
+        mMaxLevel = _card.max_level;
+        mEXPGrowingType = (GrowType)_card.level_growth;
+        mBaseEatExp = _card.give_exp_base;
+        mSellPrice = _card.give_sell_base;
+
+        mEvolution = -1; // !!!!!!!!!未填写完整
+        mEvolutionMaterial.Clear(); // !!!!!!!!!未填写完整
     }
 }
 
@@ -277,7 +293,19 @@ public class CardManager
                 continue;
             }
 
-            CardBaseData data = new CardBaseData(line[i]);
+            CardBaseData data = new CardBaseData();
+            data.Initialize(line[i]);
+            mCardDatas[data.ID] = data;
+        }
+    }
+
+    public void ResetData(sCardList _cardList)
+    {
+        mCardDatas.Clear();
+        foreach (sCardData card in _cardList.card)
+        {
+            CardBaseData data = new CardBaseData();
+            data.Initialize(card);
             mCardDatas[data.ID] = data;
         }
     }

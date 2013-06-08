@@ -28,11 +28,6 @@ public class SkillData
 
     private int mColdDownTime = 0; // 技能冷却回合
 
-    public SkillData(string _init)
-    {
-        Initialize(_init);
-    }
-
     /// <summary>
     /// 技能ID
     /// </summary>
@@ -195,7 +190,7 @@ public class SkillData
         }
     }
 
-    void Initialize(string _str)
+    public void Initialize(string _str)
     {
         string[] list = _str.Split('\t');
         if (list.Length < 16)
@@ -229,6 +224,26 @@ public class SkillData
         {
             Debug.LogError("Error Skill data: " + ex.Message);
         }
+    }
+
+    public void Initialize(sSkillData _skillData)
+    {
+        mID = _skillData.id;
+        mName = ServerStringTable.Instance.GetString(_skillData.name);
+        mDescription = ServerStringTable.Instance.GetString(_skillData.description);
+        mMultiplyDamage = float.Parse(_skillData.atkrate);
+        mFixedDamage = _skillData.fix;
+        mRange = _skillData.range;
+        mCount = 1; // !!!!!!!!!未填写完整
+        mAddBuff = _skillData.buff;
+        mManaCost = _skillData.mana;
+        mManaCostGrow = -1; // !!!!!!!!!未填写完整
+        mHatred = _skillData.hatred;
+        mMaxLevel = _skillData.maxlevel;
+        mTargetPhase = AttackTargetType.Ememy; // !!!!!!!!!未填写完整
+        mAttackAnim = AttackAnimType.NormalAttack; // !!!!!!!!!未填写完整
+        mSearchType = FindTargetConditionType.LowHP; // !!!!!!!!!未填写完整
+        mColdDownTime = 1; // !!!!!!!!!未填写完整
     }
 }
 
@@ -273,7 +288,20 @@ public class SkillManager
                 continue;
             }
 
-            SkillData data = new SkillData(line[i]);
+            SkillData data = new SkillData();
+            data.Initialize(line[i]);
+            mSkillDatas[data.ID] = data;
+        }
+    }
+
+    public void ResetData(sSkillList _skillList)
+    {
+        mSkillDatas.Clear();
+
+        foreach (sSkillData skill in _skillList.skill)
+        {
+            SkillData data = new SkillData();
+            data.Initialize(skill);
             mSkillDatas[data.ID] = data;
         }
     }

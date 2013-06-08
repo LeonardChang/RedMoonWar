@@ -14,6 +14,8 @@ public class Battle
     private bool mFinish;
     private int mEnergyCost;
 
+    private int mStageID;
+
     public int ID
     {
         set { mID = value; }
@@ -36,6 +38,12 @@ public class Battle
     {
         set { mEnergyCost = value; }
         get { return mEnergyCost; }
+    }
+
+    public int StageID
+    {
+        set { mStageID = value; }
+        get { return mStageID; }
     }
 }
 
@@ -163,6 +171,40 @@ public class Battles
         catch (System.FormatException ex)
         {
             Debug.LogError("Error Story data: " + ex.Message);
+        }
+    }
+
+    public void ResetData(sStoryList _storyList)
+    {
+        mStoryList.Clear();
+        mActivityList.Clear();
+
+        foreach (sStoryData story in _storyList.story)
+        {
+            int id = story.id;
+            int chapter_id = story.chapter_id;
+            int route_id = story.route_id;
+            int cost = story.cost;
+            string chapter_name = story.chapter_name;
+            string route_name = story.route_name;
+            int monster = story.monster;
+
+            if (!mStoryList.ContainsKey(chapter_id))
+            {
+                BigBattle big = new BigBattle();
+                big.Activity = StageSpecialActivity.None;
+                big.ID = id;
+                big.Name = chapter_name;
+                mStoryList[chapter_id] = big;
+            }
+
+            Battle stage = new Battle();
+            stage.ID = id;
+            stage.EnergyCost = cost;
+            stage.Name = route_name;
+            stage.StageID = monster;
+            stage.Finish = false;
+            mStoryList[chapter_id].BattleList[route_id] = stage;
         }
     }
 }

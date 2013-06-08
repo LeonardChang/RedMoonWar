@@ -42,37 +42,6 @@ public class EquationTool
     }
 
     /// <summary>
-    /// 计算卡牌升级所需经验
-    /// </summary>
-    /// <param name="_targetLevel"></param>
-    /// <param name="_type"></param>
-    /// <returns></returns>
-    public static int CalculateCardNextEXP(int _currentLevel, GrowType _type)
-    {
-        switch (_type)
-        {
-            case GrowType.TypeA:
-                return Experience.Instance.GetATypeEXP(_currentLevel);
-            case GrowType.TypeB:
-                return Experience.Instance.GetBTypeEXP(_currentLevel);
-            case GrowType.TypeC:
-                return Experience.Instance.GetCTypeEXP(_currentLevel);
-        }
-
-        return 0;
-    }
-
-    /// <summary>
-    /// 计算玩家升级所需经验
-    /// </summary>
-    /// <param name="_targetLevel"></param>
-    /// <returns></returns>
-    public static int CalculatePlayerNextEXP(int _currentLevel)
-    {
-        return Experience.Instance.GetPlayerEXP(_currentLevel);
-    }
-
-    /// <summary>
     /// 计算MD5
     /// </summary>
     /// <param name="sDataIn"></param>

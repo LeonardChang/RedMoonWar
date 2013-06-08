@@ -85,11 +85,17 @@ public class CacheLoader  : MonoBehaviour {
 
     private Dictionary<string, int> mNeedCheckList = new Dictionary<string, int>();
 
+    /// <summary>
+    /// 检查所有字典并读取到内存中
+    /// </summary>
     public void CheckAllCache()
     {
         CheckAllCache("", "", "", "", "", "");
     }
 
+    /// <summary>
+    /// 检查所有字典并读取到内存中(MD5)
+    /// </summary>
     public void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5)
     {
         print("Start check all cache files.");
@@ -172,26 +178,31 @@ public class CacheLoader  : MonoBehaviour {
             {
                 PkgResponse response = JsonUtil.UnpackageHead(_result);
                 sCardList data = JsonUtil.DeserializeObject<sCardList>(response.ret.Substring(1, response.ret.Length - 2));
+                CardManager.Instance.ResetData(data);
             }
             else if (_file == "DBStory.data")
             {
                 PkgResponse response = JsonUtil.UnpackageHead(_result);
                 sStoryList data = JsonUtil.DeserializeObject<sStoryList>(response.ret.Substring(1, response.ret.Length - 2));
+                Battles.Instance.ResetData(data);
             }
             else if (_file == "DBLevel.data")
             {
                 PkgResponse response = JsonUtil.UnpackageHead(_result);
                 sLevelList data = JsonUtil.DeserializeObject<sLevelList>(response.ret.Substring(1, response.ret.Length - 2));
+                Experience.Instance.ResetPlayerData(data);
             }
             else if (_file == "DBSkill.data")
             {
                 PkgResponse response = JsonUtil.UnpackageHead(_result);
                 sSkillList data = JsonUtil.DeserializeObject<sSkillList>(response.ret.Substring(1, response.ret.Length - 2));
+                SkillManager.Instance.ResetData(data);
             }
             else if (_file == "DBGacha.data")
             {
                 PkgResponse response = JsonUtil.UnpackageHead(_result);
                 sGachaList data = JsonUtil.DeserializeObject<sGachaList>(response.ret.Substring(1, response.ret.Length - 2));
+                GachaManager.Instance.ResetData(data);
             }
         }
     }
