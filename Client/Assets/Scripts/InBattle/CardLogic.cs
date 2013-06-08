@@ -532,7 +532,33 @@ public class CardLogic : MonoBehaviour {
             }
         }
 
-        DoAction();
+        if (Data.Phase == PhaseType.Enemy)
+        {
+            switch (Data.EnemyAI)
+            {
+                case AIType.NPC:
+                case AIType.Pillar:
+                    EndCalculate(false);
+                    break;
+                case AIType.Retarded:
+                    if (Random.Range(0, 5) > 5)
+                    {
+                        DoAction();
+                    }
+                    else
+                    {
+                        EndCalculate(false);
+                    }
+                    break;
+                default:
+                    DoAction();
+                    break;
+            }
+        }
+        else
+        {
+            DoAction();
+        }
     }
 
     void EndCalculate(bool _wait)
@@ -648,7 +674,7 @@ public class CardLogic : MonoBehaviour {
         mCurrentSkillID = _skill.ID;
         mTargetObj.Clear();
 
-        CardData[] list = GetTargets(_skill.SearchType, _skill);
+        CardData[] list = GetTargets(_skill.SearchType, _skill);       
         if (list.Length > 0)
         {
             int count = 0;
@@ -659,7 +685,7 @@ public class CardLogic : MonoBehaviour {
                 PlayAnimation(_isNormalAttack ? CharAnimationState.Attack : CharAnimationState.Skill);
                 count += 1;
 
-                if (count >= _skill.Count)
+                if (count >= _skill.Count && _skill.ID != (int)SpecialSkillID.AttackAll1 && _skill.ID != (int)SpecialSkillID.AttackAll2)
                 {
                     break;
                 }
@@ -693,7 +719,15 @@ public class CardLogic : MonoBehaviour {
             case AttackAnimType.SpdUp:
             case AttackAnimType.HPUp:
             case AttackAnimType.MPUp:
+                break;
             case AttackAnimType.BuffClear:
+                if (mCurrentSkillID == (int)SpecialSkillID.HealDebuff1 || mCurrentSkillID == (int)SpecialSkillID.HealDebuff2)
+                {
+                    foreach (CardLogic logic in mTargetObj)
+                    {
+                        logic.Data.ClearAllDebuff();
+                    }
+                }
                 break;
             case AttackAnimType.HPHealth:
                 {
@@ -773,45 +807,95 @@ public class CardLogic : MonoBehaviour {
         foreach (CardLogic logic in mTargetObj)
         {
             bool doubledamage = false;
-            int damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata, ref doubledamage);
-
-            // ÖØÉË×´Ì¬£¬1.5±¶ÉËº¦
-            foreach (RealBuffData buff in Data.CurrentBuff)
+            int damage = 0;
+            bool canFixDamage = true;
+            switch ((SpecialSkillID)mCurrentSkillID)
             {
-                if (buff.mGreatDamage)
-                {
-                    damage = Mathf.FloorToInt(damage * 1.5f);
-                    break;
-                }
-            }
-
-            // ÖÂÃ¤×´Ì¬£¬ÉËº¦50%¼¸ÂÊ¹é1
-            foreach (RealBuffData buff in Data.CurrentBuff)
-            {
-                if (buff.mCanMiss)
-                {
-                    if (Random.Range(0, 2) == 0)
+                case SpecialSkillID.SexDream:
+                    damage = Mathf.FloorToInt(logic.Data.HP * 0.33f);
+                    if (damage < 1)
                     {
-                        damage = doubledamage ? 2 : 1;
+                        damage = 1;
                     }
                     break;
-                }
+                case SpecialSkillID.Dead1:
+                    if (Random.Range(0, 100) < 10)
+                    {
+                        damage = logic.Data.HP;
+                        canFixDamage = false;
+                    }
+                    else
+                    {
+                        damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata, ref doubledamage);
+                    }
+                    break;
+                case SpecialSkillID.Dead2:
+                    if (Random.Range(0, 100) < 20)
+                    {
+                        damage = logic.Data.HP;
+                        canFixDamage = false;
+                    }
+                    else
+                    {
+                        damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata, ref doubledamage);
+                    }
+                    break;
+                case SpecialSkillID.Dead3:
+                    if (Random.Range(0, 100) < 40)
+                    {
+                        damage = logic.Data.HP;
+                        canFixDamage = false;
+                    }
+                    else
+                    {
+                        damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata, ref doubledamage);
+                    }
+                    break;
+                default:
+                    damage = EquationTool.CalculateDamage(Data, logic.Data, skilldata, ref doubledamage);
+                    break;
             }
 
-            // Ö÷½«¼¼ÄÜ¼õÉËÓ°Ïì
-            if (logic.Data.Phase == PhaseType.Charactor)
+            if (canFixDamage)
             {
-                LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
-                LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
-                if (skill1 != null
-                    && (skill1.Element == ElementType.None || skill1.Element == Data.Element))
+                // ÖØÉË×´Ì¬£¬1.5±¶ÉËº¦
+                foreach (RealBuffData buff in logic.Data.CurrentBuff)
                 {
-                    damage = Mathf.RoundToInt((float)damage * skill1.DamageDown);
+                    if (buff.mGreatDamage)
+                    {
+                        damage = Mathf.FloorToInt(damage * 1.5f);
+                        break;
+                    }
                 }
-                if (skill2 != null
-                    && (skill2.Element == ElementType.None || skill2.Element == Data.Element))
+
+                // ÖÂÃ¤×´Ì¬£¬ÉËº¦50%¼¸ÂÊ¹é1
+                foreach (RealBuffData buff in Data.CurrentBuff)
                 {
-                    damage = Mathf.RoundToInt((float)damage * skill2.DamageDown);
+                    if (buff.mCanMiss)
+                    {
+                        if (Random.Range(0, 2) == 0)
+                        {
+                            damage = doubledamage ? 2 : 1;
+                        }
+                        break;
+                    }
+                }
+
+                // Ö÷½«¼¼ÄÜ¼õÉËÓ°Ïì
+                if (logic.Data.Phase == PhaseType.Charactor)
+                {
+                    LeaderSkillData skill1 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill1);
+                    LeaderSkillData skill2 = LeaderSkillManager.Instance.GetSkill(GameLogic.Instance.LeaderSkill2);
+                    if (skill1 != null
+                        && (skill1.Element == ElementType.None || skill1.Element == Data.Element))
+                    {
+                        damage = Mathf.RoundToInt((float)damage * skill1.DamageDown);
+                    }
+                    if (skill2 != null
+                        && (skill2.Element == ElementType.None || skill2.Element == Data.Element))
+                    {
+                        damage = Mathf.RoundToInt((float)damage * skill2.DamageDown);
+                    }
                 }
             }
 
@@ -948,6 +1032,7 @@ public class CardLogic : MonoBehaviour {
                     tempCardList.Add(getChar);
                     break;
                 default:
+                    tempCardList.Add(getChar);
                     break;
             }
         }

@@ -9,6 +9,17 @@ public class Chessboard : MonoBehaviour {
     private int mWidth;
     private int mHeight;
 
+    public int Width
+    {
+        set { mWidth = value; }
+        get { return mWidth; }
+    }
+    public int Height
+    {
+        set { mHeight = value; }
+        get { return mHeight; }
+    }
+
     public Transform CardRoot;
     public Transform Road;
     public Transform TopRoad;
@@ -28,7 +39,7 @@ public class Chessboard : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //CacheLoader.Instance.CheckAllCache();
+        CacheLoader.Instance.CheckAllCache();
 	}
 	
 	// Update is called once per frame

@@ -43,6 +43,7 @@ public class Player
     private int mEXPMax; // 升级所需经验
     private int mFriendshipPoint; // 友情点数
     private int mAddFriendRequest; // 未处理的好友请求数
+    private int mCost; // 统御力
 
     /// <summary>
     /// 帐号
@@ -168,5 +169,14 @@ public class Player
     {
         get { return mAddFriendRequest; }
         set { mAddFriendRequest = value; }
+    }
+
+    /// <summary>
+    /// 统御力
+    /// </summary>
+    public int Cost
+    {
+        get { return mCost; }
+        set { mCost = value; }
     }
 }

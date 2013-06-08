@@ -72,11 +72,26 @@ public enum AttackAnimType : int
 /// </summary>
 public enum AttackTargetType : int
 {
-    Self = 0,   // 自己
-    Team = 1,   // 自己团队
-    Ememy = 2,  // 敌人
-    All = 3,    // 所有人
-    None = 4,   // 不需要目标
+    /// <summary>
+    /// 自己
+    /// </summary>
+    Self = 0,
+    /// <summary>
+    /// 自己团队
+    /// </summary>
+    Team = 1,
+    /// <summary>
+    /// 敌人
+    /// </summary>
+    Ememy = 2,
+    /// <summary>
+    /// 所有人
+    /// </summary>
+    All = 3,
+    /// <summary>
+    /// 不需要目标
+    /// </summary>
+    None = 4,
 
     Max,
 }
@@ -86,9 +101,18 @@ public enum AttackTargetType : int
 /// </summary>
 public enum PhaseType : int
 {
-    Charactor = 0,  // 玩家势力
-    Enemy,          // 敌人势力
-    None,           // 无势力
+    /// <summary>
+    /// 玩家势力
+    /// </summary>
+    Charactor = 0,
+    /// <summary>
+    /// 敌人势力
+    /// </summary>
+    Enemy,
+    /// <summary>
+    /// 无势力
+    /// </summary>
+    None,
 
     Max,
 }
@@ -115,15 +139,42 @@ public enum ElementType : int
 /// </summary>
 public enum AIType : int
 {
-    NPC = 0,    // NPC型，随机闲逛，不攻击范围内的敌人，不追击仇恨对象
-    Retarded,   // 迟钝型，随机闲逛，概率攻击范围内的敌人，不追击仇恨对象
-    Slime,      // 史莱姆型，随机闲逛，攻击范围内的敌人，不追击仇恨对象
-    Goblin,     // 哥布林型，随机闲逛，攻击范围内的敌人，追击仇恨对象
-    Pillar,     // 柱子型，原地不动，不攻击范围内的敌人，不追击仇恨对象
-    Cannon,     // 炮台型，原地不动，攻击范围内的敌人，不追击仇恨对象
-    Guard,      // 守卫型，原地不动，攻击范围内的敌人，追击仇恨对象
-    Assailant,  // 杀人狂型，主动接近，攻击范围内的敌人，不追击仇恨对象
-    Leader,     // 领袖型，主动接近，攻击范围内的敌人，追击仇恨对象
+    /// <summary>
+    /// NPC型，随机闲逛，不攻击敌人，不追击仇恨对象
+    /// </summary>
+    NPC = 0,
+    /// <summary>
+    /// 迟钝型，随机闲逛，概率攻击敌人，不追击仇恨对象
+    /// </summary>
+    Retarded,
+    /// <summary>
+    /// 史莱姆型，随机闲逛，攻击敌人，不追击仇恨对象
+    /// </summary>
+    Slime,
+    /// <summary>
+    /// 哥布林型，随机闲逛，攻击敌人，追击仇恨对象
+    /// </summary>
+    Goblin,
+    /// <summary>
+    /// 柱子型，原地不动，不攻击敌人，不追击仇恨对象
+    /// </summary>
+    Pillar,
+    /// <summary>
+    /// 炮台型，原地不动，攻击敌人，不追击仇恨对象
+    /// </summary>
+    Cannon,
+    /// <summary>
+    /// 守卫型，原地不动，攻击敌人，追击仇恨对象
+    /// </summary>
+    Guard,
+    /// <summary>
+    /// 杀人狂型，主动接近，攻击敌人，不追击仇恨对象
+    /// </summary>
+    Assailant,
+    /// <summary>
+    /// 领袖型，主动接近，攻击敌人，追击仇恨对象
+    /// </summary>
+    Leader,
 
     Max,
 }
@@ -133,15 +184,39 @@ public enum AIType : int
 /// </summary>
 public enum FindTargetConditionType : int
 {
-    Random = 0,     // 随机
-    BeingHurt = 1,  // 只搜索伤过血的人
-    LowHP = 2,      // 低血量优先
-    HighHP = 3,     // 高血量优先
-    DiElement = 4,  // 属性克制优先
+    /// <summary>
+    /// 随机
+    /// </summary>
+    Random = 0,
+    /// <summary>
+    /// 只搜索伤过血的人
+    /// </summary>
+    BeingHurt = 1,
+    /// <summary>
+    /// 低血量优先
+    /// </summary>
+    LowHP = 2, 
+    /// <summary>
+    /// 高血量优先
+    /// </summary>
+    HighHP = 3,
+    /// <summary>
+    /// 属性克制优先
+    /// </summary>
+    DiElement = 4,
     
-    HasDebuff = 5,  // 只搜索有异常状态的人
-    NoBuff = 6,     // 没有Buff的优先
-    LowMP = 7,      // MP不满的优先
+    /// <summary>
+    /// 只搜索有异常状态的人
+    /// </summary>
+    HasDebuff = 5,
+    /// <summary>
+    /// 没有Buff的优先
+    /// </summary>
+    NoBuff = 6,
+    /// <summary>
+    /// MP不满的优先
+    /// </summary>
+    LowMP = 7,
 
     Max,
 }
@@ -183,6 +258,7 @@ public enum MapItemType : int
     HPFood1,
     HPFood2,
     HPFood3,
+
     MPFood1,
     MPFood2,
     MPFood3,
@@ -246,4 +322,17 @@ public enum SpecialLeaderSkillID : int
     GodHP = 67,
 
     CancelRestraint = 68,
+}
+
+public enum SpecialSkillID : int
+{
+    HealDebuff1 = 67, // 解除1名同伴所有的不良状态
+    HealDebuff2 = 68, // 解除周围同伴所有的不良状态
+    SexDream = 69, // 减少敌人30%的HP
+    HealToMax = 70, // 回满一名同伴所有的HP和MP
+    AttackAll1 = 77, // 全屏攻击所有敌人
+    AttackAll2 = 78, // 全屏攻击所有敌人
+    Dead1 = 79, // 小概率造成敌人即死
+    Dead2 = 80, // 中概率造成敌人即死
+    Dead3 = 81, // 大概率造成敌人即死
 }

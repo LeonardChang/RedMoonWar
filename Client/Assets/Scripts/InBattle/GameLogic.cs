@@ -743,37 +743,55 @@ public class GameLogic : MonoBehaviour {
 
     public IEnumerable<CardData> GetActionTargets(CardData _selfData, SkillData _skill)
     {
-        for (int i = _selfData.X - _skill.Range; i <= _selfData.X + _skill.Range; i++)
+        if (_skill.ID == (int)SpecialSkillID.AttackAll1 || _skill.ID == (int)SpecialSkillID.AttackAll2)
         {
-            for (int j = _selfData.Y - _skill.Range; j <= _selfData.Y + _skill.Range; j++)
+            for (int i = 0; i <= GameChessboard.Width; i++)
             {
-                CardLogic chess = GameChessboard.GetChess(i, j);
-                switch (_skill.TargetPhase)
+                for (int j = 0; j <= GameChessboard.Height; j++)
                 {
-                    case AttackTargetType.Ememy:
-                        if (chess != null && !chess.Data.Death && chess.Data.Phase != _selfData.Phase)
-                        {
-                            yield return chess.Data;
-                        }
-                        break;
-                    case AttackTargetType.Self:
-                        if (chess != null && !chess.Data.Death && chess.Data.ID != _selfData.ID)
-                        {
-                            yield return chess.Data;
-                        }
-                        break;
-                    case AttackTargetType.Team:
-                        if (chess != null && !chess.Data.Death && chess.Data.Phase == _selfData.Phase)
-                        {
-                            yield return chess.Data;
-                        }
-                        break;
-                    case AttackTargetType.All:
-                        if (chess != null && !chess.Data.Death)
-                        {
-                            yield return chess.Data;
-                        }
-                        break;
+                    CardLogic chess = GameChessboard.GetChess(i, j);
+                    if (chess != null && !chess.Data.Death && chess.Data.Phase != _selfData.Phase)
+                    {
+                        yield return chess.Data;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = _selfData.X - _skill.Range; i <= _selfData.X + _skill.Range; i++)
+            {
+                for (int j = _selfData.Y - _skill.Range; j <= _selfData.Y + _skill.Range; j++)
+                {
+                    CardLogic chess = GameChessboard.GetChess(i, j);
+
+                    switch (_skill.TargetPhase)
+                    {
+                        case AttackTargetType.Ememy:
+                            if (chess != null && !chess.Data.Death && chess.Data.Phase != _selfData.Phase)
+                            {
+                                yield return chess.Data;
+                            }
+                            break;
+                        case AttackTargetType.Self:
+                            if (chess != null && !chess.Data.Death && chess.Data.ID != _selfData.ID)
+                            {
+                                yield return chess.Data;
+                            }
+                            break;
+                        case AttackTargetType.Team:
+                            if (chess != null && !chess.Data.Death && chess.Data.Phase == _selfData.Phase)
+                            {
+                                yield return chess.Data;
+                            }
+                            break;
+                        case AttackTargetType.All:
+                            if (chess != null && !chess.Data.Death)
+                            {
+                                yield return chess.Data;
+                            }
+                            break;
+                    }
                 }
             }
         }
@@ -781,7 +799,7 @@ public class GameLogic : MonoBehaviour {
 
     public void ShowInfomation(CardData _data)
     {
-        print("ShowInfomation");
+        //print("ShowInfomation");
 
         InfomationPanel.GetComponent<UIInformation>().StoreData = _data;
         InfomationPanel.SetActive(true);

@@ -49,11 +49,11 @@ public class Experience
         string[] line = text.text.Split('\n');
         for (int i = 0; i < line.Length; i++)
         {
-            if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            if (i < 2 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
             {
                 continue;
             }
-
+            
             string[] strlist = line[i].Split('\t');
             int level = int.Parse(strlist[0]);
             int a = int.Parse(strlist[1]);

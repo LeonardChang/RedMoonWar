@@ -229,6 +229,11 @@ public class CardData : MonoBehaviour {
     {
         get
         {
+            if (mCharacterData == null)
+            {
+                return ElementType.None;
+            }
+
             CardBaseData carddata = CardManager.Instance.GetCard(mCharacterData.CardID);
             return carddata.Element;
         }
