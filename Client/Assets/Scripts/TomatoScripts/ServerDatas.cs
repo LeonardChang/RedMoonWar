@@ -163,6 +163,12 @@ public struct sCard
 	public int def;	
 }
 
+public struct SearchFriendIdsFeedBack
+{
+	public int[] ids;
+	public int _msg;
+}
+
 
 
 

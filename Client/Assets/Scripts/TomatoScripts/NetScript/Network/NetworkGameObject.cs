@@ -10,6 +10,7 @@ public class NetworkGameObject : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
 		NetworkCtrl.Init();
+		CacheLoader.Instance.CheckAllCache();
     }
 
 	void Start () 

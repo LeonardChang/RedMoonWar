@@ -2,10 +2,19 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ServerFuction : MonoBehaviour {
+public class ServerFuction{
 	
 	public static string mName;
 	public static string mPw;
+	
+	
+	
+	/// <summary>
+	/// 获得搜索好友信息
+	/// </summary>
+	public delegate void SearchFriendListReceiveCallBack(SearchFriendIdsFeedBack ids,List<PlayerFeedBack> players,List<CardFeedBack> cards);
+    public static event SearchFriendListReceiveCallBack OnSearchFriendListReceive;
+	
 	/// <summary>
 	/// 登陆
 	/// </summary>
@@ -169,6 +178,9 @@ public class ServerFuction : MonoBehaviour {
 		}
 	}
 	
+	/// <summary>
+	/// 设置队伍
+	/// </summary>
 	public static void SetTeamCard()
 	{
 		PostParam pParam = new PostParam();
@@ -182,11 +194,23 @@ public class ServerFuction : MonoBehaviour {
         NetworkCtrl.Post(pParam, GetCardListHandler);
 	}
 	
+	/// <summary>
+	/// S设置队伍回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void SetTeamCardHandler(Response resp)
 	{
 		Debug.Log("SetTeamCardHandler");
 	}
 	
+	/// <summary>
+	/// 出售卡片
+	/// </summary>
+	/// <param name='ids'>
+	/// Identifiers.
+	/// </param>
 	public static void SellCards(List<string> ids)
 	{
 		string cards = string.Empty;
@@ -204,11 +228,20 @@ public class ServerFuction : MonoBehaviour {
         NetworkCtrl.Post(pParam, SellCardsHandler);	
 	}
 	
+	/// <summary>
+	/// 出售卡片回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void SellCardsHandler(Response resp)
 	{
 		Debug.Log("SellCardsHandler");
 	}
 	
+	/// <summary>
+	/// 获得好友列表
+	/// </summary>
 	public static void GetFriendList()
 	{
 		PostParam pParam = new PostParam();
@@ -217,11 +250,20 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, GetFriendListHandler);	
 	}
 	
+	/// <summary>
+	/// 获得好友列表回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void GetFriendListHandler(Response resp)
 	{
 		Debug.Log("GetFriendListHandler");
 	}
 	
+	/// <summary>
+	/// 获得好友申请列表
+	/// </summary>
 	public static void GetFriendRequestList()
 	{
 		PostParam pParam = new PostParam();
@@ -230,11 +272,23 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, GetFriendRequestListHandler);	
 	}
 	
+	/// <summary>
+	/// 好友申请列表回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void GetFriendRequestListHandler(Response resp)
 	{
 		Debug.Log("GetFriendRequestListHandler");
 	}
 	
+	/// <summary>
+	/// 请求加好友
+	/// </summary>
+	/// <param name='id'>
+	/// Identifier.
+	/// </param>
 	public static void RequestFriend(string id)
 	{
 		PostParam pParam = new PostParam();
@@ -245,11 +299,23 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, RequestFriendHandler);	
 	}
 	
+	/// <summary>
+	/// 请求加好友回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void RequestFriendHandler(Response resp)
 	{
 		Debug.Log("RequestFriendHandler");
 	}
 	
+	/// <summary>
+	/// 同意好友
+	/// </summary>
+	/// <param name='reqId'>
+	/// Req identifier.
+	/// </param>
 	public static void AgreeFriend(string reqId)
 	{
 		PostParam pParam = new PostParam();
@@ -259,11 +325,23 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, AgreeFriendHandler);	
 	}
 	
+	/// <summary>
+	/// 同意好友回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void AgreeFriendHandler(Response resp)
 	{
 		Debug.Log("AgreeFriendHandler");
 	}
 	
+	/// <summary>
+	/// 拒绝好友
+	/// </summary>
+	/// <param name='reqId'>
+	/// Req identifier.
+	/// </param>
 	public static void RefuseFriend(string reqId)
 	{
 		PostParam pParam = new PostParam();
@@ -273,11 +351,23 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, RefuseFriendHandler);	
 	}
 	
+	/// <summary>
+	/// 拒绝好友回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void RefuseFriendHandler(Response resp)
 	{
 		Debug.Log("RefuseFriendHandler");
 	}
 	
+	/// <summary>
+	/// 删除好友
+	/// </summary>
+	/// <param name='friendId'>
+	/// Friend identifier.
+	/// </param>
 	public static void DeleteFriend(string friendId)
 	{
 		PostParam pParam = new PostParam();
@@ -287,11 +377,24 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, DeleteFriendHandler);	
 	}
 	
+	/// <summary>
+	/// 删除好友回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void DeleteFriendHandler(Response resp)
 	{
 		Debug.Log("DeleteFriendHandler");
 	}
 	
+	
+	/// <summary>
+	/// 关卡开始
+	/// </summary>
+	/// <param name='storyId'>
+	/// Story identifier.
+	/// </param>
 	public static void StoryStart(string storyId)
 	{
 		PostParam pParam = new PostParam();
@@ -301,11 +404,20 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, StoryStartHandler);	
 	}
 	
+	/// <summary>
+	/// 关卡开始回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void StoryStartHandler(Response resp)
 	{
 		Debug.Log("StoryStartHandler");
 	}
 	
+	/// <summary>
+	/// 关卡结束
+	/// </summary>
 	public static void StoryFinish()
 	{
 		PostParam pParam = new PostParam();
@@ -314,9 +426,95 @@ public class ServerFuction : MonoBehaviour {
 		NetworkCtrl.Post(pParam, StoryFinishHandler);	
 	}
 	
+	/// <summary>
+	/// 关卡结束回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
 	public static void StoryFinishHandler(Response resp)
 	{
 		Debug.Log("StoryFinishHandler");
+	}
+	
+	/// <summary>
+	/// 搜索好友
+	/// </summary>
+	/// <param name='name'>
+	/// Name.
+	/// </param>
+	public static void SearchFriend(string name)
+	{
+		PostParam pParam = new PostParam();
+        pParam.AddPair("cmd", 17);
+		pParam.AddPair("char", ServerDatas.charId);
+		pParam.AddPair("name", name);
+		NetworkCtrl.Post(pParam, SearchFriendHandler);	
+	}
+	
+	/// <summary>
+	/// 搜索好友回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
+	public static void SearchFriendHandler(Response resp)
+	{
+		Debug.Log("GetRanFriendHandler");
+		List<PlayerFeedBack> players = new List<PlayerFeedBack>();
+		List<CardFeedBack> cards = new List<CardFeedBack>();
+		SearchFriendIdsFeedBack searchFriendIdsFeedBack = new SearchFriendIdsFeedBack();
+		
+		List<string> datas = ServerDatas.DataCheck(resp.value);
+		foreach(string data in datas)
+		{
+			int msg = ServerDatas.GetMsg(data);
+			switch((MsgMap.MSGENUM)msg)
+			{
+			case MsgMap.MSGENUM.MSG_PLAYER:
+				PlayerFeedBack playerFeedBack = JsonUtil.DeserializeObject<PlayerFeedBack>(data);
+				Debug.Log("MSG_PLAYER--->" + data);
+				players.Add(playerFeedBack);
+				break;
+			case MsgMap.MSGENUM.MSG_CARD:
+				CardFeedBack cardFeedBack = JsonUtil.DeserializeObject<CardFeedBack>(data);
+				cards.Add(cardFeedBack);
+				Debug.Log("MSG_CARD--->" + data);
+				break;
+			case MsgMap.MSGENUM.MSG_FRIENDID:
+				searchFriendIdsFeedBack = JsonUtil.DeserializeObject<SearchFriendIdsFeedBack>(data);
+				break;
+			}
+		}
+		if(OnSearchFriendListReceive != null)
+		{
+			OnSearchFriendListReceive(searchFriendIdsFeedBack,players,cards);
+		}
+		Debug.Log("SearchFriendHandler");
+	}
+	
+	/// <summary>
+	/// 获取好友推荐
+	/// </summary>
+	public static void GetRanFriend()
+	{
+		PostParam pParam = new PostParam();
+        pParam.AddPair("cmd", 18);
+		pParam.AddPair("char", ServerDatas.charId);
+		NetworkCtrl.Post(pParam, GetRanFriendHandler);	
+	}
+	
+	/// <summary>
+	/// 获得好友推荐回调
+	/// </summary>
+	/// <param name='resp'>
+	/// Resp.
+	/// </param>
+	public static void GetRanFriendHandler(Response resp)
+	{
+		
+		
+		
 	}
 	
 	
