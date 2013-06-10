@@ -781,4 +781,44 @@ public class Chessboard : MonoBehaviour {
 
         return result;
     }
+
+    /// <summary>
+    /// 活着的玩家棋子数量
+    /// </summary>
+    public int AliveCharactorNumber
+    {
+        get
+        {
+            int count = 0;
+            foreach (CardLogic logic in mChessList.Values)
+            {
+                if (logic.Data.Phase == PhaseType.Charactor && !logic.Data.Death)
+                {
+                    count += 1;
+                }
+            }
+
+            return count;
+        }
+    }
+
+    /// <summary>
+    /// 活着的敌人棋子数量
+    /// </summary>
+    public int AliveEnemyNumber
+    {
+        get
+        {
+            int count = 0;
+            foreach (CardLogic logic in mChessList.Values)
+            {
+                if (logic.Data.Phase == PhaseType.Enemy && !logic.Data.Death)
+                {
+                    count += 1;
+                }
+            }
+
+            return count;
+        }
+    }
 }

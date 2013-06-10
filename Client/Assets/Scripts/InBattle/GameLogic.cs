@@ -16,6 +16,7 @@ public class GameLogic : MonoBehaviour {
     public UISprite MultipleBtnBack;
     public GameObject InfomationPanel;
     public GameObject BigButtonPanel;
+    public GameObject MenuPanel;
 
     public UILabel CoinLabel;
     public UILabel CardLabel;
@@ -24,6 +25,13 @@ public class GameLogic : MonoBehaviour {
     public UIImageButton StayBtn;
     public UIImageButton MultiBtn;
     public UISprite BigBtn;
+
+    public UILabel SoundBtnLabel;
+    public UILabel MusicBtnLabel;
+
+    public UIPanel LoseResultPanel;
+    public UIPanel WinResultPanel;
+    public Transform WinLoseEffectRoot;
 
     int mRound = -1;
     int mGetCoin = 0;
@@ -34,6 +42,9 @@ public class GameLogic : MonoBehaviour {
     private int mLeaderSkill1 = 0; // 主将技能1
     private int mLeaderSkill2 = 0; // 主将技能2
     private int mLeaderSkillAddHP_SP = 0;
+
+    float mClickBuff = 0;
+    bool mBigButtonOpen = false;
 
     public int LeaderSkill1
     {
@@ -50,6 +61,8 @@ public class GameLogic : MonoBehaviour {
             return mLeaderSkill2;
         }
     }
+
+    bool mGameStart = true;
 
     void Awake()
     {
@@ -131,9 +144,6 @@ public class GameLogic : MonoBehaviour {
         }
     }
     
-    float mClickBuff = 0;
-    bool mBigButtonOpen = false;
-
     void OpenBigButton()
     {
         if (mBigButtonOpen)
@@ -181,6 +191,8 @@ public class GameLogic : MonoBehaviour {
         GameChessboard.Initlize(stage);
 
         SelectAll();
+
+        mGameStart = true;
     }
 
     int Round
@@ -249,7 +261,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickUp()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -267,7 +279,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickDown()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -285,7 +297,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickLeft()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -303,7 +315,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickRight()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -321,7 +333,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickUpLeft()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -339,7 +351,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickDownLeft()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -357,7 +369,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickUpRight()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -375,7 +387,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickDownRight()
     {
-        if (mCalculating || !IsAnySelect())
+        if (!mGameStart || mCalculating || !IsAnySelect())
         {
             return;
         }
@@ -461,7 +473,7 @@ public class GameLogic : MonoBehaviour {
     /// </summary>
     public void ClickStay()
     {
-        if (mCalculating)
+        if (!mGameStart || mCalculating)
         {
             return;
         }
@@ -644,6 +656,15 @@ public class GameLogic : MonoBehaviour {
         Round += 1;
 
         EnableBigButtonPanel = true;
+
+        if (GameChessboard.AliveCharactorNumber <= 0)
+        {
+            GameLose();
+        }
+        else if (GameChessboard.AliveEnemyNumber <= 0)
+        {
+            GameWin();
+        }
     }
 
     bool EnableBigButtonPanel
@@ -799,8 +820,6 @@ public class GameLogic : MonoBehaviour {
 
     public void ShowInfomation(CardData _data)
     {
-        //print("ShowInfomation");
-
         InfomationPanel.GetComponent<UIInformation>().StoreData = _data;
         InfomationPanel.SetActive(true);
 
@@ -823,6 +842,50 @@ public class GameLogic : MonoBehaviour {
         InfomationPanel.SetActive(false);
     }
 
+    public void ShowMenu()
+    {
+        MenuPanel.SetActive(true);
+
+        SoundBtnLabel.text = "Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF");
+        MusicBtnLabel.text = "Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF");
+
+        TweenScale ts = TweenScale.Begin(MenuPanel, 0.15f, Vector3.one);
+        ts.from = new Vector3(1, 0.01f, 1);
+        ts.eventReceiver = null;
+        ts.callWhenFinished = "";
+    }
+
+    public void HideMenu()
+    {
+        TweenScale ts = TweenScale.Begin(MenuPanel, 0.15f, new Vector3(1, 0.01f, 1));
+        ts.eventReceiver = gameObject;
+        ts.callWhenFinished = "RealHideMenu";
+    }
+
+    void RealHideMenu()
+    {
+        MenuPanel.SetActive(false);
+    }
+
+    public void ClickSound()
+    {
+        AudioCenter.Instance.OpenSoundEffect = !AudioCenter.Instance.OpenSoundEffect;
+        SoundBtnLabel.text = "Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF");
+        MusicBtnLabel.text = "Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF");
+    }
+
+    public void ClickMusic()
+    {
+        AudioCenter.Instance.OpenMusicEffect = !AudioCenter.Instance.OpenMusicEffect;
+        SoundBtnLabel.text = "Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF");
+        MusicBtnLabel.text = "Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF");
+    }
+
+    public void ClickQuit()
+    {
+        HideMenu();
+    }
+
     public void ShakeMap(int _level)
     {
         GameChessboard.ShakeMap(_level);
@@ -831,5 +894,35 @@ public class GameLogic : MonoBehaviour {
     public int BottomLine
     {
         get { return GameChessboard.BottomLine; }
+    }
+
+    void GameWin()
+    {
+        mGameStart = false;
+
+        WinResultPanel.gameObject.SetActive(true);
+        TweenAlpha.Begin(WinResultPanel.gameObject, 0.25f, 1).from = 0.001f;
+
+        GameObject prefab = Resources.Load("Perfabs/WinPanel") as GameObject;
+        GameObject obj = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
+
+        obj.transform.parent = WinLoseEffectRoot;
+        obj.transform.localPosition = new Vector3(0, 0, -100);
+        obj.transform.localScale = Vector3.one;
+    }
+
+    void GameLose()
+    {
+        mGameStart = false;
+
+        LoseResultPanel.gameObject.SetActive(true);
+        TweenAlpha.Begin(LoseResultPanel.gameObject, 0.25f, 1).from = 0.001f;
+
+        GameObject prefab = Resources.Load("Perfabs/LosePanel") as GameObject;
+        GameObject obj = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
+
+        obj.transform.parent = WinLoseEffectRoot;
+        obj.transform.localPosition = new Vector3(0, 0, -100);
+        obj.transform.localScale = Vector3.one;
     }
 }
