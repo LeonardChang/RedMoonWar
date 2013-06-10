@@ -345,6 +345,20 @@ public class Chessboard : MonoBehaviour {
         {
             return;
         }
+
+        // ÀØ√ﬂªÚ—£‘Œ÷–
+        foreach (RealBuffData buff in data.CurrentBuff)
+        {
+            if (buff.mSleep)
+            {
+                return;
+            }
+
+            if (buff.mDizziness)
+            {
+                return;
+            }
+        }
         
         int x = data.X + _xOffset;
         int y = data.Y + _yOffset;

@@ -245,8 +245,8 @@ public class Stage
     {
         CharacterData data = _data;
         data.ID = _id;
-        data.CardID = 150; //Random.Range(1, 190);
-        data.Level = 10;
+        data.CardID = 181;// Random.Range(1, 190);
+        data.Level = 15;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
 
@@ -262,7 +262,7 @@ public class Stage
     {
         CharacterData data = _data;
         data.ID = _id;
-        data.CardID = Random.Range(1, 18);
+        data.CardID = Random.Range(1, 190);
         data.Level = 10;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;

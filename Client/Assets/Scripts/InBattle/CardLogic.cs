@@ -719,16 +719,13 @@ public class CardLogic : MonoBehaviour {
         }
 
         AttackAnimationData data = AttackAnimationManager.Instance.GetAttackAnimation(mActionState);
-        switch ((SpecialSkillID)mActionState)
+        switch ((SpecialSkillID)mCurrentSkillID)
         {
             case SpecialSkillID.HealDebuff1:
             case SpecialSkillID.HealDebuff2:
-                if (mCurrentSkillID == (int)SpecialSkillID.HealDebuff1 || mCurrentSkillID == (int)SpecialSkillID.HealDebuff2)
+                foreach (CardLogic logic in mTargetObj)
                 {
-                    foreach (CardLogic logic in mTargetObj)
-                    {
-                        logic.Data.ClearAllDebuff();
-                    }
+                    logic.Data.ClearAllDebuff();
                 }
                 break;
             case SpecialSkillID.HealToMax:
@@ -759,7 +756,7 @@ public class CardLogic : MonoBehaviour {
             case SpecialSkillID.HealMP:
                 {
                     SkillData skilldata = SkillManager.Instance.GetSkill(mCurrentSkillID);
-                    int heal = 30;
+                    int heal = 10;
                     foreach (CardLogic logic in mTargetObj)
                     {
                         logic.Data.MP += heal;
