@@ -24,7 +24,8 @@ public class UIInformation : MonoBehaviour {
     public UISlider BloodBar;
     public UISlider ManaBar;
 
-    public GameObject BuyEnemyBtn;
+    public UIImageButton BuyEnemyBtn;
+    public UILabel BuyEnemyLabel;
 
     public GameObject BackgroundObj;
 
@@ -82,24 +83,31 @@ public class UIInformation : MonoBehaviour {
         CardSprite.spriteName = StoreData.BaseData.CardSprite;
         CardSprite.MakePixelPerfect();
 
-        if (StoreData.Phase == PhaseType.Enemy)
+        EnemyLabel.text = StoreData.Phase == PhaseType.Enemy ? "[Enemy]" : "";
+        CardBackground.color = StoreData.Phase == PhaseType.Enemy ? new Color(1, 1, 1) : new Color(0, 0, 0);
+
+        if (StoreData.Phase == PhaseType.Enemy && StoreData.BuyPrice > 0)
         {
-            BuyEnemyBtn.SetActive(true);
-
-            EnemyLabel.text = "[Enemy]";
-            EnemyLabel.color = new Color(1, 0, 0);
-            CardBackground.color = new Color(1, 1, 1);
-
+            BuyEnemyBtn.gameObject.SetActive(true);
             BackgroundObj.transform.localScale = new Vector3(554, 515, 1);
         }
         else
         {
-            BuyEnemyBtn.SetActive(false);
-
-            EnemyLabel.text = "";
-            CardBackground.color = new Color(0, 0, 0);
-
+            BuyEnemyBtn.gameObject.SetActive(false);
             BackgroundObj.transform.localScale = new Vector3(554, 421.5f, 1);
         }
+
+        BuyEnemyLabel.text = StoreData.BuyPrice.ToString();
+        BuyEnemyBtn.isEnabled = GameLogic.Instance.Apple >= StoreData.BuyPrice;
+    }
+
+    public void BuyEnemy()
+    {
+        if (StoreData != null)
+        {
+            StoreData.Logic.BuyEnemy();
+        }
+
+        GameLogic.Instance.HideInfomation();
     }
 }

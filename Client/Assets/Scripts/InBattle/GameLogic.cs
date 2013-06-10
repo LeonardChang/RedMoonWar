@@ -195,7 +195,7 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
-    int Coin
+    public int Coin
     {
         get
         {
@@ -203,12 +203,12 @@ public class GameLogic : MonoBehaviour {
         }
         set
         {
+            LabelTweener.Begin(CoinLabel.gameObject, 0.5f, mGetCoin, value);
             mGetCoin = value;
-            CoinLabel.text = mGetCoin.ToString();
         }
     }
 
-    int Card
+    public int Card
     {
         get
         {
@@ -216,12 +216,12 @@ public class GameLogic : MonoBehaviour {
         }
         set
         {
+            LabelTweener.Begin(CardLabel.gameObject, 0.5f, mGetCard, value);
             mGetCard = value;
-            CardLabel.text = mGetCard.ToString();
         }
     }
 
-    int Apple
+    public int Apple
     {
         get
         {
@@ -229,8 +229,8 @@ public class GameLogic : MonoBehaviour {
         }
         set
         {
+            LabelTweener.Begin(AppleLabel.gameObject, 0.5f, mApple, value);
             mApple = value;
-            AppleLabel.text = mApple.ToString();
         }
     }
 
@@ -819,6 +819,7 @@ public class GameLogic : MonoBehaviour {
 
     void RealHideInfomation()
     {
+        InfomationPanel.GetComponent<UIInformation>().StoreData = null;
         InfomationPanel.SetActive(false);
     }
 

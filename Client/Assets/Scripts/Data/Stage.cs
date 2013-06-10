@@ -232,7 +232,7 @@ public class Stage
             CreateRandomEnemy(ref data, i + 10000);
             data.InitX = Random.Range(0, 6);
             data.InitY = 10 + i * 3;
-            data.BuyPrice = 0;
+            data.BuyPrice = 320;
             data.DropCard = 0;
             data.DropCoin = 0;
             data.AI = AIType.Guard;
@@ -245,7 +245,7 @@ public class Stage
     {
         CharacterData data = _data;
         data.ID = _id;
-        data.CardID = 181;// Random.Range(1, 190);
+        data.CardID = Random.Range(1, 190);
         data.Level = 15;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;

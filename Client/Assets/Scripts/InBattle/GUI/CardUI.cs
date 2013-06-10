@@ -36,7 +36,7 @@ public class CardUI : MonoBehaviour {
 	void Update () {
         if (BloodBar.sliderValue < mBloodTargetValue)
 	    {
-            float val = BloodBar.sliderValue + 0.5f * Time.deltaTime;
+            float val = BloodBar.sliderValue + 0.75f * Time.deltaTime;
             if (val >= mBloodTargetValue)
             {
                 val = mBloodTargetValue;
@@ -45,7 +45,7 @@ public class CardUI : MonoBehaviour {
 	    }
         else if (BloodBar.sliderValue > mBloodTargetValue)
         {
-            float val = BloodBar.sliderValue - 0.5f * Time.deltaTime;
+            float val = BloodBar.sliderValue - 0.75f * Time.deltaTime;
             if (val <= mBloodTargetValue)
             {
                 val = mBloodTargetValue;
@@ -55,7 +55,7 @@ public class CardUI : MonoBehaviour {
 
         if (ManaBar.sliderValue < mManaTargetValue)
         {
-            float val = ManaBar.sliderValue + 0.5f * Time.deltaTime;
+            float val = ManaBar.sliderValue + 0.75f * Time.deltaTime;
             if (val >= mManaTargetValue)
             {
                 val = mManaTargetValue;
@@ -64,7 +64,7 @@ public class CardUI : MonoBehaviour {
         }
         else if (ManaBar.sliderValue > mManaTargetValue)
         {
-            float val = ManaBar.sliderValue - 0.5f * Time.deltaTime;
+            float val = ManaBar.sliderValue - 0.75f * Time.deltaTime;
             if (val <= mManaTargetValue)
             {
                 val = mManaTargetValue;

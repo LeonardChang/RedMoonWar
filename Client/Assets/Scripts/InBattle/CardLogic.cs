@@ -68,7 +68,7 @@ public class CardLogic : MonoBehaviour {
     void Update()
     {
         if (!CardAnimation.isPlaying)
-	    {
+        {
             if (mSelect)
             {
                 PlayAnimation(CharAnimationState.Select);
@@ -77,7 +77,7 @@ public class CardLogic : MonoBehaviour {
             {
                 PlayAnimation(CharAnimationState.Idle);
             }
-	    }
+        }
 
         if (mClickBuff > 0)
         {
@@ -87,7 +87,7 @@ public class CardLogic : MonoBehaviour {
                 mClickBuff = 0;
             }
         }
-	}
+    }
 
     bool mSelect = false;
     bool mNeedRefresh = false;
@@ -149,7 +149,7 @@ public class CardLogic : MonoBehaviour {
     /// <param name="_select"></param>
     public void Select(bool _select)
     {
-        if (gameObject.tag == "Enemy")
+        if (Data.Phase == PhaseType.Enemy)
         {
             return;
         }
@@ -315,7 +315,10 @@ public class CardLogic : MonoBehaviour {
         UILabel label = obj.GetComponent<UILabel>();
         if (_double)
         {
-            label.text = "-" + _Damage.ToString() + "¡Á2";
+            label.text = string.Format("-{0:D}¡Á2", _Damage);
+            LabelTweener lt = LabelTweener.Begin(label.gameObject, 0.75f, _Damage, _Damage * 2);
+            lt.delay = 0.5f;
+            lt.format = "-{0:D}";
         }
         else
         {
@@ -402,6 +405,22 @@ public class CardLogic : MonoBehaviour {
     {
         PlayAnimation(CharAnimationState.Death);
         CreateGrave();
+
+        Invoke("CreateDeathItems", 0.5f);
+    }
+
+    void CreateDeathItems()
+    {
+        if (Data.DropCard > 0)
+        {
+            CreateTAnimation("GetCard");
+            GameLogic.Instance.Card += 1;
+        }
+        else if (Data.DropCoin > 0)
+        {
+            CreateTAnimation("GetCoin");
+            GameLogic.Instance.Coin += Data.DropCoin;
+        }
     }
 
     public void CreateFlyEffect(Transform _target, AttackAnimationData _data)
@@ -581,6 +600,7 @@ public class CardLogic : MonoBehaviour {
 	                case BuffEnum.Poison:
 	                    CreateTAnimation("Poisoning");
 	                    CreateHitNumber(-buff.mAddHP, false);
+                        wait = true;
 	                    break;
 	                case BuffEnum.AddHPPerround:
 	                    CreateTAnimation("HealthHP");
@@ -604,8 +624,6 @@ public class CardLogic : MonoBehaviour {
                         }
                         break;
 	            }
-	
-	            wait = true;
 	        }
 		}
 
@@ -1095,5 +1113,20 @@ public class CardLogic : MonoBehaviour {
         }
 
         return tempCardList.ToArray();
+    }
+
+    public void BuyEnemy()
+    {
+        if (Data.BuyPrice > 0 && Data.BuyPrice <= GameLogic.Instance.Apple)
+        {
+            PlayAnimation(CharAnimationState.Join);
+            UI.Phase = PhaseType.Charactor;
+            Data.Phase = PhaseType.Charactor;
+            gameObject.tag = "Charactor";
+
+            AudioCenter.Instance.PlaySound("Absorb2");
+
+            GameLogic.Instance.Apple -= Data.BuyPrice;
+        }
     }
 }

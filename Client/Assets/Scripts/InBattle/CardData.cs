@@ -973,5 +973,14 @@ public class RealBuffData
                 mAddMP = Mathf.FloorToInt(_attacker.MPMax * 0.2f);
                 break;
         }
+
+        if (mAddHP > 300)
+        {
+            mAddHP = 300;
+        }
+        if (mAddMP > 15)
+        {
+            mAddMP = 15;
+        }
     }
 }

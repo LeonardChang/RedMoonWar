@@ -219,6 +219,28 @@ public class Chessboard : MonoBehaviour {
         {
             CardLogic obj = mChessList[id];
             CardData data = obj.Data;
+
+            // ÀØ√ﬂªÚ—£‘Œ÷–
+            bool needSkip = false;
+            foreach (RealBuffData buff in data.CurrentBuff)
+            {
+                if (buff.mSleep)
+                {
+                    needSkip = true;
+                    break;
+                }
+
+                if (buff.mDizziness)
+                {
+                    needSkip = true;
+                    break;
+                }
+            }
+            if (needSkip)
+            {
+                continue;
+            }
+
             if (data.Phase == PhaseType.Charactor && !data.Death && obj.IsSelect)
             {
                 mTempChessList.Add(id, obj);
