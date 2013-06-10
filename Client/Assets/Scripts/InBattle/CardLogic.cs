@@ -534,7 +534,7 @@ public class CardLogic : MonoBehaviour {
         }
 
         // ÀØ√ﬂªÚ—£‘Œ÷–
-        foreach (RealBuffData buff in Data.CurrentBuff)
+        foreach (RealBuffData buff in Data.CurrentBuff())
         {
             if (buff.mSleep)
             {
@@ -590,7 +590,7 @@ public class CardLogic : MonoBehaviour {
 		
 		if (!Data.Death)
 		{
-	        foreach (RealBuffData buff in Data.CurrentBuff)
+            foreach (RealBuffData buff in Data.CurrentBuff())
 	        {
 	            Data.HP += buff.mAddHP;
 	            Data.MP += buff.mAddMP;
@@ -655,7 +655,7 @@ public class CardLogic : MonoBehaviour {
     void DoAction()
     {
         bool disableSkill = false;
-        foreach (RealBuffData buff in Data.CurrentBuff)
+        foreach (RealBuffData buff in Data.CurrentBuff())
         {
             if (buff.mDisableSkill)
             {
@@ -885,7 +885,7 @@ public class CardLogic : MonoBehaviour {
             if (canFixDamage)
             {
                 // ÷ÿ…À◊¥Ã¨£¨1.5±∂…À∫¶
-                foreach (RealBuffData buff in logic.Data.CurrentBuff)
+                foreach (RealBuffData buff in logic.Data.CurrentBuff())
                 {
                     if (buff.mGreatDamage)
                     {
@@ -895,7 +895,7 @@ public class CardLogic : MonoBehaviour {
                 }
 
                 // ÷¬√§◊¥Ã¨£¨…À∫¶50%º∏¬ πÈ1
-                foreach (RealBuffData buff in Data.CurrentBuff)
+                foreach (RealBuffData buff in Data.CurrentBuff())
                 {
                     if (buff.mCanMiss)
                     {

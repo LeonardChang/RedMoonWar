@@ -925,4 +925,14 @@ public class GameLogic : MonoBehaviour {
         obj.transform.localPosition = new Vector3(0, 0, -100);
         obj.transform.localScale = Vector3.one;
     }
+
+    void ClickResurrection()
+    {
+
+    }
+
+    void ClickQuitBattle()
+    {
+        Application.Quit();
+    }
 }

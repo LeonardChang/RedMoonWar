@@ -212,7 +212,7 @@ public class Stage
     {
         mWidth = 6;
         mHeight = 50;
-        mScene = Random.Range(0, 5);
+        mScene = Random.Range(0, 6);
 
         mPlayerTeam.Clear();
         for (int i = 0; i < 6; i++)
@@ -246,7 +246,7 @@ public class Stage
         CharacterData data = _data;
         data.ID = _id;
         data.CardID = Random.Range(1, 190);
-        data.Level = 15;
+        data.Level = 10;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
 
@@ -263,7 +263,7 @@ public class Stage
         CharacterData data = _data;
         data.ID = _id;
         data.CardID = Random.Range(1, 190);
-        data.Level = 10;
+        data.Level = 5;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
 

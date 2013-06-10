@@ -135,6 +135,9 @@ public class Chessboard : MonoBehaviour {
             case 4:
                 shadowPerfab = Resources.Load("Backgrounds/IceShadow") as GameObject;
                 break;
+            case 5:
+                shadowPerfab = Resources.Load("Backgrounds/IceShadow") as GameObject;
+                break;
             default:
                 break;
         }
@@ -222,7 +225,7 @@ public class Chessboard : MonoBehaviour {
 
             // ÀØ√ﬂªÚ—£‘Œ÷–
             bool needSkip = false;
-            foreach (RealBuffData buff in data.CurrentBuff)
+            foreach (RealBuffData buff in data.CurrentBuff())
             {
                 if (buff.mSleep)
                 {
@@ -369,7 +372,7 @@ public class Chessboard : MonoBehaviour {
         }
 
         // ÀØ√ﬂªÚ—£‘Œ÷–
-        foreach (RealBuffData buff in data.CurrentBuff)
+        foreach (RealBuffData buff in data.CurrentBuff())
         {
             if (buff.mSleep)
             {
@@ -748,8 +751,10 @@ public class Chessboard : MonoBehaviour {
 
     public CardLogic GetChess(System.Int64 _id)
     {
-        foreach (CardLogic logic in mChessList.Values)
+        foreach (int logicID in mChessList.Keys)
         {
+            CardLogic logic = mChessList[logicID];
+
             if (logic.Data.ID == _id)
             {
                 return logic;
@@ -764,8 +769,10 @@ public class Chessboard : MonoBehaviour {
         float xDis = 99999;
         float yDis = 99999;
         CardLogic result = null;
-        foreach (CardLogic logic in mChessList.Values)
+        foreach (int logicID in mChessList.Keys)
         {
+            CardLogic logic = mChessList[logicID];
+
             if (logic.Data.Phase != _phase)
             {
                 continue;
@@ -790,8 +797,9 @@ public class Chessboard : MonoBehaviour {
         get
         {
             int count = 0;
-            foreach (CardLogic logic in mChessList.Values)
+            foreach (int logicID in mChessList.Keys)
             {
+                CardLogic logic = mChessList[logicID];
                 if (logic.Data.Phase == PhaseType.Charactor && !logic.Data.Death)
                 {
                     count += 1;
@@ -810,8 +818,9 @@ public class Chessboard : MonoBehaviour {
         get
         {
             int count = 0;
-            foreach (CardLogic logic in mChessList.Values)
+            foreach (int logicID in mChessList.Keys)
             {
+                CardLogic logic = mChessList[logicID];
                 if (logic.Data.Phase == PhaseType.Enemy && !logic.Data.Death)
                 {
                     count += 1;

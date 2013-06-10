@@ -317,7 +317,7 @@ public class CardData : MonoBehaviour {
         get
         {
             int addAtk = 0;
-            foreach (RealBuffData buff in CurrentBuff)
+            foreach (RealBuffData buff in CurrentBuff())
             {
                 addAtk += buff.mAddAtk;
             }
@@ -353,7 +353,7 @@ public class CardData : MonoBehaviour {
         get
         {
             int addDef = 0;
-            foreach (RealBuffData buff in CurrentBuff)
+            foreach (RealBuffData buff in CurrentBuff())
             {
                 addDef += buff.mAddDef;
             }
@@ -389,7 +389,7 @@ public class CardData : MonoBehaviour {
         get
         {
             int addSpd = 0;
-            foreach (RealBuffData buff in CurrentBuff)
+            foreach (RealBuffData buff in CurrentBuff())
             {
                 addSpd += buff.mAddSpd;
             }
@@ -677,11 +677,11 @@ public class CardData : MonoBehaviour {
     /// <summary>
     /// 当前所有buff列表
     /// </summary>
-    public Dictionary<int, RealBuffData>.ValueCollection CurrentBuff
+    public IEnumerable<RealBuffData> CurrentBuff()
     {
-        get
+        foreach (int id in mBuffList.Keys)
         {
-            return mBuffList.Values;
+            yield return mBuffList[id];
         }
     }
 
