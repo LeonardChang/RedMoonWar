@@ -11,6 +11,12 @@ public class ServerDatas{
 	public static DateTime TimeTick;
 	public static long unixTime;
 	
+	
+	public static Dictionary<System.Int64,PlayerFeedBack> playerDatas = new Dictionary<long, PlayerFeedBack>();
+	public static Dictionary<System.Int64,CardFeedBack> cardDatas = new Dictionary<long, CardFeedBack>();
+	public static Dictionary<System.Int64,RequestData> requestDatas = new Dictionary<long, RequestData>();
+	
+	
 	public static List<string> DataCheck(string data)
 	{
 		List<string> dataList = new List<string>();
@@ -125,6 +131,7 @@ public struct PlayerFeedBack
 	public int gachadate;
 	public int friendpt;	
 	public int _msg;
+	public int logindate;
 }
 
 public struct TimeFeedBack
@@ -167,6 +174,20 @@ public struct SearchFriendIdsFeedBack
 {
 	public int[] ids;
 	public int _msg;
+}
+
+public struct RequestFriendFeedBack
+{
+	public RequestData[] request;
+	public int _msg;
+}
+
+public struct RequestData
+{
+	public int id;
+	public int friend_id;
+	public int create_date;
+	public string content;
 }
 
 

@@ -15,6 +15,9 @@ public class ServerFuction{
 	public delegate void SearchFriendListReceiveCallBack(SearchFriendIdsFeedBack ids,List<PlayerFeedBack> players,List<CardFeedBack> cards);
     public static event SearchFriendListReceiveCallBack OnSearchFriendListReceive;
 	
+	public delegate void GetRequestFriendListCallBack();
+    public static event GetRequestFriendListCallBack OnGetRequestFriendList;
+	
 	/// <summary>
 	/// 登陆
 	/// </summary>
@@ -257,7 +260,22 @@ public class ServerFuction{
 	/// Resp.
 	/// </param>
 	public static void GetFriendListHandler(Response resp)
-	{
+	{	
+		List<string> datas = ServerDatas.DataCheck(resp.value);
+		Friends.Instance.MyFriends.Clear();
+		foreach(string data in datas)
+		{
+			int msg = ServerDatas.GetMsg(data);
+			switch((MsgMap.MSGENUM)msg)
+			{
+			case MsgMap.MSGENUM.MSG_PLAYER:
+				PlayerFeedBack playerFeedBack = JsonUtil.DeserializeObject<PlayerFeedBack>(data);
+				ServerDatas.playerDatas.Add(int.Parse(playerFeedBack.id),playerFeedBack);
+				Friends.Instance.MyFriends.Add(int.Parse(playerFeedBack.id));
+				Debug.Log("MSG_PLAYER--->" + data);						
+				break;
+			}
+		}
 		Debug.Log("GetFriendListHandler");
 	}
 	
@@ -280,7 +298,34 @@ public class ServerFuction{
 	/// </param>
 	public static void GetFriendRequestListHandler(Response resp)
 	{
+		List<string> datas = ServerDatas.DataCheck(resp.value);
+		Friends.Instance.Strangers.Clear();
+		foreach(string data in datas)
+		{
+			int msg = ServerDatas.GetMsg(data);
+			switch((MsgMap.MSGENUM)msg)
+			{
+			case MsgMap.MSGENUM.MSG_REQUESTFRIEND:	
+				RequestFriendFeedBack re = JsonUtil.DeserializeObject<RequestFriendFeedBack>(data);
+				foreach(RequestData ed in re.request)
+				{
+					ServerDatas.requestDatas.Add(ed.friend_id,ed);
+					Friends.Instance.Strangers.Add(ed.friend_id);
+				}
+				Debug.Log("MSG_REQUESTFRIEND--->" + data);
+				break;
+			case MsgMap.MSGENUM.MSG_PLAYER:
+				PlayerFeedBack playerFeedBack = JsonUtil.DeserializeObject<PlayerFeedBack>(data);
+				ServerDatas.playerDatas.Add(int.Parse(playerFeedBack.id),playerFeedBack);
+				Debug.Log("MSG_PLAYER--->" + data);				
+				break;
+			}
+		}
 		Debug.Log("GetFriendRequestListHandler");
+		if(OnGetRequestFriendList != null)
+		{
+			OnGetRequestFriendList();
+		}
 	}
 	
 	/// <summary>
@@ -512,8 +557,6 @@ public class ServerFuction{
 	/// </param>
 	public static void GetRanFriendHandler(Response resp)
 	{
-		
-		
 		
 	}
 	

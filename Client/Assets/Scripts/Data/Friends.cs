@@ -3,82 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 好友的数据
-/// </summary>
-[System.Serializable]
-public class FriendData
-{
-    private System.Int64 mPlayerID;
-    private string mNickName;
-    private int mLevel;
-    private CharacterData mLeader;
-    private System.DateTime mLastLoginTime;
-    private int mTodayFriendshipPoint;
-
-    /// <summary>
-    /// 玩家ID
-    /// </summary>
-    public System.Int64 PlayerID
-    {
-        get { return mPlayerID; }
-        set { mPlayerID = value; }
-    }
-
-    /// <summary>
-    /// 昵称
-    /// </summary>
-    public string NickName
-    {
-        get { return mNickName; }
-        set { mNickName = value; }
-    }
-
-    /// <summary>
-    /// 等级
-    /// </summary>
-    public int Level
-    {
-        get { return mLevel; }
-        set { mLevel = value; }
-    }
-
-    /// <summary>
-    /// 队长卡牌
-    /// </summary>
-    public CharacterData LeaderCharacter
-    {
-        get { return mLeader; }
-        set { mLeader = value; }
-    }
-
-    /// <summary>
-    /// 最后登录日期
-    /// </summary>
-    public System.DateTime LastLoginTime
-    {
-        get { return mLastLoginTime; }
-        set { mLastLoginTime = value; }
-    }
-
-    /// <summary>
-    /// 剩余的友情点
-    /// </summary>
-    public int TodayFriendshipPoint
-    {
-        get { return mTodayFriendshipPoint; }
-        set { mTodayFriendshipPoint = value; }
-    }
-}
-
-/// <summary>
 /// 好友管理器
 /// </summary>
 [System.Serializable]
 public class Friends
 {
     private static volatile Friends instance;
-    private static object syncRoot = new System.Object();
-
+	private static object syncRoot = new System.Object();
     public static Friends Instance
     {
         get
@@ -97,29 +28,31 @@ public class Friends
         }
     }
 
-    private Dictionary<System.Int64, FriendData> mFriends = new Dictionary<System.Int64, FriendData>(); // 好友列表
-    private Dictionary<System.Int64, FriendData> mStrangers = new Dictionary<System.Int64, FriendData>(); // 请求加好友的陌生人
+    private List<int> friendIds = new List<int>();
+    private List<int> strengerIds = new List<int>(); 
 
-    public Dictionary<System.Int64, FriendData> MyFriends
+    public List<int> MyFriends
     {
-        get { return mFriends; }
+        get { return friendIds; }
     }
 
-    public Dictionary<System.Int64, FriendData> Strangers
+    public List<int> Strangers
     {
-        get { return mStrangers; }
+        get { return strengerIds; }
     }
 
     /// <summary>
     /// 获取所有好友
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<FriendData> GetFriends()
+    public List<PlayerFeedBack> GetFriends()
     {
-        foreach (System.Int64 id in mFriends.Keys)
+		List<PlayerFeedBack> players = new List<PlayerFeedBack>(); 
+        foreach (int id in friendIds)
         {
-            yield return mFriends[id];
+            players.Add(ServerDatas.playerDatas[id]);
         }
+		return players;
     }
 
     /// <summary>
@@ -127,26 +60,23 @@ public class Friends
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
-    public FriendData GetFriend(System.Int64 _id)
+    public PlayerFeedBack GetFriend(int id)
     {
-        if (mFriends.ContainsKey(_id))
-        {
-            return mFriends[_id];
-        }
-
-        return null;
+       return ServerDatas.playerDatas[id];
     }
 
     /// <summary>
     /// 获取所有陌生人
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<FriendData> GetStrangers()
+    public List<PlayerFeedBack> GetStrangers()
     {
-        foreach (System.Int64 id in mStrangers.Keys)
+        List<PlayerFeedBack> players = new List<PlayerFeedBack>(); 
+        foreach (int id in strengerIds)
         {
-            yield return mStrangers[id];
+            players.Add(ServerDatas.playerDatas[id]);
         }
+		return players;
     }
 
     /// <summary>
@@ -154,14 +84,9 @@ public class Friends
     /// </summary>
     /// <param name="_id"></param>
     /// <returns></returns>
-    public FriendData GetStranger(System.Int64 _id)
+    public PlayerFeedBack GetStranger(int id)
     {
-        if (mStrangers.ContainsKey(_id))
-        {
-            return mStrangers[_id];
-        }
-
-        return null;
+        return ServerDatas.playerDatas[id];
     }
 
     /// <summary>
@@ -171,7 +96,15 @@ public class Friends
     {
         get
         {
-            return mStrangers.Values.Count;
+            return strengerIds.Count;
         }
     }
+	
+	public int FriendCount
+	{
+		get
+		{
+			return friendIds.Count;
+		}
+	}
 }
