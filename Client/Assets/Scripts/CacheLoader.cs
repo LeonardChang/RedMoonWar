@@ -43,7 +43,7 @@ public class CacheLoader  : MonoBehaviour {
             mInstance = this;
         }
 
-        this.ChecnFinishEvent += CheckResult;
+        this.CheckFinishEvent += CheckResult;
     }
 
     void Start()
@@ -90,13 +90,34 @@ public class CacheLoader  : MonoBehaviour {
     /// </summary>
     public void CheckAllCache()
     {
-        CheckAllCache("", "", "", "", "", "");
+        DownloadStringResult += DownloadMD5ListResult;
+        StartCoroutine(DownloadString(IPAdress + "/?cmd=19"));
+    }
+
+    private void DownloadMD5ListResult(bool _success, string _result)
+    {
+        DownloadStringResult -= DownloadMD5ListResult;
+        if (_success)
+        {
+            PkgResponse response = JsonUtil.UnpackageHead(_result);
+            sMD5List data = JsonUtil.DeserializeObject<sMD5List>(response.ret.Substring(1, response.ret.Length - 2));
+            CheckAllCache("", data.card, data.story, data.level, data.skill, data.gacha, data.card_level, data.file);
+        }
+        else
+        {
+            mNeedCheckList.Clear();
+            if (CheckAllCacheResult != null)
+            {
+                CheckAllCacheResult(false);
+            }
+            print("Check all cache files finish: False");
+        }
     }
 
     /// <summary>
     /// 检查所有字典并读取到内存中(MD5)
     /// </summary>
-    public void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5)
+    private void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5, string cardLevelMD5, string fileMD5)
     {
         print("Start check all cache files.");
 
@@ -135,10 +156,15 @@ public class CacheLoader  : MonoBehaviour {
         URL = IPAdress + "/?cmd=3&name=card_level";
         file = "DBCardLevel.data";
         mNeedCheckList[file] = 0;
-        CheckFile(file, gachaMD5, URL);
+        CheckFile(file, cardLevelMD5, URL);
+
+        URL = IPAdress + "/?cmd=3&name=file";
+        file = "DBFile.data";
+        mNeedCheckList[file] = 0;
+        CheckFile(file, fileMD5, URL);
     }
 
-    private System.Action<string, bool, string> ChecnFinishEvent = null;
+    private System.Action<string, bool, string> CheckFinishEvent = null;
     private void CheckFile(string _file, string _md5, string _url)
     {
         string path = EquationTool.TemporaryFilePath + "/" + _file;
@@ -149,17 +175,30 @@ public class CacheLoader  : MonoBehaviour {
             StreamReader reader = new StreamReader(path, System.Text.Encoding.Default);
             string filestr = EquationTool.Decode(reader.ReadToEnd());
             reader.Close();
-            string filemd5 = EquationTool.GetMD5(filestr);
+
+            string filemd5 = "";
+            if (_file != "DBStr.data")
+            {
+                Response response = PackageModel.GetResponse(filestr);
+                string str = response.value.Substring(1, response.value.Length - 2);
+                int start = str.IndexOf("[");
+                int end = str.LastIndexOf("]");
+                string substr = str.Substring(start, end - start + 1);
+
+                filemd5 = EquationTool.GetMD5(substr);
+            }
 
             if (string.IsNullOrEmpty(_md5) && filemd5 != _md5)
             {
+                print("File md5 is wrong, redownload it: " + path);
                 StartCoroutine(DownloadFile(_file, _url));
             }
             else
             {
-                if (ChecnFinishEvent != null)
+                print("File md5 is right: " + path);
+                if (CheckFinishEvent != null)
                 {
-                    ChecnFinishEvent(_file, true, filestr);
+                    CheckFinishEvent(_file, true, filestr);
                 }
             }
         }
@@ -177,7 +216,6 @@ public class CacheLoader  : MonoBehaviour {
         {
             if (_file == "DBStr.data")
             {
-                print(_result);
                 ServerStringTable.Instance.Initialize(_result);
             }
             else if (_file == "DBCard.data")
@@ -216,6 +254,26 @@ public class CacheLoader  : MonoBehaviour {
                 sCardLevelList data = JsonUtil.DeserializeObject<sCardLevelList>(response.ret.Substring(1, response.ret.Length - 2));
                 Experience.Instance.ResetCardLevelData(data);
             }
+            else if (_file == "DBFile.data")
+            {
+                PkgResponse response = JsonUtil.UnpackageHead(_result);
+                sFileList data = JsonUtil.DeserializeObject<sFileList>(response.ret.Substring(1, response.ret.Length - 2));
+                foreach (sFileData filedata in data.file)
+                {
+                    if (filedata.filename == "AttackAnimation.txt")
+                    {
+                        AttackAnimationManager.Instance.Initialize(filedata.content);
+                    }
+                    else if (filedata.filename == "Buff.txt")
+                    {
+                        BuffManager.Instance.Initialize(filedata.content);
+                    }
+                    else if (filedata.filename == "LeaderSkillData.txt")
+                    {
+                        LeaderSkillManager.Instance.Initialize(filedata.content);
+                    }
+                }
+            }
         }
     }
 
@@ -234,17 +292,41 @@ public class CacheLoader  : MonoBehaviour {
             writer.Write(encode);
             writer.Close();
 
-            if (ChecnFinishEvent != null)
+            if (CheckFinishEvent != null)
             {
-                ChecnFinishEvent(_file, true, str);
+                CheckFinishEvent(_file, true, str);
             }
         }
         else
         {
             Debug.LogError(www.error);
-            if (ChecnFinishEvent != null)
+            if (CheckFinishEvent != null)
             {
-                ChecnFinishEvent(_file, false, www.error);
+                CheckFinishEvent(_file, false, www.error);
+            }
+        }
+    }
+
+    private System.Action<bool, string> DownloadStringResult = null;
+    private IEnumerator DownloadString(string _url)
+    {
+        WWW www = new WWW(_url);
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error))
+        {
+            string str = www.text;
+            if (DownloadStringResult != null)
+            {
+                DownloadStringResult(true, str);
+            }
+        }
+        else
+        {
+            Debug.LogError(www.error);
+            if (DownloadStringResult != null)
+            {
+                DownloadStringResult(false, www.error);
             }
         }
     }
@@ -369,4 +451,29 @@ public class sCardLevelData
     public int atype;
     public int btype;
     public int ctype;
+}
+
+public class sFileList
+{
+    public List<sFileData> file;
+    public int _msg;
+}
+
+public class sFileData
+{
+    public int id;
+    public string filename;
+    public string content;
+}
+
+public class sMD5List
+{
+    public string card;
+    public string card_level;
+    public string story;
+    public string level;
+    public string skill;
+    public string gacha;
+    public string file;
+    public int _msg;
 }

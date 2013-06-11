@@ -170,10 +170,32 @@ public class AttackAnimationManager
 
     public AttackAnimationManager()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         mAttackAnimations.Clear();
 
         TextAsset text = Resources.Load("Datas/AttackAnimation", typeof(TextAsset)) as TextAsset;
         string[] line = text.text.Split('\n');
+        for (int i = 0; i < line.Length; i++)
+        {
+            if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            {
+                continue;
+            }
+
+            AttackAnimationData data = new AttackAnimationData(line[i]);
+            mAttackAnimations[data.ID] = data;
+        }
+    }
+
+    public void Initialize(string _file)
+    {
+        mAttackAnimations.Clear();
+
+        string[] line = _file.Split('\n');
         for (int i = 0; i < line.Length; i++)
         {
             if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))

@@ -183,10 +183,32 @@ public class LeaderSkillManager
 
     public LeaderSkillManager()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         mLeaderSkillDatas.Clear();
 
         TextAsset text = Resources.Load("Datas/LeaderSkillData", typeof(TextAsset)) as TextAsset;
         string[] line = text.text.Split('\n');
+        for (int i = 0; i < line.Length; i++)
+        {
+            if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            {
+                continue;
+            }
+
+            LeaderSkillData data = new LeaderSkillData(line[i]);
+            mLeaderSkillDatas[data.ID] = data;
+        }
+    }
+
+    public void Initialize(string _file)
+    {
+        mLeaderSkillDatas.Clear();
+
+        string[] line = _file.Split('\n');
         for (int i = 0; i < line.Length; i++)
         {
             if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))

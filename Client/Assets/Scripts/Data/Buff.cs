@@ -130,10 +130,32 @@ public class BuffManager
 
     public BuffManager()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         mBuffs.Clear();
 
         TextAsset text = Resources.Load("Datas/Buff", typeof(TextAsset)) as TextAsset;
         string[] line = text.text.Split('\n');
+        for (int i = 0; i < line.Length; i++)
+        {
+            if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            {
+                continue;
+            }
+
+            BuffData data = new BuffData(line[i]);
+            mBuffs[data.ID] = data;
+        }
+    }
+
+    public void Initialize(string _file)
+    {
+        mBuffs.Clear();
+
+        string[] line = _file.Split('\n');
         for (int i = 0; i < line.Length; i++)
         {
             if (i == 0 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))

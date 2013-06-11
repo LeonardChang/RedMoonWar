@@ -71,10 +71,10 @@ public class GameLogic : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //CacheLoader.Instance.CheckAllCache();
-        //Invoke("BattleStart", 5);
+        CacheLoader.Instance.CheckAllCache();
+        Invoke("BattleStart", 5);
 
-        BattleStart();
+        //BattleStart();
 	}
 	
 	// Update is called once per frame
