@@ -44,7 +44,7 @@ public class CardBaseData
     /// </summary>
     public string Name
     {
-        get { return mName; }
+        get { return ServerStringTable.Instance.GetString(mName); }
     }
 
     /// <summary>
@@ -233,7 +233,7 @@ public class CardBaseData
     public void Initialize(sCardData _card)
     {
         mID = _card.id;
-        mName = ServerStringTable.Instance.GetString(_card.name);
+        mName = _card.name;
         mElementType = (ElementType)_card.kind;
         mGrowingType = _card.growth_id;
         mCardSprite = _card.img;
@@ -245,10 +245,18 @@ public class CardBaseData
         mMaxLevel = _card.max_level;
         mEXPGrowingType = (GrowType)_card.level_growth;
         mBaseEatExp = _card.give_exp_base;
-        mSellPrice = _card.give_sell_base;
+        mSellPrice = _card.sell;
 
-        mEvolution = -1; // !!!!!!!!!未填写完整
-        mEvolutionMaterial.Clear(); // !!!!!!!!!未填写完整
+        mEvolution = _card.evolution;
+        mEvolutionMaterial.Clear();
+        foreach (string split in _card.evolution_material.Split(','))
+        {
+            string str = split.Trim(',');
+            if (!string.IsNullOrEmpty(str))
+            {
+                mEvolutionMaterial.Add(int.Parse(str));
+            }
+        }
     }
 }
 
@@ -319,6 +327,7 @@ public class CardManager
     {
         if (!mCardDatas.ContainsKey(_id))
         {
+            Debug.LogError("Can't find card id: " + _id.ToString());
             return null;
         }
 

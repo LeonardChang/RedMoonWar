@@ -168,6 +168,7 @@ public class GrowingManager
     {
         if (!mGrowings.ContainsKey(_id))
         {
+            Debug.LogError("Can't find growing data id: " + _id.ToString());
             return null;
         }
 

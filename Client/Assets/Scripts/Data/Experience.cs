@@ -37,6 +37,11 @@ public class Experience
 
     public Experience()
     {
+        ResetData();
+    }
+
+    public void ResetData()
+    {
         mAType.Clear();
         mBType.Clear();
         mCType.Clear();
@@ -53,7 +58,7 @@ public class Experience
             {
                 continue;
             }
-            
+
             string[] strlist = line[i].Split('\t');
             int level = int.Parse(strlist[0]);
             int a = int.Parse(strlist[1]);
@@ -70,6 +75,20 @@ public class Experience
             mCost[level] = cost;
             mEnergyMax[level] = energy;
             mEnergyInc[level] = 0.0017;
+        }
+    }
+
+    public void ResetCardLevelData(sCardLevelList _list)
+    {
+        mAType.Clear();
+        mBType.Clear();
+        mCType.Clear();
+
+        foreach (sCardLevelData data in _list.card_level)
+        {
+            mAType[data.id] = data.atype;
+            mBType[data.id] = data.btype;
+            mCType[data.id] = data.ctype;
         }
     }
 

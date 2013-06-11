@@ -186,13 +186,14 @@ public class AttackAnimationManager
         }
     }
 
-    public AttackAnimationData GetAttackAnimation(AttackAnimType _index)
+    public AttackAnimationData GetAttackAnimation(AttackAnimType _id)
     {
-        if (!mAttackAnimations.ContainsKey(_index))
+        if (!mAttackAnimations.ContainsKey(_id))
         {
+            Debug.LogError("Can't find attack animation id: " + _id.ToString());
             return null;
         }
 
-        return mAttackAnimations[_index];
+        return mAttackAnimations[_id];
     }
 }

@@ -203,6 +203,7 @@ public class LeaderSkillManager
     {
         if (!mLeaderSkillDatas.ContainsKey(_id))
         {
+            //Debug.LogError("Can't find leader skill id: " + _id.ToString());
             return null;
         }
 

@@ -146,13 +146,14 @@ public class BuffManager
         }
     }
 
-    public BuffData GetBuff(int _index)
+    public BuffData GetBuff(int _id)
     {
-        if (!mBuffs.ContainsKey(_index))
+        if (!mBuffs.ContainsKey(_id))
         {
+            Debug.LogError("Can't find buff id: " + _id.ToString());
             return null;
         }
 
-        return mBuffs[_index];
+        return mBuffs[_id];
     }
 }

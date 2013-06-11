@@ -46,7 +46,7 @@ public class SkillData
     {
         get
         {
-            return mName;
+            return ServerStringTable.Instance.GetString(mName);
         }
     }
 
@@ -57,7 +57,7 @@ public class SkillData
     {
         get
         {
-            return mDescription;
+            return ServerStringTable.Instance.GetString(mDescription);
         }
     }
 
@@ -229,21 +229,21 @@ public class SkillData
     public void Initialize(sSkillData _skillData)
     {
         mID = _skillData.id;
-        mName = ServerStringTable.Instance.GetString(_skillData.name);
-        mDescription = ServerStringTable.Instance.GetString(_skillData.description);
+        mName = _skillData.name;
+        mDescription = _skillData.description;
         mMultiplyDamage = float.Parse(_skillData.atkrate);
         mFixedDamage = _skillData.fix;
         mRange = _skillData.range;
-        mCount = 1; // !!!!!!!!!未填写完整
+        mCount = _skillData.count;
         mAddBuff = _skillData.buff;
         mManaCost = _skillData.mana;
-        mManaCostGrow = -1; // !!!!!!!!!未填写完整
+        mManaCostGrow = _skillData.mana_growth;
         mHatred = _skillData.hatred;
         mMaxLevel = _skillData.maxlevel;
-        mTargetPhase = AttackTargetType.Ememy; // !!!!!!!!!未填写完整
-        mAttackAnim = AttackAnimType.NormalAttack; // !!!!!!!!!未填写完整
-        mSearchType = FindTargetConditionType.LowHP; // !!!!!!!!!未填写完整
-        mColdDownTime = 1; // !!!!!!!!!未填写完整
+        mTargetPhase = (AttackTargetType)_skillData.targetPhase;
+        mAttackAnim = (AttackAnimType)_skillData.animation;
+        mSearchType = (FindTargetConditionType)_skillData.search;
+        mColdDownTime = _skillData.colddown;
     }
 }
 
@@ -315,6 +315,7 @@ public class SkillManager
     {
         if (!mSkillDatas.ContainsKey(_id))
         {
+            //Debug.LogError("Can't find skill id: " + _id.ToString());
             return null;
         }
 

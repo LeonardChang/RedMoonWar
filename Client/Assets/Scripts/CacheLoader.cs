@@ -131,6 +131,11 @@ public class CacheLoader  : MonoBehaviour {
         file = "DBGacha.data";
         mNeedCheckList[file] = 0;
         CheckFile(file, gachaMD5, URL);
+
+        URL = IPAdress + "/?cmd=3&name=card_level";
+        file = "DBCardLevel.data";
+        mNeedCheckList[file] = 0;
+        CheckFile(file, gachaMD5, URL);
     }
 
     private System.Action<string, bool, string> ChecnFinishEvent = null;
@@ -146,7 +151,7 @@ public class CacheLoader  : MonoBehaviour {
             reader.Close();
             string filemd5 = EquationTool.GetMD5(filestr);
 
-            if (!string.IsNullOrEmpty(_md5) && filemd5 != _md5)
+            if (string.IsNullOrEmpty(_md5) && filemd5 != _md5)
             {
                 StartCoroutine(DownloadFile(_file, _url));
             }
@@ -172,6 +177,7 @@ public class CacheLoader  : MonoBehaviour {
         {
             if (_file == "DBStr.data")
             {
+                print(_result);
                 ServerStringTable.Instance.Initialize(_result);
             }
             else if (_file == "DBCard.data")
@@ -203,6 +209,12 @@ public class CacheLoader  : MonoBehaviour {
                 PkgResponse response = JsonUtil.UnpackageHead(_result);
                 sGachaList data = JsonUtil.DeserializeObject<sGachaList>(response.ret.Substring(1, response.ret.Length - 2));
                 GachaManager.Instance.ResetData(data);
+            }
+            else if (_file == "DBCardLevel.data")
+            {
+                PkgResponse response = JsonUtil.UnpackageHead(_result);
+                sCardLevelList data = JsonUtil.DeserializeObject<sCardLevelList>(response.ret.Substring(1, response.ret.Length - 2));
+                Experience.Instance.ResetCardLevelData(data);
             }
         }
     }
@@ -268,10 +280,8 @@ public class sCardData
     public int sell;
     public int give_exp_base;
     public int give_exp_grow;
-    public int give_cost_base;
-    public int give_cost_grow;
-    public int give_sell_base;
-    public int give_sell_grow;
+    public int evolution;
+    public string evolution_material;
 }
 
 public class sStoryList
@@ -322,10 +332,16 @@ public class sSkillData
     public string atkrate;
     public int fix;
     public int range;
+    public int count;
     public int buff;
     public int mana;
+    public int mana_growth;
     public int hatred;
     public int maxlevel;
+    public int targetPhase;
+    public int animation;
+    public int search;
+    public int colddown;
 }
 
 public class sGachaList
@@ -339,4 +355,18 @@ public class sGachaData
     public int id;
     public int card_drop;
     public int cost;
+}
+
+public class sCardLevelList
+{
+    public List<sCardLevelData> card_level;
+    public int _msg;
+}
+
+public class sCardLevelData
+{
+    public int id;
+    public int atype;
+    public int btype;
+    public int ctype;
 }
