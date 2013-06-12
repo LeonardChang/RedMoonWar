@@ -849,8 +849,8 @@ public class GameLogic : MonoBehaviour {
     {
         MenuPanel.SetActive(true);
 
-        SoundBtnLabel.text = "Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF");
-        MusicBtnLabel.text = "Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF");
+        SoundBtnLabel.text = Localization.instance.Get("Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF"));
+        MusicBtnLabel.text = Localization.instance.Get("Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF"));
 
         TweenScale ts = TweenScale.Begin(MenuPanel, 0.15f, Vector3.one);
         ts.from = new Vector3(1, 0.01f, 1);
@@ -873,15 +873,15 @@ public class GameLogic : MonoBehaviour {
     public void ClickSound()
     {
         AudioCenter.Instance.OpenSoundEffect = !AudioCenter.Instance.OpenSoundEffect;
-        SoundBtnLabel.text = "Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF");
-        MusicBtnLabel.text = "Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF");
+        SoundBtnLabel.text = Localization.instance.Get("Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF"));
+        MusicBtnLabel.text = Localization.instance.Get("Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF"));
     }
 
     public void ClickMusic()
     {
         AudioCenter.Instance.OpenMusicEffect = !AudioCenter.Instance.OpenMusicEffect;
-        SoundBtnLabel.text = "Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF");
-        MusicBtnLabel.text = "Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF");
+        SoundBtnLabel.text = Localization.instance.Get("Sound " + (AudioCenter.Instance.OpenSoundEffect ? "ON" : "OFF"));
+        MusicBtnLabel.text = Localization.instance.Get("Music " + (AudioCenter.Instance.OpenMusicEffect ? "ON" : "OFF"));
     }
 
     public void ClickQuit()

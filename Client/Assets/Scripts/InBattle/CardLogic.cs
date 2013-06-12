@@ -580,6 +580,7 @@ public class CardLogic : MonoBehaviour {
         }
     }
 
+    List<RealBuffData> mTempRealBuffs = new List<RealBuffData>();
     void EndCalculate(bool _wait)
     {
         bool wait = _wait;
@@ -590,41 +591,60 @@ public class CardLogic : MonoBehaviour {
 		
 		if (!Data.Death)
 		{
+            mTempRealBuffs.Clear();
             foreach (RealBuffData buff in Data.CurrentBuff())
 	        {
-	            Data.HP += buff.mAddHP;
-	            Data.MP += buff.mAddMP;
-	
-	            switch ((BuffEnum)buff.mBuffID)
-	            {
-	                case BuffEnum.Poison:
-	                    CreateTAnimation("Poisoning");
-	                    CreateHitNumber(-buff.mAddHP, false);
-                        wait = true;
-	                    break;
-	                case BuffEnum.AddHPPerround:
-	                    CreateTAnimation("HealthHP");
-	                    CreateHealthNumber(buff.mAddHP);
-	                    break;
-	                case BuffEnum.AddMPPerround:
-	                    CreateTAnimation("HealthMP");
-	                    CreateHealManaNumber(buff.mAddMP);
-	                    break;
-                    case BuffEnum.AddAllPerround:
-                        {
+                mTempRealBuffs.Add(buff);
+            }
+
+            foreach (RealBuffData buff in mTempRealBuffs)
+            {
+                if (buff.mAddHP < 0 || (buff.mAddHP > 0 && Data.HP < Data.HPMax))
+                {
+                    Data.HP += buff.mAddHP;
+
+                    switch ((BuffEnum)buff.mBuffID)
+                    {
+                        case BuffEnum.Poison:
+                            CreateTAnimation("Poisoning");
+                            CreateHitNumber(-buff.mAddHP, false);
+                            wait = true;
+                            break;
+                        case BuffEnum.AddHPPerround:
                             CreateTAnimation("HealthHP");
                             CreateHealthNumber(buff.mAddHP);
+                            break;
+                        case BuffEnum.AddAllPerround:
+                            CreateTAnimation("HealthHP");
+                            CreateHealthNumber(buff.mAddHP);
+                            break;
+                    }
+                }
 
+                if (buff.mAddMP < 0 || (buff.mAddMP > 0 && Data.MP < Data.MPMax))
+                {
+                    Data.MP += buff.mAddMP;
+
+                    switch ((BuffEnum)buff.mBuffID)
+                    {
+                        case BuffEnum.AddMPPerround:
                             CreateTAnimation("HealthMP");
-                            GameObject obj = CreateHealManaNumber(buff.mAddMP);
-                            if (buff.mAddHP != 0)
+                            CreateHealManaNumber(buff.mAddMP);
+                            break;
+                        case BuffEnum.AddAllPerround:
                             {
-                                obj.GetComponent<Blood>().YOffset = 30;
+                                CreateTAnimation("HealthMP");
+                                GameObject obj = CreateHealManaNumber(buff.mAddMP);
+                                if (buff.mAddHP != 0)
+                                {
+                                    obj.GetComponent<Blood>().YOffset = 30;
+                                }
                             }
-                        }
-                        break;
-	            }
+                            break;
+                    }
+                }
 	        }
+            mTempRealBuffs.Clear();
 		}
 
         // data数据经过一回合

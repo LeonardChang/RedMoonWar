@@ -28,6 +28,8 @@ public class SkillData
 
     private int mColdDownTime = 0; // 技能冷却回合
 
+    private bool mNetInit = false;
+
     /// <summary>
     /// 技能ID
     /// </summary>
@@ -46,7 +48,7 @@ public class SkillData
     {
         get
         {
-            return ServerStringTable.Instance.GetString(mName);
+            return mNetInit ? ServerStringTable.Instance.GetString(mName) : mName;
         }
     }
 
@@ -57,7 +59,7 @@ public class SkillData
     {
         get
         {
-            return ServerStringTable.Instance.GetString(mDescription);
+            return mNetInit ? ServerStringTable.Instance.GetString(mDescription) : mDescription;
         }
     }
 
@@ -244,6 +246,8 @@ public class SkillData
         mAttackAnim = (AttackAnimType)_skillData.animation;
         mSearchType = (FindTargetConditionType)_skillData.search;
         mColdDownTime = _skillData.colddown;
+
+        mNetInit = true;
     }
 }
 

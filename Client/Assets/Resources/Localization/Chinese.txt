@@ -1,0 +1,14 @@
+Language = 简体中文
+English = 英语
+Chinese = 简体中文
+Sound = 音效
+Music = 音乐
+Menu = 菜单
+Bribe = 收买
+Skill = 技能
+Leader skill = 队长技能
+Sound ON = 音效 开启
+Sound OFF = 音效 关闭
+Music ON = 音乐 开启
+Music OFF = 音乐 关闭
+Quit = 退出

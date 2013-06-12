@@ -1,0 +1,14 @@
+Language = English
+English = English
+Chinese = 简体中文
+Sound = Sound
+Music = Music
+Menu = Menu
+Bribe = Bribe
+Skill = Skill
+Leader skill = Leader skill
+Sound ON = Sound ON
+Sound OFF = Sound OFF
+Music ON = Music ON
+Music OFF = Music OFF
+Quit = Quit

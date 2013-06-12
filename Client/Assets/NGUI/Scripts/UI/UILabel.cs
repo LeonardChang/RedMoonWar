@@ -425,7 +425,7 @@ public class UILabel : UIWidget
 			return mSize;
 		}
 	}
-
+    
 	/// <summary>
 	/// Legacy functionality support.
 	/// </summary>
@@ -459,6 +459,11 @@ public class UILabel : UIWidget
 		return false;
 	}
 #endif
+
+    public void OnFont(UIFont _font)
+    {
+        font = _font;
+    }
 
 	/// <summary>
 	/// UILabel needs additional processing when something changes.

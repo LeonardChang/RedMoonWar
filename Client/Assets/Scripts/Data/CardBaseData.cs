@@ -31,6 +31,8 @@ public class CardBaseData
     private int mEvolution = 0; // 可进化目标
     private List<int> mEvolutionMaterial = new List<int>(); // 进化所需材料
 
+    private bool mNetInit = false;
+
     /// <summary>
     /// 卡片ID
     /// </summary>
@@ -44,7 +46,7 @@ public class CardBaseData
     /// </summary>
     public string Name
     {
-        get { return ServerStringTable.Instance.GetString(mName); }
+        get { return mNetInit ? ServerStringTable.Instance.GetString(mName) : mName; }
     }
 
     /// <summary>
@@ -257,6 +259,8 @@ public class CardBaseData
                 mEvolutionMaterial.Add(int.Parse(str));
             }
         }
+
+        mNetInit = true;
     }
 }
 
