@@ -15,6 +15,7 @@ public class GameUIManager : MonoBehaviour {
 	void Start () {
 		ServerFuction.OnSearchFriendListReceive += OnSearchInfo;
 		ServerFuction.OnGetRequestFriendList += OnRequestFriendList;
+		ServerFuction.OnGetFriendList += OnGetFriendList;
 		g_gameUIManager = this;
 	}
 	
@@ -28,9 +29,10 @@ public class GameUIManager : MonoBehaviour {
 	/// </summary>
 	public void FriendListAppear()
 	{
+		ServerFuction.GetFriendList();
 		friendMenu.DisAppear();
 		friend.Appear();
-		friend.Init();
+		//friend.Init();
 	}
 	
 	/// <summary>
@@ -60,6 +62,13 @@ public class GameUIManager : MonoBehaviour {
 		//requestFriendList.Init();
 	}
 	
+	public void RequestFriendReset()
+	{
+		requestFriendList.DisAppear();
+		ServerFuction.GetFriendRequestList();
+		requestFriendList.Appear();
+	}
+	
 	/// <summary>
 	/// 搜索好友
 	/// </summary>
@@ -81,14 +90,20 @@ public class GameUIManager : MonoBehaviour {
 		requestFriendList.Init();
 	}
 	
-	public void AddFriend(GameObject obj)
+	public void OnGetFriendList()
 	{
-		string name = obj.transform.parent.parent.name;
-		string id = name.Replace("request","");
-		ServerFuction.AgreeFriend(id);
+		friend.Init();
 	}
 	
-	public void MessageBoxAppear(eMessageType mType, GameObject target,GameObject sWitch, string title,string message,string leftButton,string RightButton,string LeftFunc,string RightFunc)
+	
+	public void ReplyAddFriend(GameObject gameObj)
+	{
+		string name = gameObj.transform.parent.parent.name;
+		string id = name.Replace("Request","");
+		MessageBoxAppear(eMessageType.eAddFriend,gameObject,id,"Reply Friend","What are your choose","Agree","Refuse","AgreeFriend","RefuseFriend");
+	}
+	
+	public void MessageBoxAppear(eMessageType mType, GameObject target,object obj, string title,string message,string leftButton,string RightButton,string LeftFunc,string RightFunc)
 	{
 		messageBox.sTitle = title;
 		messageBox.sMessage = message;
@@ -97,16 +112,25 @@ public class GameUIManager : MonoBehaviour {
 		messageBox.sLeftFunc = LeftFunc;
 		messageBox.sRightFunc = RightFunc;
 		messageBox.target = target;
-		messageBox.sWitch = sWitch;
+		messageBox.obj = obj;
 		messageBox.mType = mType;
 		messageBox.Appear();
 		messageBox.Init();
 	}
 	
-	public void AgreeFriend(GameObject obj)
+	public void AgreeFriend(object id)
 	{
 		Debug.Log("agree");
-		Debug.Log(obj.name);
+		Debug.Log(id);
+		ServerFuction.AgreeFriend(id.ToString());
+		//Debug.Log(obj.name);
+	}
+	
+	public void RefuseFriend(object id)
+	{
+		Debug.Log("refuse");
+		Debug.Log(id);
+		ServerFuction.RefuseFriend(id.ToString());
 	}
 	
 	

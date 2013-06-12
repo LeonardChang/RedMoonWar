@@ -22,7 +22,8 @@ public class MessageBox:GameUI{
 	public string sRightFunc;
 	
 	public GameObject target;
-	public GameObject sWitch;
+	//public GameObject sWitch;
+	public object obj;
 	
 	
     public eMessageType mType;
@@ -50,15 +51,25 @@ public class MessageBox:GameUI{
 	{
 		if(target != null)
 		{
-			target.SendMessage(sLeftFunc,sWitch,SendMessageOptions.DontRequireReceiver);
+			switch(mType)
+			{
+			case eMessageType.eAddFriend:
+				break;
+				
+			}
+			target.SendMessage(sLeftFunc,obj,SendMessageOptions.DontRequireReceiver);
 		}
+		
+		gameObject.SetActive(false);
 	}
 	
 	public void Right()
 	{
 		if(target != null)
 		{
-			target.SendMessage(sRightFunc,sWitch,SendMessageOptions.DontRequireReceiver);
+			target.SendMessage(sRightFunc,obj,SendMessageOptions.DontRequireReceiver);
 		}
+		
+		gameObject.SetActive(false);
 	}
 }

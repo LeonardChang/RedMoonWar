@@ -5,5 +5,5 @@ public class RequestFriendListCtrl : MonoBehaviour {
 
 	public UILabel mName;
 	public UILabel mLevel;
-	
+	public UIButtonMessage message;
 }

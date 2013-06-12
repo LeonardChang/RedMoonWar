@@ -15,8 +15,14 @@ public class ServerFuction{
 	public delegate void SearchFriendListReceiveCallBack(SearchFriendIdsFeedBack ids,List<PlayerFeedBack> players,List<CardFeedBack> cards);
     public static event SearchFriendListReceiveCallBack OnSearchFriendListReceive;
 	
+	/// <summary>
+	/// 好友申请列表回调
+	/// </summary>
 	public delegate void GetRequestFriendListCallBack();
     public static event GetRequestFriendListCallBack OnGetRequestFriendList;
+	
+	public delegate void GetFriendListCallBack();
+	public static event GetFriendListCallBack OnGetFriendList;
 	
 	/// <summary>
 	/// 登陆
@@ -270,11 +276,23 @@ public class ServerFuction{
 			{
 			case MsgMap.MSGENUM.MSG_PLAYER:
 				PlayerFeedBack playerFeedBack = JsonUtil.DeserializeObject<PlayerFeedBack>(data);
-				ServerDatas.playerDatas.Add(int.Parse(playerFeedBack.id),playerFeedBack);
+				if(ServerDatas.playerDatas.ContainsKey(int.Parse(playerFeedBack.id)))
+				{
+					ServerDatas.playerDatas[int.Parse(playerFeedBack.id)] = playerFeedBack;
+				}
+				else
+				{
+					ServerDatas.playerDatas.Add(int.Parse(playerFeedBack.id),playerFeedBack);
+				}
+				
 				Friends.Instance.MyFriends.Add(int.Parse(playerFeedBack.id));
 				Debug.Log("MSG_PLAYER--->" + data);						
 				break;
 			}
+		}
+		if(OnGetFriendList != null)
+		{
+			OnGetFriendList();
 		}
 		Debug.Log("GetFriendListHandler");
 	}
@@ -309,14 +327,30 @@ public class ServerFuction{
 				RequestFriendFeedBack re = JsonUtil.DeserializeObject<RequestFriendFeedBack>(data);
 				foreach(RequestData ed in re.request)
 				{
-					ServerDatas.requestDatas.Add(ed.friend_id,ed);
+					if(ServerDatas.requestDatas.ContainsKey(ed.friend_id))
+					{
+						ServerDatas.requestDatas[ed.friend_id] = ed;
+					}
+					else
+					{
+						ServerDatas.requestDatas.Add(ed.friend_id,ed);
+					}
+					
 					Friends.Instance.Strangers.Add(ed.friend_id);
 				}
 				Debug.Log("MSG_REQUESTFRIEND--->" + data);
 				break;
 			case MsgMap.MSGENUM.MSG_PLAYER:
 				PlayerFeedBack playerFeedBack = JsonUtil.DeserializeObject<PlayerFeedBack>(data);
-				ServerDatas.playerDatas.Add(int.Parse(playerFeedBack.id),playerFeedBack);
+				if(ServerDatas.playerDatas.ContainsKey(int.Parse(playerFeedBack.id)))
+				{
+					ServerDatas.playerDatas[int.Parse(playerFeedBack.id)] = playerFeedBack;
+				}
+				else
+				{
+					ServerDatas.playerDatas.Add(int.Parse(playerFeedBack.id),playerFeedBack);
+				}
+				
 				Debug.Log("MSG_PLAYER--->" + data);				
 				break;
 			}
@@ -379,6 +413,7 @@ public class ServerFuction{
 	public static void AgreeFriendHandler(Response resp)
 	{
 		Debug.Log("AgreeFriendHandler");
+		GameUIManager.g_gameUIManager.RequestFriendReset();
 	}
 	
 	/// <summary>
@@ -405,6 +440,7 @@ public class ServerFuction{
 	public static void RefuseFriendHandler(Response resp)
 	{
 		Debug.Log("RefuseFriendHandler");
+		GameUIManager.g_gameUIManager.RequestFriendReset();
 	}
 	
 	/// <summary>
