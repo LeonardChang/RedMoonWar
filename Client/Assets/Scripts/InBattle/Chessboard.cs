@@ -625,6 +625,11 @@ public class Chessboard : MonoBehaviour {
 
     void CalculatorItems()
     {
+        if (GameLogic.Instance.Round < 10)
+        {
+            return;
+        }
+
         int count = GameObject.FindGameObjectsWithTag("Food").Length;
         if (count < 5)
         {

@@ -1,4 +1,4 @@
-using UnityEngine;
+锘縰sing UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -86,12 +86,12 @@ public class CacheLoader  : MonoBehaviour {
     private Dictionary<string, int> mNeedCheckList = new Dictionary<string, int>();
 
     /// <summary>
-    /// 检查所有字典并读取到内存中
+    /// 妫�鏌ユ墍鏈夊瓧鍏稿苟璇诲彇鍒板唴瀛樹腑
     /// </summary>
     public void CheckAllCache()
     {
         DownloadStringResult += DownloadMD5ListResult;
-        StartCoroutine(DownloadString(IPAdress + "/?cmd=19"));
+        StartCoroutine(DownloadString(IPAdress + "/?cmd=19&aaaa=1235"));
     }
 
     private void DownloadMD5ListResult(bool _success, string _result)
@@ -99,9 +99,26 @@ public class CacheLoader  : MonoBehaviour {
         DownloadStringResult -= DownloadMD5ListResult;
         if (_success)
         {
-            PkgResponse response = JsonUtil.UnpackageHead(_result);
-            sMD5List data = JsonUtil.DeserializeObject<sMD5List>(response.ret.Substring(1, response.ret.Length - 2));
-            CheckAllCache("", data.card, data.story, data.level, data.skill, data.gacha, data.card_level, data.file);
+            try
+            {
+                PkgResponse response = JsonUtil.UnpackageHead(_result);
+                sMD5List data = JsonUtil.DeserializeObject<sMD5List>(response.ret.Substring(1, response.ret.Length - 2));
+                CheckAllCache("", data.card, data.story, data.level, data.skill, data.gacha, data.card_level, data.file, data.monster);
+            }
+            catch (JsonException ex)
+            {
+                byte first = System.Text.Encoding.UTF8.GetBytes(_result)[0];
+                print("the first byte code is: " + (int)first);
+
+                Debug.LogError(ex.Message);
+
+                mNeedCheckList.Clear();
+                if (CheckAllCacheResult != null)
+                {
+                    CheckAllCacheResult(false);
+                }
+                print("Check all cache files finish: False");
+            }
         }
         else
         {
@@ -115,9 +132,9 @@ public class CacheLoader  : MonoBehaviour {
     }
 
     /// <summary>
-    /// 检查所有字典并读取到内存中(MD5)
+    /// 妫�鏌ユ墍鏈夊瓧鍏稿苟璇诲彇鍒板唴瀛樹腑(MD5)
     /// </summary>
-    private void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5, string cardLevelMD5, string fileMD5)
+    private void CheckAllCache(string strTableMD5, string cardMD5, string storyMD5, string levelMD5, string skillMD5, string gachaMD5, string cardLevelMD5, string fileMD5, string monsterMD5)
     {
         print("Start check all cache files.");
 
@@ -162,6 +179,11 @@ public class CacheLoader  : MonoBehaviour {
         file = "DBFile.data";
         mNeedCheckList[file] = 0;
         CheckFile(file, fileMD5, URL);
+
+        URL = IPAdress + "/?cmd=3&name=monster";
+        file = "DBMonster.data";
+        mNeedCheckList[file] = 0;
+        CheckFile(file, monsterMD5, URL);
     }
 
     private System.Action<string, bool, string> CheckFinishEvent = null;
@@ -214,65 +236,78 @@ public class CacheLoader  : MonoBehaviour {
 
         if (_success)
         {
-            if (_file == "DBStr.data")
+            try
             {
-                ServerStringTable.Instance.Initialize(_result);
-            }
-            else if (_file == "DBCard.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sCardList data = JsonUtil.DeserializeObject<sCardList>(response.ret.Substring(1, response.ret.Length - 2));
-                CardManager.Instance.ResetData(data);
-            }
-            else if (_file == "DBStory.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sStoryList data = JsonUtil.DeserializeObject<sStoryList>(response.ret.Substring(1, response.ret.Length - 2));
-                Battles.Instance.ResetData(data);
-            }
-            else if (_file == "DBLevel.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sLevelList data = JsonUtil.DeserializeObject<sLevelList>(response.ret.Substring(1, response.ret.Length - 2));
-                Experience.Instance.ResetPlayerData(data);
-            }
-            else if (_file == "DBSkill.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sSkillList data = JsonUtil.DeserializeObject<sSkillList>(response.ret.Substring(1, response.ret.Length - 2));
-                SkillManager.Instance.ResetData(data);
-            }
-            else if (_file == "DBGacha.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sGachaList data = JsonUtil.DeserializeObject<sGachaList>(response.ret.Substring(1, response.ret.Length - 2));
-                GachaManager.Instance.ResetData(data);
-            }
-            else if (_file == "DBCardLevel.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sCardLevelList data = JsonUtil.DeserializeObject<sCardLevelList>(response.ret.Substring(1, response.ret.Length - 2));
-                Experience.Instance.ResetCardLevelData(data);
-            }
-            else if (_file == "DBFile.data")
-            {
-                PkgResponse response = JsonUtil.UnpackageHead(_result);
-                sFileList data = JsonUtil.DeserializeObject<sFileList>(response.ret.Substring(1, response.ret.Length - 2));
-                foreach (sFileData filedata in data.file)
+                if (_file == "DBStr.data")
                 {
-                    if (filedata.filename == "AttackAnimation.txt")
+                    ServerStringTable.Instance.Initialize(_result);
+                }
+                else if (_file == "DBCard.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sCardList data = JsonUtil.DeserializeObject<sCardList>(response.ret.Substring(1, response.ret.Length - 2));
+                    CardManager.Instance.ResetData(data);
+                }
+                else if (_file == "DBStory.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sStoryList data = JsonUtil.DeserializeObject<sStoryList>(response.ret.Substring(1, response.ret.Length - 2));
+                    Battles.Instance.ResetData(data);
+                }
+                else if (_file == "DBLevel.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sLevelList data = JsonUtil.DeserializeObject<sLevelList>(response.ret.Substring(1, response.ret.Length - 2));
+                    Experience.Instance.ResetPlayerData(data);
+                }
+                else if (_file == "DBSkill.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sSkillList data = JsonUtil.DeserializeObject<sSkillList>(response.ret.Substring(1, response.ret.Length - 2));
+                    SkillManager.Instance.ResetData(data);
+                }
+                else if (_file == "DBGacha.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sGachaList data = JsonUtil.DeserializeObject<sGachaList>(response.ret.Substring(1, response.ret.Length - 2));
+                    GachaManager.Instance.ResetData(data);
+                }
+                else if (_file == "DBCardLevel.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sCardLevelList data = JsonUtil.DeserializeObject<sCardLevelList>(response.ret.Substring(1, response.ret.Length - 2));
+                    Experience.Instance.ResetCardLevelData(data);
+                }
+                else if (_file == "DBFile.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sFileList data = JsonUtil.DeserializeObject<sFileList>(response.ret.Substring(1, response.ret.Length - 2));
+                    foreach (sFileData filedata in data.file)
                     {
-                        AttackAnimationManager.Instance.Initialize(filedata.content);
-                    }
-                    else if (filedata.filename == "Buff.txt")
-                    {
-                        BuffManager.Instance.Initialize(filedata.content);
-                    }
-                    else if (filedata.filename == "LeaderSkillData.txt")
-                    {
-                        LeaderSkillManager.Instance.Initialize(filedata.content);
+                        if (filedata.filename == "AttackAnimation.txt")
+                        {
+                            AttackAnimationManager.Instance.Initialize(filedata.content);
+                        }
+                        else if (filedata.filename == "Buff.txt")
+                        {
+                            BuffManager.Instance.Initialize(filedata.content);
+                        }
+                        else if (filedata.filename == "LeaderSkillData.txt")
+                        {
+                            LeaderSkillManager.Instance.Initialize(filedata.content);
+                        }
                     }
                 }
+                else if (_file == "DBMonster.data")
+                {
+                    PkgResponse response = JsonUtil.UnpackageHead(_result);
+                    sMonsterList data = JsonUtil.DeserializeObject<sMonsterList>(response.ret.Substring(1, response.ret.Length - 2));
+                    MonsterManager.Instance.Initialize(data);
+                }
+            }
+            catch (JsonException ex)
+            {
+                Debug.LogError(ex.Message);
             }
         }
     }
@@ -475,5 +510,31 @@ public class sMD5List
     public string skill;
     public string gacha;
     public string file;
+    public string monster;
     public int _msg;
+}
+
+public class sMonsterList
+{
+    public List<sMonsterData> monster;
+    public int _msg;
+}
+
+public class sMonsterData
+{
+    public int id;
+    public string name;
+    public string profile;
+    public string img;
+    public int ai;
+    public int hp;
+    public int mp;
+    public int speed;
+    public int attack;
+    public int defence;
+    public int normalskill;
+    public int skill;
+    public int leaderskill;
+    public int level;
+    public int price;
 }

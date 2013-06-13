@@ -3,6 +3,53 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
+/// 怪物字典
+/// </summary>
+public class MonsterManager
+{
+    private static volatile MonsterManager instance;
+    private static object syncRoot = new System.Object();
+
+    public static MonsterManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (syncRoot)
+                {
+                    if (instance == null)
+                    {
+                        instance = new MonsterManager();
+                    }
+                }
+            }
+            return instance;
+        }
+    }
+
+    private Dictionary<int, sMonsterData> mData = new Dictionary<int, sMonsterData>();
+    public void Initialize(sMonsterList _list)
+    {
+        mData.Clear();
+        foreach (sMonsterData data in _list.monster)
+        {
+            mData[data.id] = data;
+        }
+    }
+
+    /// <summary>
+    /// 获取怪物数据
+    /// </summary>
+    /// <param name="_id"></param>
+    /// <returns></returns>
+    public sMonsterData GetMonsterData(int _id)
+    {
+        return mData.ContainsKey(_id) ? mData[_id] : null;
+    }
+}
+
+/// <summary>
 /// 棋子的详细数据
 /// </summary>
 [System.Serializable]
