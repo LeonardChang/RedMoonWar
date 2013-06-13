@@ -11,6 +11,8 @@ public class TomatoTest : MonoBehaviour {
 	void Start () {
 		ServerFuction.GameLogin("test2","test");
 		//ServerFuction.GetSysTime();
+		//ServerFuction.TestPost();
+		//ServerFuction.GetSysTime();
 		
         //data = new TestData();
         //this.GetType().InvokeMember("data", BindingFlags.SetField, null, this, new object[] { 3,"33" }, null, null, null);

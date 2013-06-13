@@ -17,7 +17,7 @@ public class MsgMap : MonoBehaviour {
 		MSG_COIN = 11,
 		MSG_BAG = 12,
 		M13 = 13,
-		M14 = 14,
+		MSG_FRIENDLIST = 14,
 		MSG_REQUESTFRIEND = 15,
 		MSG_FRIENDID = 16,
 	}

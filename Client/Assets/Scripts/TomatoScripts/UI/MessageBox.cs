@@ -6,6 +6,7 @@ public enum eMessageType
 {
 	None,
 	eAddFriend,
+	eDeleteFriend,
 }
 public class MessageBox:GameUI{
 	
@@ -54,6 +55,8 @@ public class MessageBox:GameUI{
 			switch(mType)
 			{
 			case eMessageType.eAddFriend:
+				break;
+			case eMessageType.eDeleteFriend:
 				break;
 				
 			}

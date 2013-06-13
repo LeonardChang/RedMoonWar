@@ -15,6 +15,7 @@ public class ServerDatas{
 	public static Dictionary<System.Int64,PlayerFeedBack> playerDatas = new Dictionary<long, PlayerFeedBack>();
 	public static Dictionary<System.Int64,CardFeedBack> cardDatas = new Dictionary<long, CardFeedBack>();
 	public static Dictionary<System.Int64,RequestData> requestDatas = new Dictionary<long, RequestData>();
+	public static Dictionary<System.Int64,FriendListData> friendDatas = new Dictionary<long, FriendListData>();
 	
 	
 	public static List<string> DataCheck(string data)
@@ -190,6 +191,53 @@ public struct RequestData
 	public string content;
 }
 
+public struct FriendListFeedBack
+{
+	public FriendListData[] friends;
+	public int _msg;
+}
+
+public struct FriendListData
+{
+	public int id;
+	public int friend_id;
+	public string op;
+	public int opdate;
+}
+
+public struct StageInfoFeedBack
+{
+	public int stageId;
+	public int taskId;
+	public int energy;
+	public int _msg;
+}
+
+public struct StageFeedBack
+{
+	public int stage_id;
+	public int width;
+    public int height;
+    public int scene_id;
+	public BattlePlayerDataFeedBack[] players;
+	public BattleEnemyDataFeedBack[] enemys;
+	public int _msg;
+}
+
+public struct BattlePlayerDataFeedBack
+{
+	public int x;
+    public int y;
+}
+
+public struct BattleEnemyDataFeedBack
+{
+	public int x;
+    public int y;
+	public int monster_id;
+	public int mDropCard;
+    public int mDropCoin;
+}
 
 
 

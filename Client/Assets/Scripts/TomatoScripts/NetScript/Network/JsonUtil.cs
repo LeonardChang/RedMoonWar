@@ -42,6 +42,8 @@ public class JsonUtil
     public static PkgResponse UnpackageHead(string value)
     {
         PkgResponse result = new PkgResponse();
+		int index = value.IndexOf("{");
+		value.Substring(index);
         JsonData jd = JsonMapper.ToObject(value);
         //result.head = JsonMapper.ToObject<Head>(JsonMapper.ToJson(jd["head"]));
         result.cmd = JsonMapper.ToJson(jd["cmd"]);

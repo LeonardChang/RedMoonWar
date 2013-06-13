@@ -39,6 +39,7 @@ public class ServerFuction{
         pParam.AddPair("cmd", 1);
         pParam.AddPair("name", name);
         pParam.AddPair("password", pw);
+		pParam.AddPair("rand", "111111");
         NetworkCtrl.Post(pParam, LoginHandler);
 		mName = name;
 		mPw = pw;
@@ -288,6 +289,21 @@ public class ServerFuction{
 				Friends.Instance.MyFriends.Add(int.Parse(playerFeedBack.id));
 				Debug.Log("MSG_PLAYER--->" + data);						
 				break;
+			case MsgMap.MSGENUM.MSG_FRIENDLIST:
+				FriendListFeedBack friendList = JsonUtil.DeserializeObject<FriendListFeedBack>(data);
+				for(int i = 0; i< friendList.friends.Length;i++)
+				{
+					FriendListData friendData = friendList.friends[i];
+					if(ServerDatas.friendDatas.ContainsKey(friendData.friend_id))
+					{
+						ServerDatas.friendDatas[friendData.friend_id] = friendData;
+					}
+					else
+					{
+						ServerDatas.friendDatas.Add(friendData.friend_id,friendData);
+					}
+				}
+				break;
 			}
 		}
 		if(OnGetFriendList != null)
@@ -467,6 +483,7 @@ public class ServerFuction{
 	public static void DeleteFriendHandler(Response resp)
 	{
 		Debug.Log("DeleteFriendHandler");
+		GameUIManager.g_gameUIManager.FriendListReset();
 	}
 	
 	
@@ -596,6 +613,16 @@ public class ServerFuction{
 		
 	}
 	
+	public static void TestPost()
+	{
+		PostParam pParam = new PostParam();
+        pParam.AddPair("cmd", 19);
+		NetworkCtrl.Post(pParam, TestPostHandler);	
+	}
 	
+	public static void TestPostHandler(Response resp)
+	{
+		List<string> datas = ServerDatas.DataCheck(resp.value);
+	}
 	
 }

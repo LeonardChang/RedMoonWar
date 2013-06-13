@@ -69,6 +69,13 @@ public class GameUIManager : MonoBehaviour {
 		requestFriendList.Appear();
 	}
 	
+	public void FriendListReset()
+	{
+		friend.DisAppear();
+		ServerFuction.GetFriendList();
+		friend.Appear();
+	}
+	
 	/// <summary>
 	/// 搜索好友
 	/// </summary>
@@ -103,6 +110,13 @@ public class GameUIManager : MonoBehaviour {
 		MessageBoxAppear(eMessageType.eAddFriend,gameObject,id,"Reply Friend","What are your choose","Agree","Refuse","AgreeFriend","RefuseFriend");
 	}
 	
+	public void DeleteFriend(GameObject gameObj)
+	{
+		string name = gameObj.transform.parent.parent.name;
+		string id = name.Replace("Friend","");
+		MessageBoxAppear(eMessageType.eDeleteFriend,gameObject,id,"Detele Friend","What are your choose","Delete","Cancel","DeleteFriend","CancelDeleteFriend");
+	}
+	
 	public void MessageBoxAppear(eMessageType mType, GameObject target,object obj, string title,string message,string leftButton,string RightButton,string LeftFunc,string RightFunc)
 	{
 		messageBox.sTitle = title;
@@ -131,6 +145,35 @@ public class GameUIManager : MonoBehaviour {
 		Debug.Log("refuse");
 		Debug.Log(id);
 		ServerFuction.RefuseFriend(id.ToString());
+	}
+	
+	public void DeleteFriend(object id)
+	{
+		Debug.Log("delete");
+		ServerFuction.DeleteFriend(id.ToString());
+	}
+	
+	public void CancelDeleteFriend(object id)
+	{
+		Debug.Log("cancel");
+	}
+	
+	public void AddFriendToFriendMenu()
+	{
+		requestFriendList.DisAppear();
+		friendMenu.Appear();
+	}
+	
+	public void SearchFriendToFriendMunu()
+	{
+		searchFriend.DisAppear();
+		friendMenu.Appear();
+	}
+	
+	public void FriendListToFriendMenu()
+	{
+		friend.DisAppear();
+		friendMenu.Appear();
 	}
 	
 	
