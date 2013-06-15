@@ -33,6 +33,8 @@ public class GameLogic : MonoBehaviour {
     public UIPanel WinResultPanel;
     public Transform WinLoseEffectRoot;
 
+    public AudioClip BGMClip;
+
     int mRound = -1;
     int mGetCoin = 0;
     int mGetCard = 0;
@@ -75,6 +77,8 @@ public class GameLogic : MonoBehaviour {
         //Invoke("BattleStart", 5);
 
         BattleStart();
+
+        AudioCenter.Instance.PlayMusic(BGMClip, 1);
 	}
 	
 	// Update is called once per frame

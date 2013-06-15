@@ -159,7 +159,12 @@ public class AudioCenter : MonoBehaviour {
     /// <returns></returns>
     public AudioSource PlayMusic(string _clipName, float _volume)
     {
-        AudioClip clip = GetClip(_clipName);
+        return PlayMusic(GetClip(_clipName), _volume);
+    }
+
+    public AudioSource PlayMusic(AudioClip _clip, float _volume)
+    {
+        AudioClip clip = _clip;
         AudioSource bgmPlayer = BGMPlayer;
         if (clip != null && bgmPlayer.clip != clip)
         {
@@ -219,7 +224,7 @@ public class AudioCenter : MonoBehaviour {
             SEPlayers[sePlayerID].pitch = _pitch;
             SEPlayers[sePlayerID].Play();
 
-            return BGMPlayer;
+            return SEPlayers[sePlayerID];
         }
 
         return null;
