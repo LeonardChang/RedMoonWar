@@ -162,6 +162,12 @@ public class AudioCenter : MonoBehaviour {
         return PlayMusic(GetClip(_clipName), _volume);
     }
 
+    /// <summary>
+    /// 播放一个音乐
+    /// </summary>
+    /// <param name="_clip"></param>
+    /// <param name="_volume"></param>
+    /// <returns></returns>
     public AudioSource PlayMusic(AudioClip _clip, float _volume)
     {
         AudioClip clip = _clip;

@@ -35,6 +35,8 @@ public class GameLogic : MonoBehaviour {
 
     public AudioClip BGMClip;
 
+    public UILabel AutoBtnLabel;
+
     int mRound = -1;
     int mGetCoin = 0;
     int mGetCard = 0;
@@ -78,7 +80,10 @@ public class GameLogic : MonoBehaviour {
 
         BattleStart();
 
-        AudioCenter.Instance.PlayMusic(BGMClip, 1);
+        if (!Application.isEditor)
+        {
+            AudioCenter.Instance.PlayMusic(BGMClip, 1);
+        }
 	}
 	
 	// Update is called once per frame
@@ -200,6 +205,7 @@ public class GameLogic : MonoBehaviour {
         SelectAll();
 
         mGameStart = true;
+        IsAuto = false;
     }
 
     public int Round
@@ -276,7 +282,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoUp();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -294,7 +300,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoDown();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -312,7 +318,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoLeft();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -330,7 +336,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoRight();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -348,7 +354,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoUpLeft();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -366,7 +372,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoDownLeft();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -384,7 +390,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoUpRight();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -402,7 +408,7 @@ public class GameLogic : MonoBehaviour {
         CleanClickBuff();
         mCalculating = true;
         GameChessboard.GoDownRight();
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
 
         EnableBigButtonPanel = false;
     }
@@ -487,7 +493,7 @@ public class GameLogic : MonoBehaviour {
 
         CleanClickBuff();
         mCalculating = true;
-        GameChessboard.AllEmemyMove();
+        GameChessboard.TryEnemyMoveAuto();
         //CalculateAI();
 
         EnableBigButtonPanel = false;
@@ -505,6 +511,27 @@ public class GameLogic : MonoBehaviour {
         mIsMultiple = !mIsMultiple;
         MultipleBtnBack.spriteName = mIsMultiple ? "BtnIcon07" : "BtnIcon06";
         MultipleBtnBack.MakePixelPerfect();
+    }
+
+    private bool mIsAuto = false;
+    void ClickAuto()
+    {
+        IsAuto = !IsAuto;
+        if (!mCalculating)
+        {
+            DoAutoNextRound();
+        }
+    }
+
+    bool IsAuto
+    {
+        get { return mIsAuto; }
+        set 
+        {
+            mIsAuto = value;
+            AutoBtnLabel.text = Localization.instance.Get(mIsAuto ? "Not Auto" : "Auto");
+            Time.timeScale = mIsAuto ? 3 : 1;
+        }
     }
 
     public void CleanClickBuff()
@@ -666,12 +693,36 @@ public class GameLogic : MonoBehaviour {
 
         if (GameChessboard.AliveCharactorNumber <= 0)
         {
+            IsAuto = false;
             GameLose();
         }
         else if (GameChessboard.AliveEnemyNumber <= 0)
         {
+            IsAuto = false;
             GameWin();
         }
+        else if (IsAuto)
+        {
+            DoAutoNextRound();
+        }
+    }
+
+    void DoAutoNextRound()
+    {
+        // 不是自动状态，立即返回
+        if (!IsAuto)
+        {
+            return;
+        }
+
+        // 全选所有的棋子
+        if (IsAnyUnselect())
+        {
+            SelectAll();
+        }
+
+        // 尝试移动
+        GameChessboard.TryCharMoveAuto();
     }
 
     bool EnableBigButtonPanel
@@ -935,11 +986,29 @@ public class GameLogic : MonoBehaviour {
 
     void ClickResurrection()
     {
-
+        Resurrection();
     }
 
     void ClickQuitBattle()
     {
         Application.Quit();
+    }
+
+    void Resurrection()
+    {
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("WinLosePanel"))
+        {
+            Destroy(obj);
+        }
+        GameChessboard.Resurrection();
+
+        TweenAlpha.Begin(LoseResultPanel.gameObject, 0.25f, 0);
+        mGameStart = true;
+        IsAuto = false;
+    }
+
+    public CardLogic GetChess(System.Int64 _id)
+    {
+        return GameChessboard.GetChess(_id);
     }
 }

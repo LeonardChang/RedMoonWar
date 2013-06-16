@@ -12,3 +12,7 @@ Sound OFF = Sound OFF
 Music ON = Music ON
 Music OFF = Music OFF
 Quit = Quit
+Auto = Auto
+Not Auto = Cancel Auto
+Resurgence = Resurgence
+OK = OK

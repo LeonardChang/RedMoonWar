@@ -10,6 +10,9 @@ public class CardData : MonoBehaviour {
     private int mX = 0;
     private int mY = 0;
 
+    private int mInitX = 0;
+    private int mInitY = 0;
+
     private bool mDeath = false;
 
     private AIType mEnemyAI = AIType.Slime;
@@ -21,6 +24,8 @@ public class CardData : MonoBehaviour {
     private bool mIsLeader = false;
 
     private Dictionary<int, RealBuffData> mBuffList = new Dictionary<int, RealBuffData>();
+
+    private PhaseType mInitPhase = PhaseType.Charactor;
 
     /// <summary>
     /// 棋子在棋盘中的ID
@@ -309,6 +314,18 @@ public class CardData : MonoBehaviour {
         }
     }
 
+    public PhaseType InitPhase
+    {
+        get
+        {
+            return mInitPhase;
+        }
+        set
+        {
+            mInitPhase = value;
+        }
+    }
+
     /// <summary>
     /// 攻击力
     /// </summary>
@@ -436,6 +453,28 @@ public class CardData : MonoBehaviour {
         get
         {
             return mY;
+        }
+    }
+
+    /// <summary>
+    /// init X坐标
+    /// </summary>
+    public int InitX
+    {
+        get
+        {
+            return mInitX;
+        }
+    }
+
+    /// <summary>
+    /// init Y坐标
+    /// </summary>
+    public int InitY
+    {
+        get
+        {
+            return mInitY;
         }
     }
 
@@ -771,6 +810,8 @@ public class CardData : MonoBehaviour {
     protected int mDropCard = 0;
     protected int mDropCoin = 0;
 
+    protected int mChessID = 0;
+
     /// <summary>
     /// 收买价格，0为不可收买
     /// </summary>
@@ -813,6 +854,18 @@ public class CardData : MonoBehaviour {
         set
         {
             mDropCoin = value;
+        }
+    }
+
+    public int ChessID
+    {
+        get
+        {
+            return mChessID;
+        }
+        set
+        {
+            mChessID = value;
         }
     }
 
@@ -862,6 +915,12 @@ public class CardData : MonoBehaviour {
         mY = _y;
     }
 
+    public void SetInitPosition(int _x, int _y)
+    {
+        mInitX = _x;
+        mInitY = _y;
+    }
+
     private int mColdDown = 0;
     public void StartSkillColdDown()
     {
@@ -888,6 +947,19 @@ public class CardData : MonoBehaviour {
     {
         BuffPastOneRound();
         ColdDownPassOneRound();
+    }
+
+    public void Resurrection()
+    {
+        print(gameObject.name + " resurrection!");
+
+        HP = HPMax;
+        MP = 0;
+        mDeath = false;
+        mColdDown = 0;
+        ClearAllBuff();
+
+        gameObject.SetActive(true);
     }
 }
 
