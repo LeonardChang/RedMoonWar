@@ -530,7 +530,7 @@ public class GameLogic : MonoBehaviour {
         {
             mIsAuto = value;
             AutoBtnLabel.text = Localization.instance.Get(mIsAuto ? "Not Auto" : "Auto");
-            Time.timeScale = mIsAuto ? 3 : 1;
+            Time.timeScale = mIsAuto ? 2 : 1;
         }
     }
 
