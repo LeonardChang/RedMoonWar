@@ -153,7 +153,7 @@ public class Chessboard : MonoBehaviour {
         mChessList.Clear();
         Object perfab = Resources.Load("Cards/Perfabs/Card");
 
-        for (int i = 0; i < _stage.Players.Length; i++ )
+        for (int i = 0; i < _stage.Players.Length; i++)
         {
             BattleCharacterData data = _stage.Players[i];
 
@@ -169,8 +169,11 @@ public class Chessboard : MonoBehaviour {
             logic.Data.DropCard = 0;
             logic.Data.DropCoin = 0;
             logic.Data.IsLeader = i <= 1;
+            logic.Data.InitPhase = PhaseType.Charactor;
 
             int id = mChessList.Keys.Count;
+            logic.Data.ChessID = id;
+            
             mChessList.Add(id, logic);
             InitlizeChess(data.InitX, data.InitY, id);
         }
@@ -190,8 +193,11 @@ public class Chessboard : MonoBehaviour {
             logic.Data.DropCoin = data.DropCoin;
             logic.Data.IsLeader = false;
             logic.Data.EnemyAI = data.AI;
+            logic.Data.InitPhase = PhaseType.Enemy;
 
             int id = mChessList.Keys.Count;
+            logic.Data.ChessID = id;
+            
             mChessList.Add(id, logic);
             InitlizeChess(data.InitX, data.InitY, id);
         }
@@ -209,6 +215,7 @@ public class Chessboard : MonoBehaviour {
 
         mChessboardData[_x, _y] = _id;
         mChessList[_id].Data.SetPosition(_x, _y);
+        mChessList[_id].Data.SetInitPosition(_x, _y);
 
         return true;
     }
@@ -250,7 +257,7 @@ public class Chessboard : MonoBehaviour {
         }
     }
 
-    void GetAllEnemt()
+    void GetAllEnemy()
     {
         mTempChessList.Clear();
         foreach (int id in mChessList.Keys)
@@ -266,45 +273,50 @@ public class Chessboard : MonoBehaviour {
 
     public void GoUp()
     {
-        TryMove(0, 1);
+        CharTryMove(0, 1);
     }
 
     public void GoDown()
     {
-        TryMove(0, -1);
+        CharTryMove(0, -1);
     }
 
     public void GoLeft()
     {
-        TryMove(-1, 0);
+        CharTryMove(-1, 0);
     }
 
     public void GoRight()
     {
-        TryMove(1, 0);
+        CharTryMove(1, 0);
     }
 
     public void GoUpLeft()
     {
-        TryMove(-1, 1);
+        CharTryMove(-1, 1);
     }
 
     public void GoDownLeft()
     {
-        TryMove(-1, -1);
+        CharTryMove(-1, -1);
     }
 
     public void GoUpRight()
     {
-        TryMove(1, 1);
+        CharTryMove(1, 1);
     }
 
     public void GoDownRight()
     {
-        TryMove(1, -1);
+        CharTryMove(1, -1);
     }
 
-    void TryMove(int _xOffset, int _yOffset)
+    /// <summary>
+    /// 队伍尝试移动
+    /// </summary>
+    /// <param name="_xOffset"></param>
+    /// <param name="_yOffset"></param>
+    void CharTryMove(int _xOffset, int _yOffset)
     {
         GetAllSelectCharactor();
         while (mTempChessList.Keys.Count > 0)
@@ -327,7 +339,7 @@ public class Chessboard : MonoBehaviour {
                 }
                 else if (mChessboardData[x, y] == -1 || mChessList[mChessboardData[x, y]].Data.Death)
                 {
-                    mChessboardData[x, y] = mChessboardData[data.X, data.Y];
+                    mChessboardData[x, y] = data.ChessID;
                     mChessboardData[data.X, data.Y] = -1;
                     data.SetPosition(x, y);
 
@@ -357,7 +369,145 @@ public class Chessboard : MonoBehaviour {
         mNeedRefresh = true;
     }
 
-    void EnemyTryMove(CardLogic _logic, int _xOffset, int _yOffset)
+    /// <summary>
+    /// 尝试自动计算己方移动
+    /// </summary>
+    public void TryCharMoveAuto()
+    {
+        // 如果当前不动就能攻击到敌人，返回
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
+        {
+            CardLogic card = obj.GetComponent<CardLogic>();
+
+            CardData target = GameLogic.Instance.GetActionTarget(card.Data, card.Data.NormalAttack);
+            if (target != null)
+            {
+                GameLogic.Instance.ClickStay();
+                return;
+            }
+        }
+
+        // 搜索5格内是否有敌人
+        CardLogic enemy = null;
+        int maxX = -1, maxY = -1;
+        int minX = 99999, minY = 99999;
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
+        {
+            CardLogic card = obj.GetComponent<CardLogic>();
+
+            if (maxX < card.Data.X)
+            {
+                maxX = card.Data.X;
+            }
+            if (maxY < card.Data.Y)
+            {
+                maxY = card.Data.Y;
+            }
+            if (minX > card.Data.X)
+            {
+                minX = card.Data.X;
+            }
+            if (minY > card.Data.Y)
+            {
+                minY = card.Data.Y;
+            }
+
+            CardData target = GameLogic.Instance.GetActionTarget(card.Data, card.Data.NormalAttack, 5);
+            if (target != null)
+            {
+                enemy = target.Logic;
+            }
+        }
+
+        // 没有敌人，前进
+        if (enemy == null)
+        {
+            GoUp();
+        }
+        else
+        {
+            int tx = 0, ty = 0;
+            if (maxX < Width - 1 && enemy.Data.X > maxX)
+            {
+                tx = 1;
+            }
+            else if (minX > 0 && enemy.Data.X < minX)
+            {
+                tx = -1;
+            }
+
+            if (maxY < Height - 1 && enemy.Data.Y > maxY)
+            {
+                ty = 1;
+            }
+            else if (minY > 0 && enemy.Data.Y < minY)
+            {
+                ty = -1;
+            }
+
+            if (tx == 0 && ty == 1)
+            {
+                GoUp();
+            }
+            else if (tx == 0 && ty == -1)
+            {
+                GoDown();
+            }
+            else if (tx == -1 && ty == 0)
+            {
+                GoLeft();
+            }
+            else if (tx == 1 && ty == 0)
+            {
+                GoRight();
+            }
+            else if (tx == 1 && ty == 1)
+            {
+                GoRight();
+            }
+            else if (tx == -1 && ty == 1)
+            {
+                GoUpLeft();
+            }
+            else if (tx == 1 && ty == -1)
+            {
+                GoDownRight();
+            }
+            else if (tx == -1 && ty == -1)
+            {
+                GoDownLeft();
+            }
+            else
+            {
+                foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Charactor"))
+                {
+                    CardLogic card = obj.GetComponent<CardLogic>();
+                    CardData target = GameLogic.Instance.GetActionTarget(card.Data, card.Data.NormalAttack);
+                    if (target == null)
+                    {
+                        // 普通攻击打不到人
+                        target = GameLogic.Instance.GetActionTarget(card.Data, card.Data.Skill);
+                        if (target == null || card.Data.MP < card.Data.Skill.GetManaCost(card.Data.SkillLevel))
+                        {
+                            // 技能也没法用，考虑移动一下
+                            if (TryMoveToPrey(card))
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 单个棋子尝试移动
+    /// </summary>
+    /// <param name="_logic"></param>
+    /// <param name="_xOffset"></param>
+    /// <param name="_yOffset"></param>
+    void ChessTryMove(CardLogic _logic, int _xOffset, int _yOffset)
     {
         if (_xOffset == 0 && _yOffset == 0)
         {
@@ -398,9 +548,12 @@ public class Chessboard : MonoBehaviour {
         }
     }
 
-    public void AllEmemyMove()
+    /// <summary>
+    /// 尝试自动计算地方移动
+    /// </summary>
+    public void TryEnemyMoveAuto()
     {
-        GetAllEnemt();
+        GetAllEnemy();
         while (mTempChessList.Keys.Count > 0)
         {
             int count = mTempChessList.Keys.Count;
@@ -438,7 +591,7 @@ public class Chessboard : MonoBehaviour {
                         }
                         break;
                     case AIType.Goblin:
-                        if (obj.Data.LastAttackerID != -1)
+                        if (obj.Data.LastAttackerID > 0)
                         {
                             CardLogic target = GetChess(obj.Data.LastAttackerID);
                             TryMoveTo(obj, target);
@@ -457,7 +610,7 @@ public class Chessboard : MonoBehaviour {
                         TryMoveToPrey(obj);
                         break;
                     case AIType.Guard:
-                        if (obj.Data.LastAttackerID != -1)
+                        if (obj.Data.LastAttackerID > 0)
                         {
                             CardLogic target = GetChess(obj.Data.LastAttackerID);
                             TryMoveTo(obj, target);
@@ -475,7 +628,7 @@ public class Chessboard : MonoBehaviour {
                         }
                         break;
                     case AIType.Leader:
-                        if (obj.Data.LastAttackerID != -1)
+                        if (obj.Data.LastAttackerID > 0)
                         {
                             CardLogic target = GetChess(obj.Data.LastAttackerID);
                             TryMoveTo(obj, target);
@@ -507,11 +660,20 @@ public class Chessboard : MonoBehaviour {
         mNeedRefresh = true;
     }
 
+    /// <summary>
+    /// 尝试随机移动
+    /// </summary>
+    /// <param name="_self"></param>
     void TryRandomMove(CardLogic _self)
     {
-        EnemyTryMove(_self, Random.Range(-1, 2), Random.Range(-1, 2));
+        ChessTryMove(_self, Random.Range(-1, 2), Random.Range(-1, 2));
     }
 
+    /// <summary>
+    /// 尝试朝目标移动
+    /// </summary>
+    /// <param name="_self"></param>
+    /// <param name="_target"></param>
     void TryMoveTo(CardLogic _self, CardLogic _target)
     {
         int tx = 0, ty = 0;
@@ -532,9 +694,14 @@ public class Chessboard : MonoBehaviour {
         {
             ty = -1;
         }
-        EnemyTryMove(_self, tx, ty);
+        ChessTryMove(_self, tx, ty);
     }
 
+    /// <summary>
+    /// 尝试朝可攻击的人移动
+    /// </summary>
+    /// <param name="_self"></param>
+    /// <returns></returns>
     bool TryMoveToPrey(CardLogic _self)
     {
         CardData data = GameLogic.Instance.GetActionTarget(_self.Data, _self.Data.NormalAttack, 1);
@@ -833,5 +1000,44 @@ public class Chessboard : MonoBehaviour {
 
             return count;
         }
+    }
+
+    /// <summary>
+    /// 复活
+    /// </summary>
+    public void Resurrection()
+    {
+        foreach (int key in mChessList.Keys)
+        {
+            if (mChessList[key].Data.InitPhase == PhaseType.Charactor)
+            {
+                CardData data = mChessList[key].Data;
+                int x = data.InitX;
+                int y = data.InitY;
+
+                while (mChessboardData[x, y] != -1 && !mChessList[mChessboardData[x, y]].Data.Death)
+                {
+                    y += 1;
+                }
+                
+                if (mChessboardData[data.X, data.Y] == data.ChessID)
+                {
+                    mChessboardData[data.X, data.Y] = -1;
+                }
+                mChessboardData[x, y] = data.ChessID;
+                
+                data.SetPosition(x, y);
+                data.Resurrection();
+            }
+            else
+            {
+                CardData data = mChessList[key].Data;
+                data.LastAttackerID = -1;
+                data.AttackerHatred = 0;
+            }
+        }
+
+        CalculatorBottomLine();
+        mNeedRefresh = true;
     }
 }

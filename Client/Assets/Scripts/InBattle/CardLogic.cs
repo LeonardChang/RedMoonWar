@@ -447,7 +447,9 @@ public class CardLogic : MonoBehaviour {
                     dir.Normalize();
                     obj.transform.up = dir;
 
-                    TweenPosition.Begin(obj, _data.Delay, to + new Vector3(0, 0, -1)).from = from;
+                    TweenPosition tp = TweenPosition.Begin(obj, _data.Delay, to + new Vector3(0, 0, -1));
+                    tp.from = from;
+                    tp.ignoreTimeScale = false;
 
                     ParticleKiller pk = obj.transform.FindChild("Star").gameObject.GetComponent<ParticleKiller>();
                     if (pk != null)
@@ -471,8 +473,9 @@ public class CardLogic : MonoBehaviour {
 
                     Vector3 to = _target.localPosition + new Vector3(0, 50, 0);
 
-                    TweenPositionEx.Begin(obj, _data.Delay, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f).method = UITweener.Method.EaseInOut;
-                    //Destroy(obj, _data.Delay);
+                    TweenPositionEx tpe = TweenPositionEx.Begin(obj, _data.Delay, gameObject.transform.localPosition + new Vector3(Random.Range(0, 2) == 0 ? -300 : 300, Random.Range(0, 2) == 0 ? -300 : 300, -1), to + new Vector3(0, 0, -1), 0.75f);
+                    tpe.method = UITweener.Method.EaseInOut;
+                    tpe.ignoreTimeScale = false;
 
                     ParticleKiller pk = obj.GetComponent<ParticleKiller>();
                     if (pk != null)
@@ -650,6 +653,17 @@ public class CardLogic : MonoBehaviour {
         // data数据经过一回合
         Data.PastOneRound();
 
+        // 如果仇恨对象死了，就忘了他吧
+        if (Data.LastAttackerID > 0)
+        {
+            CardLogic logic = GameLogic.Instance.GetChess(Data.LastAttackerID);
+            if (logic != null && logic.Data.Death)
+            {
+                Data.LastAttackerID = -1;
+                Data.AttackerHatred = 0;
+            }
+        }
+        
         if (wait)
         {
             // 如行动过则稍微等一会儿再结束
@@ -976,7 +990,7 @@ public class CardLogic : MonoBehaviour {
                 }
                 logic.Data.LastAttackerID = Data.ID;
             }
-            else if (logic.Data.LastAttackerID != -1)
+            else if (logic.Data.LastAttackerID > 0)
             {
                 // 上次是被其他人揍的
                 logic.Data.AttackerHatred -= skilldata.Hatred;

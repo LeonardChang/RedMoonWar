@@ -4,7 +4,8 @@ using System.Collections;
 public class CardUI : MonoBehaviour {
     public UISlider BloodBar;
     public UISlider ManaBar;
-    public UISprite SelectSprite;
+    //public UISprite SelectSprite;
+    public GameObject SelectNode;
 
     public UISprite FrontSprite;
     public UISprite AvatarSprite;
@@ -117,7 +118,11 @@ public class CardUI : MonoBehaviour {
     {
         set
         {
-            SelectSprite.gameObject.SetActive(value);
+            SelectNode.SetActive(value);
+            foreach (ParticleEmitter emitter in SelectNode.GetComponentsInChildren<ParticleEmitter>())
+            {
+                emitter.emit = value;
+            }
         }
     }
 

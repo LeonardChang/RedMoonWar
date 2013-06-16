@@ -12,3 +12,7 @@ Sound OFF = 音效 关闭
 Music ON = 音乐 开启
 Music OFF = 音乐 关闭
 Quit = 退出
+Auto = 托管
+Not Auto = 取消托管
+Resurgence = 复活
+OK = 确定
