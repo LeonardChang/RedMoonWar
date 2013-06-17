@@ -115,6 +115,22 @@ public class Battles
 
     private Dictionary<int, BigBattle> mStoryList = new Dictionary<int, BigBattle>();
     private Dictionary<int, BigBattle> mActivityList = new Dictionary<int, BigBattle>();
+	
+	public Dictionary<int, BigBattle> StoryList
+	{
+		get
+		{
+			return mStoryList;
+		}
+	}
+	
+	public Dictionary<int, BigBattle> ActivityList
+	{
+		get
+		{
+			return mActivityList;
+		}
+	}
 
     public Battles()
     {
