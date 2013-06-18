@@ -3,53 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 怪物字典
-/// </summary>
-public class MonsterManager
-{
-    private static volatile MonsterManager instance;
-    private static object syncRoot = new System.Object();
-
-    public static MonsterManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                lock (syncRoot)
-                {
-                    if (instance == null)
-                    {
-                        instance = new MonsterManager();
-                    }
-                }
-            }
-            return instance;
-        }
-    }
-
-    private Dictionary<int, sMonsterData> mData = new Dictionary<int, sMonsterData>();
-    public void Initialize(sMonsterList _list)
-    {
-        mData.Clear();
-        foreach (sMonsterData data in _list.monster)
-        {
-            mData[data.id] = data;
-        }
-    }
-
-    /// <summary>
-    /// 获取怪物数据
-    /// </summary>
-    /// <param name="_id"></param>
-    /// <returns></returns>
-    public sMonsterData GetMonsterData(int _id)
-    {
-        return mData.ContainsKey(_id) ? mData[_id] : null;
-    }
-}
-
-/// <summary>
 /// 棋子的详细数据
 /// </summary>
 [System.Serializable]
@@ -257,6 +210,13 @@ public class Stage
 
     public Stage()
     {
+        //InitializeRandom();
+
+        InitializeLocal(7);
+    }
+
+    private void InitializeRandom()
+    {
         mWidth = 6;
         mHeight = 50;
         mScene = Random.Range(0, 6);
@@ -265,7 +225,7 @@ public class Stage
         for (int i = 0; i < 6; i++)
         {
             BattleCharacterData data = new BattleCharacterData();
-            CreateRandomCharactor(ref data, i);
+            CreateRandomCharactor(ref data, i, 50);
             data.InitX = 0 + i;
             data.InitY = 1;
 
@@ -288,12 +248,92 @@ public class Stage
         }
     }
 
-    private void CreateRandomCharactor(ref BattleCharacterData _data, int _id)
+    private int mCurrentLocalStageID = 0;
+    public int CurrentLocalStageID
+    {
+        get
+        {
+            return mCurrentLocalStageID;
+        }
+    }
+
+    public void InitializeLocal(int _stageID)
+    {
+        mEnemyTeam.Clear();
+
+        TextAsset text = Resources.Load("Datas/Stage", typeof(TextAsset)) as TextAsset;
+        string[] line = text.text.Split('\n');
+        for (int i = 0; i < line.Length; i++)
+        {
+            if (i < 2 || line[i] == "\n" || string.IsNullOrEmpty(line[i]))
+            {
+                continue;
+            }
+
+            string[] lineValue = line[i].Split('\t');
+
+            int id = int.Parse(lineValue[0]);
+            if (id == _stageID)
+            {
+                mCurrentLocalStageID = id;
+
+                int chapter_id = int.Parse(lineValue[1]);
+                int route_id = int.Parse(lineValue[2]);
+                int monster = int.Parse(lineValue[3]);
+                int cost = int.Parse(lineValue[4]);
+                string chapter_name = lineValue[5];
+                string route_name = lineValue[6];
+                string image = lineValue[7];
+                int coin_bonus = int.Parse(lineValue[8]);
+
+                string[] scene_set = image.Split(',');
+                mScene = int.Parse(scene_set[0]);
+                mWidth = int.Parse(scene_set[1]);
+                mHeight = int.Parse(scene_set[2]);
+
+                foreach (sMonsterGroupData mg in MonsterGroupManager.Instance.GetMonsterGroupData(monster))
+                {
+                    if (Random.Range(0, 10000) > mg.rate)
+                    {
+                        continue;
+                    }
+
+                    sMonsterData monter = MonsterManager.Instance.GetMonsterData(mg.monster);
+
+                    BattleEnemyData data = new BattleEnemyData();
+                    data.ID = mEnemyTeam.Count + 10000;
+                    data.CardID = int.Parse(monter.img);
+                    data.Level = monter.level;
+                    data.SkillLevel = 1;
+                    data.GetDate = System.DateTime.Now;
+
+                    data.MaxHP = monter.hp;
+                    data.MaxMP = monter.mp;
+                    data.Atk = monter.attack;
+                    data.Def = monter.defence;
+                    data.Spd = monter.speed;
+
+                    data.InitX = mg.x;
+                    data.InitY = mg.y;
+                    data.BuyPrice = monter.price;
+                    data.DropCard = 0;
+                    data.DropCoin = mg.money_drop;
+                    data.AI = (AIType)monter.ai;
+
+                    mEnemyTeam.Add(data);
+                }
+
+                break;
+            }
+        }
+    }
+
+    private void CreateRandomCharactor(ref BattleCharacterData _data, int _id, int level)
     {
         CharacterData data = _data;
         data.ID = _id;
-        data.CardID = Random.Range(1, 190);
-        data.Level = Random.Range(40, 60);
+        data.CardID = Random.Range(0, 6) * 3 + 1;
+        data.Level = level;
         data.SkillLevel = 1;
         data.GetDate = System.DateTime.Now;
 
@@ -320,5 +360,32 @@ public class Stage
         data.Atk = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetATK(data.Level);
         data.Def = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetDEF(data.Level);
         data.Spd = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetSPD(data.Level);
+    }
+
+    public void CreateCharactor(ref BattleCharacterData _data, int _id, int _cardID, int level)
+    {
+        CharacterData data = _data;
+        data.ID = _id;
+        data.CardID = _cardID;
+        data.Level = level;
+        data.SkillLevel = 1;
+        data.GetDate = System.DateTime.Now;
+
+        CardBaseData carddata = CardManager.Instance.GetCard(data.CardID);
+        data.MaxHP = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetHP(data.Level);
+        data.MaxMP = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetMP(data.Level);
+        data.Atk = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetATK(data.Level);
+        data.Def = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetDEF(data.Level);
+        data.Spd = GrowingManager.Instance.GetGrowing(carddata.GrowingType).GetSPD(data.Level);
+    }
+
+    public void ClearPlayers()
+    {
+        mPlayerTeam.Clear();
+    }
+
+    public void AddCharactor(BattleCharacterData _data)
+    {
+        mPlayerTeam.Add(_data);
     }
 }

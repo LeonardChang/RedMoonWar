@@ -942,6 +942,11 @@ public class GameLogic : MonoBehaviour {
     public void ClickQuit()
     {
         HideMenu();
+
+        if (Application.isEditor)
+        {
+            Application.LoadLevel("StageTest");
+        }
     }
 
     public void ShakeMap(int _level)
@@ -991,7 +996,14 @@ public class GameLogic : MonoBehaviour {
 
     void ClickQuitBattle()
     {
-        Application.Quit();
+        if (Application.isEditor)
+        {
+            Application.LoadLevel("StageTest");
+        }
+        else
+        {
+            Application.Quit();
+        }
     }
 
     void Resurrection()
