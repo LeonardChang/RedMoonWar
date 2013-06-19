@@ -8,6 +8,7 @@ public class GameUIManager : MonoBehaviour {
 	public SearchFriend searchFriend;
 	public RequestFriendList requestFriendList;
 	public MessageBox messageBox;
+	public Anniuncement anniuncement;
 	
 	public static GameUIManager g_gameUIManager;
 	
@@ -174,6 +175,12 @@ public class GameUIManager : MonoBehaviour {
 	{
 		friend.DisAppear();
 		friendMenu.Appear();
+	}
+	
+	public void AnniuncementAppear()
+	{
+		anniuncement.Appear();
+		
 	}
 	
 	

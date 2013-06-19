@@ -9,7 +9,7 @@ public class TomatoTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ServerFuction.GameLogin("test2","test");
+		ServerFuction.GameLogin("test","test");
 		//ServerFuction.GetSysTime();
 		//ServerFuction.TestPost();
 		//ServerFuction.GetSysTime();
