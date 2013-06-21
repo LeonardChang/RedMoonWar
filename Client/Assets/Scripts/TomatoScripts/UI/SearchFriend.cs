@@ -6,6 +6,7 @@ public class SearchFriend : GameUI {
 	public GameObject searchFriendCtrl;
 	public List<GameObject> searchList;
 	public UITable table;
+	public UILabel mInput;
 	
 	
 	void Start()
@@ -36,6 +37,12 @@ public class SearchFriend : GameUI {
 	
 	public void SearchInfo(SearchFriendIdsFeedBack ids,List<PlayerFeedBack> players,List<CardFeedBack> cards)
 	{
+		for(int i = 0; i< searchList.Count; i++)
+		{
+			GameObject obj = searchList[i];
+			Destroy(obj);
+		}		
+		searchList.Clear();
 		int count =  ids.ids.Length;
 		for(int i = 0; i< count; i++)
 		{
@@ -50,5 +57,10 @@ public class SearchFriend : GameUI {
 			ctrl.charId = ids.ids[i];
 		}	
 		table.repositionNow = true;
+	}
+	
+	public void SearchPlayer()
+	{
+		ServerFuction.SearchFriend(mInput.text);
 	}
 }

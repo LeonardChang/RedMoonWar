@@ -71,6 +71,13 @@ public class Formation
 
     private Dictionary<System.Int64, CharacterData> mTeam = new Dictionary<System.Int64, CharacterData>(); // 玩家所有卡片列表
     private List<FormationData> mFormation = new List<FormationData>(); // 玩家编队卡片列表（第一个为队长）
+	
+	public List<System.Int64> mCharacterIds = new List<System.Int64>();
+	public void Init()
+	{
+		
+	}
+	
 
     private int mFriendPosition;
 

@@ -9,7 +9,7 @@ public class TomatoTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ServerFuction.GameLogin("test","test");
+		ServerFuction.GameLogin("test2","test");
 		//ServerFuction.GetSysTime();
 		//ServerFuction.TestPost();
 		//ServerFuction.GetSysTime();
@@ -29,7 +29,22 @@ public class TomatoTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
+        //if(Input.GetKeyDown(KeyCode.T))
+		//{
+		//	GameUIManager.g_gameUIManager.FriendListAppear();
+		//}
+		if(Input.GetKeyDown(KeyCode.S))
+		{
+			GameUIManager.g_gameUIManager.SearchFriendAppear();
+		}
+		if(Input.GetKeyDown(KeyCode.A))
+		{
+			GameUIManager.g_gameUIManager.RequestFriendListAppear();
+		}
+		if(Input.GetKeyDown(KeyCode.D))
+		{
+			GameUIManager.g_gameUIManager.FriendListAppear();
+		}
 	}
 }
 
