@@ -212,7 +212,53 @@ public class Stage
     {
         //InitializeRandom();
 
-        InitializeLocal(7);
+        InitializeLocal(20);
+
+        if (mPlayerTeam.Count < 6)
+        {
+            mPlayerTeam.Clear();
+
+            BattleCharacterData data = new BattleCharacterData();
+            CreateCharactor(ref data, 0, 130, 2);
+            data.InitX = 1;
+            data.InitY = 2;
+            mPlayerTeam.Add(data);
+
+
+            data = new BattleCharacterData();
+            CreateCharactor(ref data, 1, 158, 2);
+            data.InitX = 2;
+            data.InitY = 2;
+            mPlayerTeam.Add(data);
+
+
+            data = new BattleCharacterData();
+            CreateCharactor(ref data, 2, 115, 1);
+            data.InitX = 3;
+            data.InitY = 2;
+            mPlayerTeam.Add(data);
+
+
+            data = new BattleCharacterData();
+            CreateCharactor(ref data, 3, 57, 1);
+            data.InitX = 2;
+            data.InitY = 1;
+            mPlayerTeam.Add(data);
+
+
+            data = new BattleCharacterData();
+            CreateCharactor(ref data, 4, 15, 1);
+            data.InitX = 4;
+            data.InitY = 1;
+            mPlayerTeam.Add(data);
+
+
+            data = new BattleCharacterData();
+            CreateCharactor(ref data, 5, 152, 1);
+            data.InitX = 3;
+            data.InitY = 1;
+            mPlayerTeam.Add(data);
+        }
     }
 
     private void InitializeRandom()
