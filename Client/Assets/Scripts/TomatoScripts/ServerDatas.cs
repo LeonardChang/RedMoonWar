@@ -239,5 +239,10 @@ public struct BattleEnemyDataFeedBack
     public int mDropCoin;
 }
 
+public struct TeamFormationFeedBack
+{
+	public int[] team;
+}
+
 
 

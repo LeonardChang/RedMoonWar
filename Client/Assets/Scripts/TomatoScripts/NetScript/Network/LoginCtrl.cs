@@ -7,7 +7,7 @@ public class LoginCtrl
     public static void GameLogin(string name,string password)
     {
         PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 1);
+        pParam.AddPair("cmd", GameDatas.Cmd_GameLogin);
         pParam.AddPair("name", name);
         pParam.AddPair("password", password);
         NetworkCtrl.Post(pParam, LoginHandler);

@@ -148,6 +148,7 @@ public class CharacterManager
     }
 
     private Dictionary<System.Int64, CharacterData> mCharacterDatas = new Dictionary<System.Int64, CharacterData>();
+	
 
     public CharacterManager()
     {

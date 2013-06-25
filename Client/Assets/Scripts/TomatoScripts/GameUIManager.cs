@@ -85,7 +85,7 @@ public class GameUIManager : MonoBehaviour {
 	/// </param>
 	public void SearchFriend()
 	{
-		ServerFuction.SearchFriend("tester002");
+		searchFriend.SearchPlayer();
 	}
 	
 	public void OnSearchInfo(SearchFriendIdsFeedBack ids,List<PlayerFeedBack> players,List<CardFeedBack> cards)

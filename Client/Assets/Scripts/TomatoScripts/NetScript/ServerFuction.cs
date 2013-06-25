@@ -36,7 +36,7 @@ public class ServerFuction{
 	public static void GameLogin(string name,string pw)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 1);
+        pParam.AddPair("cmd", GameDatas.Cmd_GameLogin);
         pParam.AddPair("name", name);
         pParam.AddPair("password", pw);
 		pParam.AddPair("rand", "111111");
@@ -93,10 +93,7 @@ public class ServerFuction{
 					chara.MaxHP = card.hp;
 					chara.MaxMP = card.mp;
 					chara.Spd = card.spd;
-					if(card.use <=0)
-					{
-						Formation.Instance.Team.Add(chara.ID,chara);
-					}
+					Formation.Instance.Team.Add(chara.ID,chara);
 				}
 				Debug.Log("MSG_CARD--->" + data);
 				break;
@@ -127,7 +124,7 @@ public class ServerFuction{
 	public static void GetSysTime()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 4);
+        pParam.AddPair("cmd", GameDatas.Cmd_GetSysTime);
         NetworkCtrl.Post(pParam, LoginHandler);
 	}
 	
@@ -160,7 +157,7 @@ public class ServerFuction{
 	public static void GetCardList()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 5);
+        pParam.AddPair("cmd", GameDatas.Cmd_GetCardList);
         pParam.AddPair("char", ServerDatas.charId);
         NetworkCtrl.Post(pParam, GetCardListHandler);
 	}
@@ -194,7 +191,7 @@ public class ServerFuction{
 	public static void SetTeamCard()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 6);
+        pParam.AddPair("cmd", GameDatas.Cmd_SetTeamCard);
 		pParam.AddPair("char", ServerDatas.charId);
         pParam.AddPair("pos1", 1);
 		pParam.AddPair("pos1", 2);
@@ -232,7 +229,7 @@ public class ServerFuction{
 		
 		cards.Substring(0,cards.Length-1);
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 7);
+        pParam.AddPair("cmd", GameDatas.Cmd_SellCards);
 		pParam.AddPair("char", ServerDatas.charId);
         pParam.AddPair("cards", cards);
         NetworkCtrl.Post(pParam, SellCardsHandler);	
@@ -255,7 +252,7 @@ public class ServerFuction{
 	public static void GetFriendList()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 9);
+        pParam.AddPair("cmd", GameDatas.Cmd_GetFriendList);
 		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, GetFriendListHandler);	
 	}
@@ -319,7 +316,7 @@ public class ServerFuction{
 	public static void GetFriendRequestList()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 10);
+        pParam.AddPair("cmd", GameDatas.Cmd_GetFriendRequestList);
 		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, GetFriendRequestListHandler);	
 	}
@@ -387,7 +384,7 @@ public class ServerFuction{
 	public static void RequestFriend(string id)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 11);
+        pParam.AddPair("cmd", GameDatas.Cmd_RequestFriend);
 		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("friend", id);
 		pParam.AddPair("content", "fuck you");
@@ -414,7 +411,7 @@ public class ServerFuction{
 	public static void AgreeFriend(string reqId)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 12);
+        pParam.AddPair("cmd", GameDatas.Cmd_AgreeFriend);
 		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("req", reqId);
 		NetworkCtrl.Post(pParam, AgreeFriendHandler);	
@@ -441,7 +438,7 @@ public class ServerFuction{
 	public static void RefuseFriend(string reqId)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 13);
+        pParam.AddPair("cmd", GameDatas.Cmd_RefuseFriend);
 		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("req", reqId);
 		NetworkCtrl.Post(pParam, RefuseFriendHandler);	
@@ -468,7 +465,7 @@ public class ServerFuction{
 	public static void DeleteFriend(string friendId)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 14);
+        pParam.AddPair("cmd", GameDatas.Cmd_DeleteFriend);
 		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("friend", friendId);
 		NetworkCtrl.Post(pParam, DeleteFriendHandler);	
@@ -496,7 +493,7 @@ public class ServerFuction{
 	public static void StoryStart(string storyId)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 15);
+        pParam.AddPair("cmd", GameDatas.Cmd_StoryStart);
 		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("story", storyId);
 		NetworkCtrl.Post(pParam, StoryStartHandler);	
@@ -519,7 +516,7 @@ public class ServerFuction{
 	public static void StoryFinish()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 16);
+        pParam.AddPair("cmd", GameDatas.Cmd_StoryFinish);
 		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, StoryFinishHandler);	
 	}
@@ -544,7 +541,7 @@ public class ServerFuction{
 	public static void SearchFriend(string name)
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 17);
+        pParam.AddPair("cmd", GameDatas.Cmd_SearchFriend);
 		pParam.AddPair("char", ServerDatas.charId);
 		pParam.AddPair("name", name);
 		NetworkCtrl.Post(pParam, SearchFriendHandler);	
@@ -597,7 +594,7 @@ public class ServerFuction{
 	public static void GetRanFriend()
 	{
 		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 18);
+        pParam.AddPair("cmd", GameDatas.Cmd_GetRanFriend);
 		pParam.AddPair("char", ServerDatas.charId);
 		NetworkCtrl.Post(pParam, GetRanFriendHandler);	
 	}
@@ -613,16 +610,30 @@ public class ServerFuction{
 		
 	}
 	
-	public static void TestPost()
-	{
-		PostParam pParam = new PostParam();
-        pParam.AddPair("cmd", 19);
-		NetworkCtrl.Post(pParam, TestPostHandler);	
-	}
-	
 	public static void TestPostHandler(Response resp)
 	{
+		
+	}
+	
+	public static void Gacha(int _type,int count)
+	{
+		PostParam pParam = new PostParam();
+        pParam.AddPair("cmd", GameDatas.Cmd_Gacha);
+		pParam.AddPair("char", ServerDatas.charId);
+		pParam.AddPair("type", _type);
+		pParam.AddPair("count",count);
+		NetworkCtrl.Post(pParam, GachaHandler);	
+	}
+	
+	public static void GachaHandler(Response resp)
+	{
 		List<string> datas = ServerDatas.DataCheck(resp.value);
+		foreach(string da in datas)
+		{
+			Debug.Log(da);
+		}
+		
+		//GetCardList();
 	}
 	
 }
