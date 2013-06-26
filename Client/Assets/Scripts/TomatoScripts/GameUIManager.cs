@@ -9,6 +9,8 @@ public class GameUIManager : MonoBehaviour {
 	public RequestFriendList requestFriendList;
 	public MessageBox messageBox;
 	public Anniuncement anniuncement;
+	public GameStage gameStage;
+	
 	
 	public static GameUIManager g_gameUIManager;
 	
@@ -181,6 +183,26 @@ public class GameUIManager : MonoBehaviour {
 	{
 		anniuncement.Appear();
 		
+	}
+	
+	public void BigStageAppear()
+	{
+		gameStage.Appear();
+		gameStage.Init();
+	}
+	
+	public void IntoSmallStage(GameObject obj)
+	{
+		string name = obj.name.Replace("BigStage","");
+		StageManager.nowBigStageId = int.Parse(name);	
+		if(StageManager.nowBigStageId == StageManager.bigStageId)
+		{
+			
+		}
+		else
+		{
+			
+		}
 	}
 	
 	
