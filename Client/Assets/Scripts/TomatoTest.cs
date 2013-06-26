@@ -45,6 +45,10 @@ public class TomatoTest : MonoBehaviour {
 		{
 			GameUIManager.g_gameUIManager.FriendListAppear();
 		}
+		if(Input.GetKeyDown(KeyCode.E))
+		{
+			GameUIManager.g_gameUIManager.BigStageAppear();
+		}
 	}
 }
 

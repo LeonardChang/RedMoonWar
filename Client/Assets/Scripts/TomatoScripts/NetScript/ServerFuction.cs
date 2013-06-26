@@ -78,6 +78,8 @@ public class ServerFuction{
 				Player.Instance.EnergyMax = playerFeedBack.enegymax;
 				Player.Instance.Coin = playerFeedBack.money;
 				Player.Instance.FriendshipPoint = playerFeedBack.friendpt;
+				StageManager.bigStageId = int.Parse(playerFeedBack.chapter_id);
+				StageManager.stageId = int.Parse(playerFeedBack.route_id);
 				break;
 			case MsgMap.MSGENUM.MSG_CARD:
 				CardFeedBack cardFeedBack = JsonUtil.DeserializeObject<CardFeedBack>(data);
